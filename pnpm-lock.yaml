@@ -26,6 +26,9 @@ importers:
       '@payloadcms/next':
         specifier: ^3.62.0
         version: 3.62.0(@types/react@18.0.0)(graphql@16.11.0)(monaco-editor@0.54.0)(next@15.5.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.62.0(graphql@16.11.0)(typescript@5.0.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.0.2)
+      '@payloadcms/plugin-seo':
+        specifier: ^3.62.0
+        version: 3.62.0(@types/react@18.0.0)(monaco-editor@0.54.0)(next@15.5.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.62.0(graphql@16.11.0)(typescript@5.0.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.0.2)
       '@payloadcms/richtext-lexical':
         specifier: ^3.62.0
         version: 3.62.0(@faceless-ui/modal@3.0.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(@payloadcms/next@3.62.0(@types/react@18.0.0)(graphql@16.11.0)(monaco-editor@0.54.0)(next@15.5.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.62.0(graphql@16.11.0)(typescript@5.0.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.0.2))(@types/react@18.0.0)(monaco-editor@0.54.0)(next@15.5.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.62.0(graphql@16.11.0)(typescript@5.0.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.0.2)(yjs@13.6.27)
@@ -1050,6 +1053,13 @@ packages:
 
   '@payloadcms/plugin-cloud-storage@3.62.0':
     resolution: {integrity: sha512-P1hYEpeW+6CIW2AOZT8A00LK2cvPSI/8x4w1LGC21ofmrGWW5aBeHxHKDLaYwoqpUu8G03M2yZsMFMn4HGmi4g==}
+    peerDependencies:
+      payload: 3.62.0
+      react: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
+      react-dom: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
+
+  '@payloadcms/plugin-seo@3.62.0':
+    resolution: {integrity: sha512-WHXXwqCK20l/NbzjNPvjeREW+1bwikvWE5KhYr8FAwGkq8pm/K6vpSqZUmkt0vF+LQstGh/PPFK+aRHoryMonw==}
     peerDependencies:
       payload: 3.62.0
       react: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
@@ -4927,6 +4937,20 @@ snapshots:
       find-node-modules: 2.1.3
       payload: 3.62.0(graphql@16.11.0)(typescript@5.0.2)
       range-parser: 1.2.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - monaco-editor
+      - next
+      - supports-color
+      - typescript
+
+  '@payloadcms/plugin-seo@3.62.0(@types/react@18.0.0)(monaco-editor@0.54.0)(next@15.5.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.62.0(graphql@16.11.0)(typescript@5.0.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.0.2)':
+    dependencies:
+      '@payloadcms/translations': 3.62.0
+      '@payloadcms/ui': 3.62.0(@types/react@18.0.0)(monaco-editor@0.54.0)(next@15.5.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.62.0(graphql@16.11.0)(typescript@5.0.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.0.2)
+      payload: 3.62.0(graphql@16.11.0)(typescript@5.0.2)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     transitivePeerDependencies:

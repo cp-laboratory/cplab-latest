@@ -4,8 +4,11 @@ import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { buildConfig } from 'payload'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import path from 'path'
 import { Users } from './collections/Users'
+import { News } from './collections/News'
+import { Publications } from './collections/Publications'
 import Logo from './components/payload/Logo'
 import Icon from './components/payload/Icon'
 
@@ -16,6 +19,8 @@ export default buildConfig({
   // Define and configure your collections in this array
   collections: [
     Users, // Custom users collection with role-based access
+    News, // News articles
+    Publications, // Research publications
     // Add your collections here
     // Example Media collection with upload enabled
     {
@@ -30,21 +35,67 @@ export default buildConfig({
           type: 'text',
           required: true,
         },
+        {
+          name: 'uploadedBy',
+          type: 'relationship',
+          relationTo: 'users',
+          admin: {
+            position: 'sidebar',
+            description: 'User who uploaded this file',
+          },
+          hooks: {
+            beforeChange: [
+              ({ req, value }) => {
+                // Automatically set uploadedBy to current user
+                if (req.user && !value) {
+                  return req.user.id
+                }
+                return value
+              },
+            ],
+          },
+        },
       ],
       access: {
-        // Only professors can upload/manage media
-        create: ({ req: { user } }) => {
-          if (!user) return false
-          return user.role === 'professor'
-        },
         read: () => true, // Anyone can view media
+        create: ({ req: { user } }) => {
+          // Both professors and students can upload
+          if (!user) return false
+          return user.role === 'professor' || user.role === 'student'
+        },
         update: ({ req: { user } }) => {
           if (!user) return false
-          return user.role === 'professor'
+          
+          // Professors can update all
+          if (user.role === 'professor') return true
+          
+          // Students can only update their own uploads
+          if (user.role === 'student') {
+            return {
+              uploadedBy: {
+                equals: user.id,
+              },
+            }
+          }
+          
+          return false
         },
         delete: ({ req: { user } }) => {
           if (!user) return false
-          return user.role === 'professor'
+          
+          // Professors can delete all
+          if (user.role === 'professor') return true
+          
+          // Students can only delete their own uploads
+          if (user.role === 'student') {
+            return {
+              uploadedBy: {
+                equals: user.id,
+              },
+            }
+          }
+          
+          return false
         },
       },
     },
@@ -85,6 +136,17 @@ export default buildConfig({
 
   // Plugins for storage and other features
   plugins: [
+    // SEO Plugin
+    seoPlugin({
+      collections: ['news', 'publications'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }) => `CPLab - ${doc?.title || 'Untitled'}`,
+      generateDescription: ({ doc }) => doc?.excerpt || doc?.abstract || '',
+      generateURL: ({ doc, collectionSlug }) => {
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+        return `${baseUrl}/${collectionSlug}/${doc?.slug}`
+      },
+    }),
     // Cloudflare R2 Storage (S3-compatible)
     s3Storage({
       collections: {
