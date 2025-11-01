@@ -87,7 +87,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 relative z-50">
           <Link
             href="/admin"
             className="font-medium transition-colors hover:text-foreground text-muted-foreground text-sm"
