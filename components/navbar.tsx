@@ -79,17 +79,17 @@ export function Navbar() {
           >
             <span className="relative z-20">News</span>
           </Link>
+          <Link
+            href="/contact"
+            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span className="relative z-20">Contact</span>
+          </Link>
         </div>
 
         <div className="flex items-center gap-4">
           <Link
-            href="/contact"
-            className="font-medium transition-colors hover:text-foreground text-muted-foreground text-sm"
-          >
-            Contact
-          </Link>
-          <Link
-            href="/login"
+            href="/admin"
             className="font-medium transition-colors hover:text-foreground text-muted-foreground text-sm"
           >
             Login
@@ -149,15 +149,15 @@ export function Navbar() {
               >
                 News
               </Link>
+              <Link
+                href="/contact"
+                className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
+              >
+                Contact
+              </Link>
               <div className="border-t border-border/50 pt-4 mt-4">
                 <Link
-                  href="/contact"
-                  className="px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50 block"
-                >
-                  Contact
-                </Link>
-                <Link
-                  href="/login"
+                  href="/admin"
                   className="px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50 block"
                 >
                   Login
