@@ -9,9 +9,10 @@ const Logo = () => {
         src="/cpl-logo.png" 
         alt="CPLab Logo" 
         style={{ 
-          height: '40px', 
-          width: '40px',
-          objectFit: 'contain'
+          height: '100px', 
+          width: '100px',
+          objectFit: 'contain',
+          borderRadius: '8px'
         }} 
       />
       <span style={{ 
@@ -19,7 +20,7 @@ const Logo = () => {
         fontWeight: 'bold',
         color: 'currentColor'
       }}>
-        CPLab
+        {/* CPLab */}
       </span>
     </div>
   )
