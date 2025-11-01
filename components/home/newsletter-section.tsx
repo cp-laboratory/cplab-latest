@@ -8,13 +8,43 @@ import { motion } from "framer-motion"
 export function NewsletterSection() {
   const [email, setEmail] = useState("")
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState("")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (email) {
-      setIsSubmitted(true)
-      setEmail("")
-      setTimeout(() => setIsSubmitted(false), 3000)
+    if (!email) return
+
+    setIsLoading(true)
+    setMessage("")
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setIsSubmitted(true)
+        setEmail("")
+        setMessage(data.message || "Successfully subscribed!")
+        setTimeout(() => {
+          setIsSubmitted(false)
+          setMessage("")
+        }, 5000)
+      } else {
+        setMessage(data.error || "Failed to subscribe. Please try again.")
+      }
+    } catch (error) {
+      console.error('Subscription error:', error)
+      setMessage("An error occurred. Please try again later.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -57,21 +87,27 @@ export function NewsletterSection() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-white/50 transition-colors"
+                  disabled={isLoading}
+                  className="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-white/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: isLoading ? 1 : 1.05 }}
+                  whileTap={{ scale: isLoading ? 1 : 0.95 }}
                   type="submit"
-                  className="px-6 py-3 rounded-full bg-white text-primary font-semibold hover:bg-white/90 transition-colors whitespace-nowrap"
+                  disabled={isLoading}
+                  className="px-6 py-3 rounded-full bg-white text-primary font-semibold hover:bg-white/90 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitted ? "Subscribed!" : "Subscribe"}
+                  {isLoading ? "Subscribing..." : isSubmitted ? "Subscribed!" : "Subscribe"}
                 </motion.button>
               </form>
 
-              {isSubmitted && (
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-white/70 text-sm mt-4">
-                  Thank you for subscribing!
+              {message && (
+                <motion.p 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  className={`text-sm mt-4 ${isSubmitted ? 'text-white/90' : 'text-red-200'}`}
+                >
+                  {message}
                 </motion.p>
               )}
             </motion.div>
