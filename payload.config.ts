@@ -5,6 +5,7 @@ import { buildConfig } from 'payload'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
+import { Users } from './collections/Users'
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -12,6 +13,7 @@ export default buildConfig({
 
   // Define and configure your collections in this array
   collections: [
+    Users, // Custom users collection with role-based access
     // Add your collections here
     // Example Media collection with upload enabled
     {
@@ -27,6 +29,22 @@ export default buildConfig({
           required: true,
         },
       ],
+      access: {
+        // Only professors can upload/manage media
+        create: ({ req: { user } }) => {
+          if (!user) return false
+          return user.role === 'professor'
+        },
+        read: () => true, // Anyone can view media
+        update: ({ req: { user } }) => {
+          if (!user) return false
+          return user.role === 'professor'
+        },
+        delete: ({ req: { user } }) => {
+          if (!user) return false
+          return user.role === 'professor'
+        },
+      },
     },
   ],
 
@@ -92,6 +110,9 @@ export default buildConfig({
     meta: {
       titleSuffix: '- CPLab CMS',
     },
+    user: 'users',
+    // Customize admin panel based on user role
+    components: {},
   },
 
   // Configure TypeScript
