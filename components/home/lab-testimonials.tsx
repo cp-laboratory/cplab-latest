@@ -77,7 +77,7 @@ const TestimonialCard = ({
 
 export function LabTestimonialsSection() {
   const headingRef = useRef(null)
-  const isInView = useInView(headingRef, { once: true, amount: 0.5 })
+  const isInView = useInView(headingRef, { once: true, amount: 0.3 })
 
   return (
     <section id="testimonials" className="py-12 md:py-20">
@@ -85,7 +85,7 @@ export function LabTestimonialsSection() {
         <motion.div
           ref={headingRef}
           initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mx-auto max-w-[540px]"
         >
