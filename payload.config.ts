@@ -62,25 +62,45 @@ export default buildConfig({
           name: 'uploadedBy',
           type: 'relationship',
           relationTo: 'users',
+          required: true,
           admin: {
             position: 'sidebar',
+            readOnly: true, // Make it read-only, cannot be edited
             description: 'User who uploaded this file',
+            condition: () => false, // Hide from UI completely
           },
           hooks: {
             beforeChange: [
-              ({ req, value }) => {
-                // Automatically set uploadedBy to current user
-                if (req.user && !value) {
+              ({ req }) => {
+                // Always set to current user, ignore any manual input
+                if (req.user) {
                   return req.user.id
                 }
-                return value
+                return undefined
               },
             ],
           },
         },
       ],
       access: {
-        read: () => true, // Anyone can view media
+        read: ({ req: { user } }) => {
+          // Public can view media (for frontend display)
+          if (!user) return true
+          
+          // Professors can see all media
+          if (user.role === 'professor') return true
+          
+          // Students can only see their own uploads in admin panel
+          if (user.role === 'student') {
+            return {
+              uploadedBy: {
+                equals: user.id,
+              },
+            }
+          }
+          
+          return false
+        },
         create: ({ req: { user } }) => {
           // Both professors and students can upload
           if (!user) return false
