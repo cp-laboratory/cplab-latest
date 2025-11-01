@@ -6,6 +6,8 @@ import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
 import { Users } from './collections/Users'
+import Logo from './components/payload/Logo'
+import Icon from './components/payload/Icon'
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -112,7 +114,12 @@ export default buildConfig({
     },
     user: 'users',
     // Customize admin panel based on user role
-    components: {},
+    components: {
+      graphics: {
+        Logo: Logo as any,
+        Icon: Icon as any,
+      },
+    },
   },
 
   // Configure TypeScript
