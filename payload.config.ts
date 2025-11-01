@@ -22,12 +22,35 @@ export default buildConfig({
     News, // News articles
     Publications, // Research publications
     // Add your collections here
-    // Example Media collection with upload enabled
+    // Media collection with Cloudflare R2 upload
     {
       slug: 'media',
       upload: {
+        // staticDir is required even when using cloud storage
+        // Files won't actually be saved here when disableLocalStorage is true
         staticDir: path.resolve(__dirname, 'media'),
         mimeTypes: ['image/*', 'video/*', 'application/pdf'],
+        imageSizes: [
+          {
+            name: 'thumbnail',
+            width: 400,
+            height: 300,
+            position: 'centre',
+          },
+          {
+            name: 'card',
+            width: 768,
+            height: 1024,
+            position: 'centre',
+          },
+          {
+            name: 'tablet',
+            width: 1024,
+            height: undefined,
+            position: 'centre',
+          },
+        ],
+        adminThumbnail: 'thumbnail',
       },
       fields: [
         {
@@ -150,7 +173,17 @@ export default buildConfig({
     // Cloudflare R2 Storage (S3-compatible)
     s3Storage({
       collections: {
-        media: true, // Enable R2 storage for media collection
+        media: {
+          // Disable local storage, use R2 only
+          disableLocalStorage: true,
+          // Set the public URL for accessing files
+          prefix: 'media',
+          // Generate public URLs using your custom domain
+          generateFileURL: ({ filename, prefix }) => {
+            const publicURL = process.env.R2_PUBLIC_URL || ''
+            return `${publicURL}/${prefix}/${filename}`
+          },
+        },
       },
       bucket: process.env.R2_BUCKET_NAME || '',
       config: {
@@ -160,6 +193,7 @@ export default buildConfig({
         },
         region: 'auto', // Cloudflare R2 uses 'auto' region
         endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+        forcePathStyle: true, // Required for R2
       },
     }),
   ],
