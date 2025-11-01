@@ -2,7 +2,7 @@
 
 import { Marquee } from "@/components/magicui/marquee"
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 
 const testimonials = [
   {
@@ -76,18 +76,26 @@ const TestimonialCard = ({
 }
 
 export function LabTestimonialsSection() {
-  const headingRef = useRef(null)
-  const isInView = useInView(headingRef, { once: true, amount: 0.3 })
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const [hasAnimated, setHasAnimated] = useState(false)
+
+  useEffect(() => {
+    if (isInView && !hasAnimated) {
+      setHasAnimated(true)
+    }
+  }, [isInView, hasAnimated])
 
   return (
-    <section id="testimonials" className="py-12 md:py-20">
+    <section id="testimonials" className="relative py-12 md:py-20">
       <div className="mx-auto max-w-7xl px-4">
         <motion.div
-          ref={headingRef}
+          ref={ref}
           initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+          animate={hasAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="mx-auto max-w-[540px]"
+          style={{ willChange: 'opacity, transform' }}
         >
           <div className="flex justify-center">
             <button
