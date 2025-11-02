@@ -19,9 +19,9 @@ export default function Hero() {
 
   return (
     <>
-      <section className="relative overflow-hidden min-h-screen flex flex-col">
-        <div className="container mx-auto px-4 py-24 sm:py-32 relative z-10 flex-1 flex flex-col">
-          <div className="mx-auto max-w-4xl text-center flex-1 flex flex-col justify-center">
+      <section className="relative overflow-hidden py-24 sm:py-32">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="mx-auto max-w-4xl text-center">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
