@@ -21,11 +21,23 @@ export default function FAQSection() {
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
-        const response = await fetch('/api/faqs')
+        const response = await fetch('/api/faqs', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch FAQs')
+        }
+        
         const data = await response.json()
-        setFaqs(data.docs || [])
+        // Handle both array and object with docs property
+        setFaqs(Array.isArray(data) ? data : (data.docs || []))
       } catch (error) {
         console.error('Error fetching FAQs:', error)
+        setFaqs([])
       } finally {
         setLoading(false)
       }

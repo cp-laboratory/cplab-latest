@@ -3,14 +3,14 @@ import { useState, useEffect } from "react"
 import Hero from "@/components/home/hero"
 import ResearchAreas from "@/components/home/research-areas"
 import ResearchFeatures from "@/components/home/research-features"
-import { LabTestimonialsSection } from "@/components/home/lab-testimonials"
-import { LabFactsSection } from "@/components/home/lab-facts"
 import LabHighlights from "@/components/home/lab-highlights"
+import AnnouncementsSection from "@/components/home/announcements-section"
 import { LabProjectsCarousel } from "@/components/home/lab-projects-carousel"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { NewsletterSection } from "@/components/home/newsletter-section"
+import { LabTestimonialsSection } from "@/components/home/lab-testimonials"
 import FAQSection from "@/components/home/faq-section"
+import { NewsletterSection } from "@/components/home/newsletter-section"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -66,6 +66,11 @@ export default function Home() {
       {/* Research Areas Section */}
       <div id="research">
         <ResearchAreas />
+      </div>
+
+      {/* Announcements Section */}
+      <div id="announcements">
+        <AnnouncementsSection />
       </div>
 
       {/* Lab Projects Carousel */}
