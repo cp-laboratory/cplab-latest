@@ -124,24 +124,7 @@ export default buildConfig({
         },
       ],
       access: {
-        read: ({ req: { user } }) => {
-          // Public can view media (for frontend display)
-          if (!user) return true
-          
-          // Professors can see all media
-          if (user.role === 'professor') return true
-          
-          // Students can only see their own uploads in admin panel
-          if (user.role === 'student') {
-            return {
-              uploadedBy: {
-                equals: user.id,
-              },
-            }
-          }
-          
-          return false
-        },
+        read: () => true, // Everyone can view all media (public and in admin panel)
         create: ({ req: { user } }) => {
           // Both professors and students can upload
           if (!user) return false
