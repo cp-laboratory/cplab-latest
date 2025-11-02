@@ -29,7 +29,8 @@ export default buildConfig({
         // staticDir is required even when using cloud storage
         // Files won't actually be saved here when disableLocalStorage is true
         staticDir: path.resolve(__dirname, 'media'),
-        mimeTypes: ['image/*', 'video/*', 'application/pdf'],
+        mimeTypes: ['image/*', 'video/*', 'application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/x-zip-compressed'],
+        filesRequiredOnCreate: false,
         imageSizes: [
           {
             name: 'thumbnail',
@@ -51,6 +52,20 @@ export default buildConfig({
           },
         ],
         adminThumbnail: 'thumbnail',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ data, req }) => {
+            // Validate file size (5MB limit)
+            if (req.file && req.file.size) {
+              const maxSize = 5 * 1024 * 1024 // 5MB in bytes
+              if (req.file.size > maxSize) {
+                throw new Error(`File size exceeds the 5MB limit. Your file is ${(req.file.size / 1024 / 1024).toFixed(2)}MB`)
+              }
+            }
+            return data
+          },
+        ],
       },
       fields: [
         {
