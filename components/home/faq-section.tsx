@@ -1,43 +1,42 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus, Minus } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
+interface FAQ {
+  id: string
+  question: string
+  answer: string
+  category: string
+  order: number
+  isPublished: boolean
+}
+
 export default function FAQSection() {
   const [openItems, setOpenItems] = useState<number[]>([])
+  const [faqs, setFaqs] = useState<FAQ[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      try {
+        const response = await fetch('/api/faqs')
+        const data = await response.json()
+        setFaqs(data.docs || [])
+      } catch (error) {
+        console.error('Error fetching FAQs:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFAQs()
+  }, [])
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
   }
-
-  const faqs = [
-    {
-      question: "What research areas does CPL focus on?",
-      answer:
-        "CPL specializes in Application Development, Machine Learning, Blockchain, IoT & Sensor Networks, and Cyber Security. Our interdisciplinary approach combines cutting-edge research with practical applications.",
-    },
-    {
-      question: "How can I join the CPL research team?",
-      answer:
-        "We welcome talented researchers and students. Visit our Team page to learn about current opportunities, or contact us directly at contact@cpl.edu with your research interests and background.",
-    },
-    {
-      question: "Can I collaborate with CPL on research projects?",
-      answer:
-        "We actively seek collaborations with academic institutions, industry partners, and research organizations. Contact us to discuss potential partnership opportunities.",
-    },
-    {
-      question: "How do I access CPL publications?",
-      answer:
-        "All our research publications are available on our Publications page, organized by type (research papers, conference papers, journals). You can browse, filter, and access detailed information about each publication.",
-    },
-    {
-      question: "Does CPL offer internships or student programs?",
-      answer:
-        "Yes, we offer various internship and student research programs. Check our News section for announcements about current opportunities, or reach out to our team for more information.",
-    },
-  ]
 
   return (
     <section id="faq" className="relative overflow-hidden py-12 md:py-20">
@@ -74,7 +73,16 @@ export default function FAQSection() {
           </span>
         </motion.h2>
 
-        <div className="mx-auto mt-12 flex max-w-xl flex-col gap-6">
+        {loading ? (
+          <div className="mx-auto mt-12 flex max-w-xl justify-center">
+            <p className="text-muted-foreground">Loading FAQs...</p>
+          </div>
+        ) : faqs.length === 0 ? (
+          <div className="mx-auto mt-12 flex max-w-xl justify-center">
+            <p className="text-muted-foreground">No FAQs available at the moment.</p>
+          </div>
+        ) : (
+          <div className="mx-auto mt-12 flex max-w-xl flex-col gap-6">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
@@ -136,6 +144,7 @@ export default function FAQSection() {
             </motion.div>
           ))}
         </div>
+        )}
       </div>
     </section>
   );

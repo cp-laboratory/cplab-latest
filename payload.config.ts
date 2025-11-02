@@ -10,6 +10,7 @@ import { Users } from './collections/Users'
 import { News } from './collections/News'
 import { Publications } from './collections/Publications'
 import { Projects } from './collections/Projects'
+import { FAQ } from './collections/FAQ'
 
 // Conditionally import Logo and Icon only in production
 const Logo = process.env.NODE_ENV === 'production' ? require('./components/payload/Logo').default : undefined
@@ -45,6 +46,7 @@ export default buildConfig({
     News, // News articles
     Publications, // Research publications
     Projects, // Research and student projects
+    FAQ, // Frequently Asked Questions (Admin only)
     // Add your collections here
     // Media collection with Cloudflare R2 upload
     {

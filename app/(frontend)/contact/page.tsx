@@ -26,8 +26,19 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // For now, just show success message
+    
+    // Construct mailto link with form data
+    const mailtoLink = `mailto:help@cplab.org?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    )}`
+    
+    // Open email client
+    window.location.href = mailtoLink
+    
+    // Show success message
     setIsSubmitted(true)
+    
+    // Reset form after a delay
     setTimeout(() => {
       setFormData({ name: "", email: "", subject: "", message: "" })
       setIsSubmitted(false)
@@ -190,7 +201,7 @@ export default function ContactPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-center"
                   >
-                    Thank you! Your message has been sent successfully.
+                    Opening your email client... Please send the email to complete your message.
                   </motion.div>
                 )}
               </form>
