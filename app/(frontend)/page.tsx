@@ -79,9 +79,9 @@ export default function Home() {
       </div> */}
 
       {/* Lab Facts Section */}
-      <div id="facts">
+      {/* <div id="facts">
         <LabFactsSection />
-      </div>
+      </div> */}
 
       {/* Testimonials Section */}
       <div id="testimonials">
