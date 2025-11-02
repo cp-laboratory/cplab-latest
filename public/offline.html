@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - CPLAB</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 600px;
+    }
+    
+    .icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    p {
+      color: #a0aec0;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    
+    .status {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      padding: 16px;
+      border-radius: 8px;
+      margin: 24px 0;
+    }
+    
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      background: #eab308;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      animation: blink 1s ease-in-out infinite;
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    
+    .button {
+      background: #1E88E5;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .button:hover {
+      background: #1976D2;
+      transform: translateY(-2px);
+    }
+    
+    .tips {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 24px;
+      text-align: left;
+    }
+    
+    .tips h3 {
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+    
+    .tips ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .tips li {
+      padding: 8px 0;
+      color: #a0aec0;
+    }
+    
+    .tips li:before {
+      content: "•";
+      color: #1E88E5;
+      font-weight: bold;
+      display: inline-block;
+      width: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📡</div>
+    <h1>You're Offline</h1>
+    <p>It looks like you've lost your internet connection. Don't worry, some content may still be available.</p>
+    
+    <div class="status">
+      <span class="status-indicator"></span>
+      <span id="status-text">No Internet Connection</span>
+    </div>
+    
+    <div>
+      <button class="button" onclick="window.location.reload()">Try Again</button>
+      <button class="button" onclick="window.location.href='/'">Go to Home</button>
+    </div>
+    
+    <div class="tips">
+      <h3>💡 What you can do:</h3>
+      <ul>
+        <li>Check your internet connection</li>
+        <li>Try disabling airplane mode</li>
+        <li>Check your Wi-Fi or mobile data</li>
+        <li>Previously visited pages may be cached</li>
+      </ul>
+    </div>
+    
+    <p style="margin-top: 32px; font-size: 0.875rem; color: #718096;">
+      CPLAB PWA • Offline Mode
+    </p>
+  </div>
+  
+  <script>
+    // Monitor connection status
+    function updateStatus() {
+      const statusText = document.getElementById('status-text');
+      if (navigator.onLine) {
+        statusText.textContent = 'Connected! Redirecting...';
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      } else {
+        statusText.textContent = 'No Internet Connection';
+      }
+    }
+    
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    
+    // Check status on load
+    updateStatus();
+  </script>
+</body>
+</html>
