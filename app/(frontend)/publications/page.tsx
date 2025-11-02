@@ -17,7 +17,14 @@ interface Publication {
     }
     externalAuthor?: string
   }>
-  venue?: string
+  venue?: {
+    name?: string
+    acronym?: string
+    volume?: string
+    issue?: string
+    pages?: string
+    location?: string
+  }
   abstract?: string
   doi?: string
   url?: string
@@ -86,6 +93,38 @@ export default function PublicationsPage() {
       })
       .filter(name => name !== "Unknown")
       .join(", ") || "No authors listed"
+  }
+
+  // Format venue string
+  const formatVenue = (venue?: Publication["venue"]) => {
+    if (!venue) return null
+    
+    const parts: string[] = []
+    
+    // Add venue name and acronym
+    if (venue.name) {
+      parts.push(venue.acronym ? `${venue.name} (${venue.acronym})` : venue.name)
+    }
+    
+    // Add volume and issue for journals
+    if (venue.volume || venue.issue) {
+      const volIssue: string[] = []
+      if (venue.volume) volIssue.push(`Vol. ${venue.volume}`)
+      if (venue.issue) volIssue.push(`No. ${venue.issue}`)
+      if (volIssue.length > 0) parts.push(volIssue.join(', '))
+    }
+    
+    // Add pages
+    if (venue.pages) {
+      parts.push(`pp. ${venue.pages}`)
+    }
+    
+    // Add location for conferences
+    if (venue.location) {
+      parts.push(venue.location)
+    }
+    
+    return parts.length > 0 ? parts.join(', ') : null
   }
 
   return (
@@ -212,9 +251,9 @@ export default function PublicationsPage() {
                       </div>
                     </div>
 
-                    {pub.venue && (
+                    {formatVenue(pub.venue) && (
                       <p className="text-sm text-muted-foreground mb-3">
-                        <span className="font-medium">Venue:</span> {pub.venue}
+                        <span className="font-medium">Venue:</span> {formatVenue(pub.venue)}
                       </p>
                     )}
                     

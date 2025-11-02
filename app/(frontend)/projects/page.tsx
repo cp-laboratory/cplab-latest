@@ -11,31 +11,31 @@ import { Footer } from "@/components/footer";
 
 interface Project {
   id: string
-  title: string
-  slug: string
+  title?: string
+  slug?: string
   tagline?: string
-  projectType: string
-  status: string
-  description: string
-  coverImage: {
-    url: string
-    alt: string
+  projectType?: string
+  status?: string
+  description?: string
+  coverImage?: {
+    url?: string
+    alt?: string
   }
   logo?: {
-    url: string
-    alt: string
+    url?: string
+    alt?: string
   }
-  teamMembers: Array<{
+  teamMembers?: Array<{
     member?: {
-      firstName: string
-      lastName: string
+      firstName?: string
+      lastName?: string
     }
     externalMember?: string
-    role: string
+    role?: string
   }>
   technologies?: Array<{
-    name: string
-    category: string
+    name?: string
+    category?: string
   }>
   researchAreas?: string[]
   links?: {
@@ -46,8 +46,8 @@ interface Project {
     stars?: number
     users?: number
   }
-  featured: boolean
-  openSource: boolean
+  featured?: boolean
+  openSource?: boolean
 }
 
 export default function ProjectsPage() {
@@ -87,8 +87,9 @@ export default function ProjectsPage() {
   const filteredProjects = projects.filter((project) => {
     const matchesFilter = filter === "all" || project.projectType === filter
     const matchesSearch = 
-      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      project.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      project.tagline?.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesFilter && matchesSearch
   })
 
@@ -208,20 +209,20 @@ export default function ProjectsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Link href={`/projects/${project.slug}`}>
+                <Link href={`/projects/${project.slug || project.id}`}>
                   <div className="group h-full bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                     {/* Cover Image */}
                     <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
                       {project.coverImage?.url ? (
                         <Image
                           src={project.coverImage.url}
-                          alt={project.coverImage.alt || project.title}
+                          alt={project.coverImage.alt || project.title || "Project cover"}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-6xl">
-                          {getTypeIcon(project.projectType)}
+                          {getTypeIcon(project.projectType || "research")}
                         </div>
                       )}
                       
@@ -235,25 +236,29 @@ export default function ProjectsPage() {
                       )}
                       
                       {/* Status Badge */}
-                      <div className="absolute bottom-4 left-4">
-                        <Badge className={`${getStatusColor(project.status)} backdrop-blur-sm border`}>
-                          {project.status.replace("-", " ").toUpperCase()}
-                        </Badge>
-                      </div>
+                      {project.status && (
+                        <div className="absolute bottom-4 left-4">
+                          <Badge className={`${getStatusColor(project.status)} backdrop-blur-sm border`}>
+                            {project.status.replace("-", " ").toUpperCase()}
+                          </Badge>
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}
                     <div className="p-6 space-y-4">
                       {/* Title & Type */}
                       <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-2xl">{getTypeIcon(project.projectType)}</span>
-                          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                            {project.projectType.replace("-", " ")}
-                          </span>
-                        </div>
+                        {project.projectType && (
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-2xl">{getTypeIcon(project.projectType)}</span>
+                            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                              {project.projectType.replace("-", " ")}
+                            </span>
+                          </div>
+                        )}
                         <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                          {project.title}
+                          {project.title || "Untitled Project"}
                         </h3>
                       </div>
 
@@ -265,21 +270,25 @@ export default function ProjectsPage() {
                       )}
 
                       {/* Description */}
-                      <p className="text-sm text-muted-foreground line-clamp-3">
-                        {project.description}
-                      </p>
+                      {project.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-3">
+                          {project.description}
+                        </p>
+                      )}
 
                       {/* Technologies */}
                       {project.technologies && project.technologies.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.slice(0, 4).map((tech, i) => (
-                            <Badge
-                              key={i}
-                              variant="outline"
-                              className="text-xs bg-background/50"
-                            >
-                              {tech.name}
-                            </Badge>
+                            tech.name && (
+                              <Badge
+                                key={i}
+                                variant="outline"
+                                className="text-xs bg-background/50"
+                              >
+                                {tech.name}
+                              </Badge>
+                            )
                           ))}
                           {project.technologies.length > 4 && (
                             <Badge variant="outline" className="text-xs bg-background/50">

@@ -11,44 +11,44 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 interface Project {
   id: string
-  title: string
-  slug: string
+  title?: string
+  slug?: string
   tagline?: string
-  projectType: string
-  status: string
-  description: string
+  projectType?: string
+  status?: string
+  description?: string
   problem?: string
   solution?: string
   impact?: string
-  coverImage: {
-    url: string
-    alt: string
+  coverImage?: {
+    url?: string
+    alt?: string
   }
   logo?: {
-    url: string
-    alt: string
+    url?: string
+    alt?: string
   }
-  teamMembers: Array<{
+  teamMembers?: Array<{
     member?: {
-      id: string
-      firstName: string
-      lastName: string
-      profileImage?: { url: string }
+      id?: string
+      firstName?: string
+      lastName?: string
+      profileImage?: { url?: string }
     }
     externalMember?: string
-    role: string
+    role?: string
   }>
   timeline?: {
-    startDate: string
+    startDate?: string
     endDate?: string
     duration?: string
   }
   technologies?: Array<{
-    name: string
-    category: string
+    name?: string
+    category?: string
   }>
   researchAreas?: string[]
-  tags?: Array<{ tag: string }>
+  tags?: Array<{ tag?: string }>
   links?: {
     github?: string
     gitlab?: string
@@ -58,27 +58,27 @@ interface Project {
     reddit?: string
     devpost?: string
     twitter?: string
-    other?: Array<{ label: string; url: string }>
+    other?: Array<{ label?: string; url?: string }>
   }
   images?: Array<{
-    image: { url: string; alt?: string }
+    image?: { url?: string; alt?: string }
     caption?: string
-    imageType: string
+    imageType?: string
     order?: number
   }>
   documents?: Array<{
-    file: { url: string; filename: string }
-    documentType: string
-    title: string
+    file?: { url?: string; filename?: string }
+    documentType?: string
+    title?: string
     description?: string
   }>
   features?: Array<{
-    title: string
+    title?: string
     description?: string
     icon?: string
   }>
   achievements?: Array<{
-    title: string
+    title?: string
     description?: string
     date?: string
     url?: string
@@ -95,13 +95,13 @@ interface Project {
     views?: number
   }
   funding?: Array<{
-    source: string
+    source?: string
     amount?: string
     type?: string
   }>
   license?: string
-  featured: boolean
-  openSource: boolean
+  featured?: boolean
+  openSource?: boolean
   lookingForCollaborators?: boolean
   acceptingContributions?: boolean
   contactEmail?: string
@@ -163,7 +163,9 @@ export default function ProjectDetailPage() {
     )
   }
 
-  const sortedImages = project.images?.sort((a, b) => (a.order || 0) - (b.order || 0)) || []
+  const sortedImages = project.images
+    ?.filter((img) => img.image?.url) // Only include images with valid URLs
+    ?.sort((a, b) => (a.order || 0) - (b.order || 0)) || []
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -199,19 +201,23 @@ export default function ProjectDetailPage() {
               Projects
             </Link>
             <span>/</span>
-            <span className="text-foreground">{project.title}</span>
+            <span className="text-foreground">{project.title || "Untitled Project"}</span>
           </div>
 
           {/* Title & Badges */}
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-6">
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <Badge className={`${getStatusColor(project.status)} border`}>
-                  {project.status.replace("-", " ").toUpperCase()}
-                </Badge>
-                <Badge variant="outline">
-                  {project.projectType.replace("-", " ").toUpperCase()}
-                </Badge>
+                {project.status && (
+                  <Badge className={`${getStatusColor(project.status)} border`}>
+                    {project.status.replace("-", " ").toUpperCase()}
+                  </Badge>
+                )}
+                {project.projectType && (
+                  <Badge variant="outline">
+                    {project.projectType.replace("-", " ").toUpperCase()}
+                  </Badge>
+                )}
                 {project.featured && (
                   <Badge className="bg-primary/90 text-primary-foreground border-0">
                     ⭐ Featured
@@ -225,7 +231,7 @@ export default function ProjectDetailPage() {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                {project.title}
+                {project.title || "Untitled Project"}
               </h1>
               
               {project.tagline && (
@@ -235,7 +241,7 @@ export default function ProjectDetailPage() {
               )}
             </div>
 
-            {project.logo && (
+            {project.logo?.url && (
               <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-border bg-card">
                 <Image
                   src={project.logo.url}
@@ -280,7 +286,7 @@ export default function ProjectDetailPage() {
         </motion.div>
 
         {/* Cover Image */}
-        {project.coverImage && (
+        {project.coverImage?.url && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -289,7 +295,7 @@ export default function ProjectDetailPage() {
           >
             <Image
               src={project.coverImage.url}
-              alt={project.coverImage.alt || project.title}
+              alt={project.coverImage.alt || project.title || "Project cover"}
               fill
               className="object-cover"
             />
@@ -353,13 +359,15 @@ export default function ProjectDetailPage() {
                 <h2 className="text-2xl font-bold mb-6">Key Features</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {project.features.map((feature, index) => (
-                    <div key={index} className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
-                      {feature.icon && <div className="text-3xl mb-3">{feature.icon}</div>}
-                      <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                      {feature.description && (
-                        <p className="text-sm text-muted-foreground">{feature.description}</p>
-                      )}
-                    </div>
+                    feature.title && (
+                      <div key={index} className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
+                        {feature.icon && <div className="text-3xl mb-3">{feature.icon}</div>}
+                        <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                        {feature.description && (
+                          <p className="text-sm text-muted-foreground">{feature.description}</p>
+                        )}
+                      </div>
+                    )
                   ))}
                 </div>
               </motion.section>
@@ -375,39 +383,45 @@ export default function ProjectDetailPage() {
                 <h2 className="text-2xl font-bold mb-6">Gallery</h2>
                 
                 {/* Main Image */}
-                <div className="relative aspect-video w-full rounded-xl overflow-hidden mb-4 border border-border">
-                  <Image
-                    src={sortedImages[selectedImageIndex].image.url}
-                    alt={sortedImages[selectedImageIndex].image.alt || sortedImages[selectedImageIndex].caption || "Project image"}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                {sortedImages[selectedImageIndex].caption && (
-                  <p className="text-sm text-muted-foreground text-center mb-4">
-                    {sortedImages[selectedImageIndex].caption}
-                  </p>
+                {sortedImages[selectedImageIndex]?.image?.url && (
+                  <>
+                    <div className="relative aspect-video w-full rounded-xl overflow-hidden mb-4 border border-border">
+                      <Image
+                        src={sortedImages[selectedImageIndex].image!.url!}
+                        alt={sortedImages[selectedImageIndex].image!.alt || sortedImages[selectedImageIndex].caption || "Project image"}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    {sortedImages[selectedImageIndex].caption && (
+                      <p className="text-sm text-muted-foreground text-center mb-4">
+                        {sortedImages[selectedImageIndex].caption}
+                      </p>
+                    )}
+                  </>
                 )}
 
                 {/* Thumbnails */}
                 <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
                   {sortedImages.map((img, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImageIndex(index)}
-                      className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImageIndex === index
-                          ? "border-primary ring-2 ring-primary/20"
-                          : "border-border hover:border-primary/50"
-                      }`}
-                    >
-                      <Image
-                        src={img.image.url}
-                        alt={img.image.alt || `Thumbnail ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </button>
+                    img.image?.url && (
+                      <button
+                        key={index}
+                        onClick={() => setSelectedImageIndex(index)}
+                        className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                          selectedImageIndex === index
+                            ? "border-primary ring-2 ring-primary/20"
+                            : "border-border hover:border-primary/50"
+                        }`}
+                      >
+                        <Image
+                          src={img.image.url}
+                          alt={img.image.alt || `Thumbnail ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </button>
+                    )
                   ))}
                 </div>
               </motion.section>
@@ -443,26 +457,28 @@ export default function ProjectDetailPage() {
                 <h2 className="text-2xl font-bold mb-6">🏆 Achievements & Awards</h2>
                 <div className="space-y-4">
                   {project.achievements.map((achievement, index) => (
-                    <div key={index} className="bg-card border border-border rounded-xl p-6">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold mb-2">{achievement.title}</h3>
-                          {achievement.description && (
-                            <p className="text-sm text-muted-foreground mb-2">{achievement.description}</p>
-                          )}
-                          {achievement.date && (
-                            <p className="text-xs text-muted-foreground">
-                              {formatDate(achievement.date)}
-                            </p>
+                    achievement.title && (
+                      <div key={index} className="bg-card border border-border rounded-xl p-6">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold mb-2">{achievement.title}</h3>
+                            {achievement.description && (
+                              <p className="text-sm text-muted-foreground mb-2">{achievement.description}</p>
+                            )}
+                            {achievement.date && (
+                              <p className="text-xs text-muted-foreground">
+                                {formatDate(achievement.date)}
+                              </p>
+                            )}
+                          </div>
+                          {achievement.url && (
+                            <a href={achievement.url} target="_blank" rel="noopener noreferrer">
+                              <Button size="sm" variant="outline">View</Button>
+                            </a>
                           )}
                         </div>
-                        {achievement.url && (
-                          <a href={achievement.url} target="_blank" rel="noopener noreferrer">
-                            <Button size="sm" variant="outline">View</Button>
-                          </a>
-                        )}
                       </div>
-                    </div>
+                    )
                   ))}
                 </div>
               </motion.section>
@@ -513,28 +529,32 @@ export default function ProjectDetailPage() {
                 <h2 className="text-2xl font-bold mb-6">📄 Documents & Resources</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {project.documents.map((doc, index) => (
-                    <a
-                      key={index}
-                      href={doc.file.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all group"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="text-3xl">📎</div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
-                            {doc.title}
-                          </h3>
-                          {doc.description && (
-                            <p className="text-sm text-muted-foreground mb-2">{doc.description}</p>
-                          )}
-                          <Badge variant="outline" className="text-xs">
-                            {doc.documentType.replace("-", " ").toUpperCase()}
-                          </Badge>
+                    doc.file?.url && doc.title && (
+                      <a
+                        key={index}
+                        href={doc.file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-all group"
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="text-3xl">📎</div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
+                              {doc.title}
+                            </h3>
+                            {doc.description && (
+                              <p className="text-sm text-muted-foreground mb-2">{doc.description}</p>
+                            )}
+                            {doc.documentType && (
+                              <Badge variant="outline" className="text-xs">
+                                {doc.documentType.replace("-", " ").toUpperCase()}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </a>
+                      </a>
+                    )
                   ))}
                 </div>
               </motion.section>
@@ -582,7 +602,7 @@ export default function ProjectDetailPage() {
             )}
 
             {/* Timeline */}
-            {project.timeline && (
+            {project.timeline?.startDate && (
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -623,11 +643,11 @@ export default function ProjectDetailPage() {
                 <div className="space-y-4">
                   {project.teamMembers.map((member, index) => (
                     <div key={index} className="flex items-center gap-3">
-                      {member.member?.profileImage ? (
+                      {member.member?.profileImage?.url ? (
                         <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-border">
                           <Image
                             src={member.member.profileImage.url}
-                            alt={`${member.member?.firstName} ${member.member?.lastName}`}
+                            alt={`${member.member?.firstName || ""} ${member.member?.lastName || ""}`.trim() || "Team member"}
                             fill
                             className="object-cover"
                           />
@@ -636,7 +656,7 @@ export default function ProjectDetailPage() {
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
                           {member.member?.firstName && member.member?.lastName
                             ? `${member.member.firstName[0]}${member.member.lastName[0]}`
-                            : member.externalMember?.[0] || "?"
+                            : member.externalMember?.[0]?.toUpperCase() || "?"
                           }
                         </div>
                       )}
@@ -644,12 +664,14 @@ export default function ProjectDetailPage() {
                         <p className="font-medium text-sm">
                           {member.member?.firstName && member.member?.lastName
                             ? `${member.member.firstName} ${member.member.lastName}`
-                            : member.externalMember || "Unknown"
+                            : member.externalMember || "Unknown Member"
                           }
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          {member.role.replace("-", " ")}
-                        </p>
+                        {member.role && (
+                          <p className="text-xs text-muted-foreground">
+                            {member.role.replace("-", " ")}
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -668,9 +690,11 @@ export default function ProjectDetailPage() {
                 <h3 className="text-lg font-bold mb-4">🛠️ Technologies</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, index) => (
-                    <Badge key={index} variant="outline" className="bg-background/50">
-                      {tech.name}
-                    </Badge>
+                    tech.name && (
+                      <Badge key={index} variant="outline" className="bg-background/50">
+                        {tech.name}
+                      </Badge>
+                    )
                   ))}
                 </div>
               </motion.div>
@@ -741,9 +765,11 @@ export default function ProjectDetailPage() {
                     </a>
                   )}
                   {project.links.other?.map((link, index) => (
-                    <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
-                      <span>→</span> {link.label}
-                    </a>
+                    link.url && link.label && (
+                      <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
+                        <span>→</span> {link.label}
+                      </a>
+                    )
                   ))}
                 </div>
               </motion.div>
@@ -760,17 +786,19 @@ export default function ProjectDetailPage() {
                 <h3 className="text-lg font-bold mb-4">💰 Funding</h3>
                 <div className="space-y-3">
                   {project.funding.map((fund, index) => (
-                    <div key={index} className="pb-3 border-b border-border last:border-0 last:pb-0">
-                      <p className="font-semibold text-sm">{fund.source}</p>
-                      {fund.amount && (
-                        <p className="text-xs text-muted-foreground mt-1">{fund.amount}</p>
-                      )}
-                      {fund.type && (
-                        <Badge variant="outline" className="text-xs mt-2">
-                          {fund.type.replace("-", " ")}
-                        </Badge>
-                      )}
-                    </div>
+                    fund.source && (
+                      <div key={index} className="pb-3 border-b border-border last:border-0 last:pb-0">
+                        <p className="font-semibold text-sm">{fund.source}</p>
+                        {fund.amount && (
+                          <p className="text-xs text-muted-foreground mt-1">{fund.amount}</p>
+                        )}
+                        {fund.type && (
+                          <Badge variant="outline" className="text-xs mt-2">
+                            {fund.type.replace("-", " ")}
+                          </Badge>
+                        )}
+                      </div>
+                    )
                   ))}
                 </div>
               </motion.div>
