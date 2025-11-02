@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
 
 export function StickyFooter() {
+  // Disabled - v0 branding removed
+  return null
+  
+  /* Original component disabled
   const [isAtBottom, setIsAtBottom] = useState(false)
 
   useEffect(() => {
@@ -116,4 +120,5 @@ export function StickyFooter() {
       )}
     </AnimatePresence>
   )
+  */
 }
