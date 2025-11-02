@@ -24,36 +24,21 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build arguments for environment variables
-ARG MONGODB_URI
-ARG PAYLOAD_SECRET
-ARG NEXT_PUBLIC_SERVER_URL
-ARG S3_ENDPOINT
-ARG S3_BUCKET
-ARG S3_ACCESS_KEY_ID
-ARG S3_SECRET_ACCESS_KEY
-ARG S3_REGION
-ARG EMAIL_FROM
-ARG SMTP_HOST
-ARG SMTP_PORT
-ARG SMTP_USER
-ARG SMTP_PASS
-
-# Set environment variables for build
-# These are needed for Payload CMS initialization during build
-ENV MONGODB_URI=${MONGODB_URI}
-ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
-ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
-ENV S3_ENDPOINT=${S3_ENDPOINT}
-ENV S3_BUCKET=${S3_BUCKET}
-ENV S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
-ENV S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
-ENV S3_REGION=${S3_REGION}
-ENV EMAIL_FROM=${EMAIL_FROM}
-ENV SMTP_HOST=${SMTP_HOST}
-ENV SMTP_PORT=${SMTP_PORT}
-ENV SMTP_USER=${SMTP_USER}
-ENV SMTP_PASS=${SMTP_PASS}
+# Use placeholder values for build to satisfy Payload CMS
+# Real secrets will be provided at runtime via environment variables
+ENV MONGODB_URI="mongodb://placeholder:27017/placeholder"
+ENV PAYLOAD_SECRET="placeholder-secret-key-minimum-32-characters-long-for-build"
+ENV NEXT_PUBLIC_SERVER_URL="http://localhost:3000"
+ENV S3_ENDPOINT="https://placeholder.r2.cloudflarestorage.com"
+ENV S3_BUCKET="placeholder"
+ENV S3_ACCESS_KEY_ID="placeholder"
+ENV S3_SECRET_ACCESS_KEY="placeholder"
+ENV S3_REGION="auto"
+ENV EMAIL_FROM="noreply@placeholder.com"
+ENV SMTP_HOST="smtp.placeholder.com"
+ENV SMTP_PORT="587"
+ENV SMTP_USER="placeholder"
+ENV SMTP_PASS="placeholder"
 
 RUN corepack enable pnpm && pnpm run build
 

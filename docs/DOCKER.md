@@ -1,28 +1,67 @@
-# Docker Deployment Guide for CPLAB
+# Docker Deployment Guide
 
-This guide explains how to deploy the CPLAB Next.js + Payload CMS application using Docker.
+## Security Notice
 
-## Prerequisites
+**This Docker image is safe to share publicly!** 
 
-- Docker Engine 20.10+
-- Docker Compose 2.0+ (optional, for docker-compose.yml)
-- Environment variables configured
+The build process uses placeholder values to satisfy Payload CMS during compilation. All actual secrets are provided at **runtime only** via environment variables, so they are never baked into the image layers.
 
 ## Quick Start
 
-### 1. Configure Environment Variables
-
-Create a `.env` file in the project root with all required variables:
+### 1. Build the image (no secrets needed!)
 
 ```bash
-cp .env.example .env
-# Edit .env with your actual values
+# Build with Docker Compose
+docker-compose build
+
+# Or build with Docker directly
+docker build -t cplab .
 ```
 
-### 2. Build and Run with Docker Compose
+**No environment variables are needed during build!** The image uses placeholder values internally.
+
+### 2. Set up runtime environment variables
+
+Create a `.env` file with your actual credentials:
 
 ```bash
-# Build and start the container
+cp .env.docker.example .env
+```
+
+Then edit `.env` with your actual values:
+
+```bash
+# REQUIRED: Generate a secure secret key (minimum 32 characters)
+PAYLOAD_SECRET=$(openssl rand -base64 32)
+
+# REQUIRED: Your MongoDB connection string
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+
+# REQUIRED: Your server URL
+NEXT_PUBLIC_SERVER_URL=https://yourdomain.com
+
+# REQUIRED: Cloudflare R2 / S3 credentials
+S3_ENDPOINT=https://account-id.r2.cloudflarestorage.com
+S3_BUCKET=your-bucket-name
+S3_ACCESS_KEY_ID=your-access-key
+S3_SECRET_ACCESS_KEY=your-secret-key
+S3_REGION=auto
+
+# REQUIRED: SMTP configuration
+EMAIL_FROM=noreply@yourdomain.com
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+```
+
+### 3. Run the container with your secrets
+
+```bash
+# Build the image
+docker-compose build
+
+# Start the container
 docker-compose up -d
 
 # View logs
@@ -32,152 +71,162 @@ docker-compose logs -f
 docker-compose down
 ```
 
-### 3. Build and Run with Docker CLI
+The application will be available at `http://localhost:3000`.
+
+### 3. Run the container with your secrets
 
 ```bash
-# Build the image
-docker build -t cplab:latest \
-  --build-arg MONGODB_URI="${MONGODB_URI}" \
-  --build-arg PAYLOAD_SECRET="${PAYLOAD_SECRET}" \
-  --build-arg NEXT_PUBLIC_SERVER_URL="${NEXT_PUBLIC_SERVER_URL}" \
-  --build-arg S3_ENDPOINT="${S3_ENDPOINT}" \
-  --build-arg S3_BUCKET="${S3_BUCKET}" \
-  --build-arg S3_ACCESS_KEY_ID="${S3_ACCESS_KEY_ID}" \
-  --build-arg S3_SECRET_ACCESS_KEY="${S3_SECRET_ACCESS_KEY}" \
-  --build-arg S3_REGION="${S3_REGION}" \
-  --build-arg EMAIL_FROM="${EMAIL_FROM}" \
-  --build-arg SMTP_HOST="${SMTP_HOST}" \
-  --build-arg SMTP_PORT="${SMTP_PORT}" \
-  --build-arg SMTP_USER="${SMTP_USER}" \
-  --build-arg SMTP_PASS="${SMTP_PASS}" \
-  .
+# Start with Docker Compose (reads from .env automatically)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+The application will be available at `http://localhost:3000`.
+
+### 4. Alternative: Run with Docker directly
+
+```bash
+# Run the container with environment variables from .env file
+docker run -d \
+  -p 3000:3000 \
+  --env-file .env \
+  --name cplab \
+  cplab
+
+# Or specify environment variables manually
+docker run -d \
+  -p 3000:3000 \
+  -e MONGODB_URI="your_mongodb_uri" \
+  -e PAYLOAD_SECRET="your_secret_key_32_chars_minimum" \
+  -e NEXT_PUBLIC_SERVER_URL="http://localhost:3000" \
+  -e S3_ENDPOINT="your_s3_endpoint" \
+  -e S3_BUCKET="your_bucket" \
+  -e S3_ACCESS_KEY_ID="your_access_key" \
+  -e S3_SECRET_ACCESS_KEY="your_secret_key" \
+  -e S3_REGION="auto" \
+  -e EMAIL_FROM="noreply@example.com" \
+  -e SMTP_HOST="smtp.gmail.com" \
+  -e SMTP_PORT="587" \
+  -e SMTP_USER="your@email.com" \
+  -e SMTP_PASS="your_password" \
+  --name cplab \
+  cplab
+```
+
+## Sharing the Image Publicly
+
+Since the Docker image contains **no secrets** (only placeholder values used during build), you can safely:
+
+1. **Push to Docker Hub:**
+   ```bash
+   docker tag cplab your-username/cplab:latest
+   docker push your-username/cplab:latest
+   ```
+
+2. **Push to GitHub Container Registry:**
+   ```bash
+   docker tag cplab ghcr.io/your-username/cplab:latest
+   docker push ghcr.io/your-username/cplab:latest
+   ```
+
+3. **Share on any public registry** - The image is secure!
+
+Anyone who pulls your image will need to provide their own environment variables at runtime.
+
+## Environment Variables Reference
+
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `MONGODB_URI` | Yes | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/db` |
+| `PAYLOAD_SECRET` | Yes | Secret key for Payload CMS (min 32 chars) | Generated with `openssl rand -base64 32` |
+| `NEXT_PUBLIC_SERVER_URL` | Yes | Public URL of your application | `https://yourdomain.com` |
+| `S3_ENDPOINT` | Yes | S3-compatible storage endpoint | `https://account.r2.cloudflarestorage.com` |
+| `S3_BUCKET` | Yes | S3 bucket name | `my-bucket` |
+| `S3_ACCESS_KEY_ID` | Yes | S3 access key | Your access key |
+| `S3_SECRET_ACCESS_KEY` | Yes | S3 secret key | Your secret key |
+| `S3_REGION` | Yes | S3 region (use `auto` for R2) | `auto` or `us-east-1` |
+| `EMAIL_FROM` | Yes | Email sender address | `noreply@yourdomain.com` |
+| `SMTP_HOST` | Yes | SMTP server hostname | `smtp.gmail.com` |
+| `SMTP_PORT` | Yes | SMTP server port | `587` |
+| `SMTP_USER` | Yes | SMTP username | `your@email.com` |
+| `SMTP_PASS` | Yes | SMTP password | Your password/app password |
+
+## Production Deployment
+
+On your production server:
+
+```bash
+# Pull the image from your registry
+docker pull your-username/cplab:latest
+
+# Create .env file with production secrets
+nano .env
 
 # Run the container
 docker run -d \
   -p 3000:3000 \
-  --name cplab \
   --env-file .env \
-  cplab:latest
-
-# View logs
-docker logs -f cplab
-
-# Stop the container
-docker stop cplab
-docker rm cplab
-```
-
-## Environment Variables
-
-Required environment variables for the application:
-
-### Database
-- `MONGODB_URI` - MongoDB connection string
-
-### Payload CMS
-- `PAYLOAD_SECRET` - Secret key for Payload (min 32 characters)
-- `NEXT_PUBLIC_SERVER_URL` - Public URL of the application
-
-### Storage (Cloudflare R2 / S3)
-- `S3_ENDPOINT` - S3-compatible endpoint
-- `S3_BUCKET` - Bucket name
-- `S3_ACCESS_KEY_ID` - Access key ID
-- `S3_SECRET_ACCESS_KEY` - Secret access key
-- `S3_REGION` - Region (use 'auto' for Cloudflare R2)
-
-### Email (SMTP)
-- `EMAIL_FROM` - Sender email address
-- `SMTP_HOST` - SMTP server host
-- `SMTP_PORT` - SMTP server port
-- `SMTP_USER` - SMTP username
-- `SMTP_PASS` - SMTP password
-
-## Docker Image Details
-
-### Multi-Stage Build
-
-The Dockerfile uses a multi-stage build process:
-
-1. **deps** - Installs dependencies
-2. **builder** - Builds the Next.js application
-3. **runner** - Production runtime image
-
-### Image Optimization
-
-- Uses `node:20-alpine` for minimal image size
-- Leverages Next.js standalone output for optimal bundle
-- Includes only production dependencies
-- Runs as non-root user (`nextjs:1001`)
-
-### Exposed Ports
-
-- Port `3000` - HTTP server
-
-## Production Deployment
-
-### Docker Hub / Container Registry
-
-```bash
-# Tag the image
-docker tag cplab:latest your-registry.com/cplab:latest
-
-# Push to registry
-docker push your-registry.com/cplab:latest
-
-# Pull and run on production server
-docker pull your-registry.com/cplab:latest
-docker run -d -p 3000:3000 --env-file .env your-registry.com/cplab:latest
-```
-
-### Health Check
-
-Add a health check to your deployment:
-
-```bash
-docker run -d \
-  -p 3000:3000 \
+  --restart unless-stopped \
   --name cplab \
-  --env-file .env \
-  --health-cmd="wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1" \
-  --health-interval=30s \
-  --health-timeout=10s \
-  --health-retries=3 \
-  cplab:latest
+  your-username/cplab:latest
 ```
 
 ## Troubleshooting
 
-### View Container Logs
+### Build fails with "missing secret key"
+
+**Problem**: This error should no longer occur with the new Dockerfile.
+
+**Solution**: The Dockerfile now uses placeholder values during build. If you still see this error, ensure you're using the latest Dockerfile that has placeholder ENV values (not ARG values).
+
+### SMTP connection errors during build
+
+**Problem**: You see `Error: connect ECONNREFUSED` during build.
+
+**Solution**: These are warnings from placeholder SMTP values and can be safely ignored. The build will complete successfully.
+
+### Image size is too large
+
+**Problem**: Docker image is several GB.
+
+**Solution**: The Dockerfile uses multi-stage builds and Next.js standalone mode to minimize size. Make sure you're using the production image, not the builder stage.
+
+### Container exits immediately
+
+**Problem**: Container starts but exits right away.
+
+**Solution**: Check logs to see the error:
 
 ```bash
+docker-compose logs cplab
+
+# Or for docker run
 docker logs cplab
-docker logs -f cplab  # Follow logs
 ```
 
-### Execute Commands in Container
+Common causes:
 
-```bash
-docker exec -it cplab sh
-```
+- Missing required environment variables
+- Invalid MongoDB connection string
+- Port 3000 already in use
 
-### Rebuild Without Cache
+### Cannot connect to MongoDB
 
-```bash
-docker build --no-cache -t cplab:latest .
-```
+**Problem**: Application can't connect to MongoDB.
 
-### Check Container Status
+**Solution**:
 
-```bash
-docker ps -a
-docker inspect cplab
-```
+- Ensure MongoDB URI is correct and accessible from the container
+- For MongoDB Atlas, whitelist the Docker host IP
+- For local MongoDB, use `host.docker.internal` instead of `localhost`
 
 ## Notes
 
-- The application runs on port 3000 by default
-- Change the port mapping if needed: `-p 8080:3000`
-- Ensure MongoDB is accessible from the Docker container
-- For production, use a reverse proxy (Nginx, Traefik) with SSL
-- Consider using Docker secrets for sensitive environment variables
-- The `media` directory is copied but consider using cloud storage (R2/S3) for production
+- **Security**: Secrets are ONLY provided at runtime, never baked into the image. This makes the image safe to share publicly.
+
+- **SMTP Warnings**: During build, you may see SMTP connection errors with placeholder values. These are harmless warnings and won't affect the build.
