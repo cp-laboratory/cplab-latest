@@ -62,9 +62,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy media directory if it exists (for Payload CMS uploads)
-COPY --from=builder --chown=nextjs:nodejs /app/media ./media
-
 USER nextjs
 
 EXPOSE 3000
