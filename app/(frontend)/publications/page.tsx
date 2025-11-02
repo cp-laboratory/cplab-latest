@@ -119,37 +119,6 @@ export default function PublicationsPage() {
     fetchPublications()
   }, [])
 
-  const types = ["All", "Journal Article", "Conference Paper", "Book Chapter", "Technical Report", "Thesis/Dissertation", "Preprint"]
-  
-  // Get unique years from publications, filtering out undefined
-  const years = [
-    "All", 
-    ...Array.from(new Set(publications.map(pub => pub.year).filter((year): year is number => year !== undefined)))
-      .sort((a, b) => b - a)
-  ]
-
-  const filteredPublications = publications.filter((pub) => {
-    const matchesType = !selectedType || pub.publicationType === selectedType
-    const matchesYear = !selectedYear || pub.year === selectedYear
-    const matchesSearch = !searchQuery || 
-      pub.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pub.abstract?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pub.keywords?.some(k => k.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      formatAuthors(pub.authors).toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesType && matchesYear && matchesSearch
-  })
-
-  // Pagination
-  const totalPages = Math.ceil(filteredPublications.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const paginatedPublications = filteredPublications.slice(startIndex, endIndex)
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [selectedType, selectedYear, searchQuery])
-
   // Format authors string
   const formatAuthors = (authors?: Publication["authors"]) => {
     if (!authors || authors.length === 0) return "No authors listed"
@@ -198,6 +167,37 @@ export default function PublicationsPage() {
     
     return parts.length > 0 ? parts.join(', ') : null
   }
+
+  const types = ["All", "Journal Article", "Conference Paper", "Book Chapter", "Technical Report", "Thesis/Dissertation", "Preprint"]
+  
+  // Get unique years from publications, filtering out undefined
+  const years = [
+    "All", 
+    ...Array.from(new Set(publications.map(pub => pub.year).filter((year): year is number => year !== undefined)))
+      .sort((a, b) => b - a)
+  ]
+
+  const filteredPublications = publications.filter((pub) => {
+    const matchesType = !selectedType || pub.publicationType === selectedType
+    const matchesYear = !selectedYear || pub.year === selectedYear
+    const matchesSearch = !searchQuery || 
+      pub.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      pub.abstract?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      pub.keywords?.some(k => k.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      formatAuthors(pub.authors).toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesType && matchesYear && matchesSearch
+  })
+
+  // Pagination
+  const totalPages = Math.ceil(filteredPublications.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedPublications = filteredPublications.slice(startIndex, endIndex)
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedType, selectedYear, searchQuery])
 
   return (
     <div className="min-h-screen w-full relative bg-black">
