@@ -19,7 +19,7 @@ export const Projects: CollectionConfig = {
             // Check if current user is in the team members
             const userId = req.user.id.toString()
             const isTeamMember = docToCheck.teamMembers.some((member: any) => {
-              return member.member && member.member.toString() === userId
+              return member?.member && member?.member?.toString() === userId
             })
             
             if (!isTeamMember) {
@@ -44,7 +44,7 @@ export const Projects: CollectionConfig = {
           if (project && project.teamMembers) {
             const userId = req.user.id.toString()
             const isTeamMember = project.teamMembers.some((member: any) => {
-              return member.member && member.member.toString() === userId
+              return member?.member && member?.member.toString() === userId
             })
             
             if (!isTeamMember) {

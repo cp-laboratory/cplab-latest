@@ -627,14 +627,14 @@ export default function ProjectDetailPage() {
                         <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-border">
                           <Image
                             src={member.member.profileImage.url}
-                            alt={`${member.member.firstName} ${member.member.lastName}`}
+                            alt={`${member.member?.firstName} ${member.member?.lastName}`}
                             fill
                             className="object-cover"
                           />
                         </div>
                       ) : (
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                          {member.member 
+                          {member.member?.firstName && member.member?.lastName
                             ? `${member.member.firstName[0]}${member.member.lastName[0]}`
                             : member.externalMember?.[0] || "?"
                           }
@@ -642,9 +642,9 @@ export default function ProjectDetailPage() {
                       )}
                       <div className="flex-1">
                         <p className="font-medium text-sm">
-                          {member.member 
+                          {member.member?.firstName && member.member?.lastName
                             ? `${member.member.firstName} ${member.member.lastName}`
-                            : member.externalMember
+                            : member.externalMember || "Unknown"
                           }
                         </p>
                         <p className="text-xs text-muted-foreground">
