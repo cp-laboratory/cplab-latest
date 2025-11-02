@@ -92,7 +92,7 @@ export function Navbar() {
             href="/admin"
             className="font-medium transition-colors hover:text-foreground text-muted-foreground text-sm"
           >
-            Login
+            Dashboard
           </Link>
         </div>
       </header>
@@ -160,7 +160,7 @@ export function Navbar() {
                   href="/admin"
                   className="px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50 block"
                 >
-                  Login
+                  Dashboard
                 </Link>
               </div>
             </nav>

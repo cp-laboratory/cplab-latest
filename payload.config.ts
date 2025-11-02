@@ -51,6 +51,13 @@ export default buildConfig({
     // Media collection with Cloudflare R2 upload
     {
       slug: 'media',
+      admin: {
+        // Hide from students in the admin panel
+        hidden: ({ user }) => {
+          if (!user) return true
+          return user.role !== 'professor'
+        },
+      },
       upload: {
         // staticDir is required even when using cloud storage
         // Files won't actually be saved here when disableLocalStorage is true
@@ -124,7 +131,24 @@ export default buildConfig({
         },
       ],
       access: {
-        read: () => true, // Everyone can view all media (public and in admin panel)
+        read: ({ req: { user } }) => {
+          // Public can view all media (for frontend display)
+          if (!user) return true
+          
+          // Professors can see all media
+          if (user.role === 'professor') return true
+          
+          // Students can only see their own uploads
+          if (user.role === 'student') {
+            return {
+              uploadedBy: {
+                equals: user.id,
+              },
+            }
+          }
+          
+          return false
+        },
         create: ({ req: { user } }) => {
           // Both professors and students can upload
           if (!user) return false
