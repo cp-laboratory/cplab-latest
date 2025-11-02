@@ -64,8 +64,21 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/projects"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Projects
+                </Link>
+              </li>
+              <li>
                 <Link href="/news" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   News
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -104,18 +117,25 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="mailto:info@cplab.edu"
+                  href="mailto:help@cplab.org"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  info@cplab.edu
+                  help@cplab.org
                 </a>
               </li>
               <li>
+                <p className="text-sm text-muted-foreground">
+                  Basherhat, Dinajpur - 5200
+                  <br />
+                  Bangladesh
+                </p>
+              </li>
+              <li>
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+8801712534968"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  +1 (234) 567-890
+                  01712-534968
                 </a>
               </li>
             </ul>

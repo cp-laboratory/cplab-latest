@@ -55,8 +55,8 @@ export default function ContactPage() {
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Information */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="space-y-8"
             >
@@ -65,17 +65,17 @@ export default function ContactPage() {
                 <p className="text-muted-foreground">
                   Cyber Physical Laboratory
                   <br />
-                  Basherhat - Bura Dighi, 5200
+                  Basherhat, Dinajpur - 5200
                   <br />
-                  West Bengal, India
+                  Bangladesh
                 </p>
               </div>
 
               <div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">Email</h3>
                 <p className="text-muted-foreground">
-                  <a href="mailto:contact@cpl.edu" className="hover:text-primary transition-colors">
-                    contact@cpl.edu
+                  <a href="mailto:help@cplab.org" className="hover:text-primary transition-colors">
+                    help@cplab.org
                   </a>
                 </p>
               </div>
@@ -83,8 +83,8 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">Phone</h3>
                 <p className="text-muted-foreground">
-                  <a href="tel:+1234567890" className="hover:text-primary transition-colors">
-                    +1 (234) 567-890
+                  <a href="tel:+8801712534968" className="hover:text-primary transition-colors">
+                    01712-534968
                   </a>
                 </p>
               </div>
@@ -102,27 +102,12 @@ export default function ContactPage() {
                   )}
                 </div>
               </div>
-
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold text-foreground mb-4">Location</h3>
-                <div className="rounded-lg overflow-hidden border border-border/50 w-full h-80">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.5847394847!2d88.6544752!3d25.69708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4ad47cef4eb99%3A0x2e73ed582f7775ce!2sCyber%20Physical%20Laboratory!5e0!3m2!1sen!2sin!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, filter: "invert(1) hue-rotate(180deg)" }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                </div>
-              </div>
             </motion.div>
 
             {/* Contact Form */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -211,6 +196,27 @@ export default function ContactPage() {
               </form>
             </motion.div>
           </div>
+
+          {/* Location Map - Full Width */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-16"
+          >
+            <h3 className="text-xl font-semibold text-foreground mb-4">Location</h3>
+            <div className="rounded-lg overflow-hidden border border-border/50 w-full h-96">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.5847394847!2d88.6544752!3d25.69708!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e4ad47cef4eb99%3A0x2e73ed582f7775ce!2sCyber%20Physical%20Laboratory!5e0!3m2!1sen!2sin!4v1234567890"
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: "invert(1) hue-rotate(180deg)" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </motion.div>
         </div>
       </main>
 

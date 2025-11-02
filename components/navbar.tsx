@@ -74,16 +74,16 @@ export function Navbar() {
             <span className="relative z-20">Publications</span>
           </Link>
           <Link
+            href="/projects"
+            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span className="relative z-20">Projects</span>
+          </Link>
+          <Link
             href="/news"
             className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <span className="relative z-20">News</span>
-          </Link>
-          <Link
-            href="/contact"
-            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <span className="relative z-20">Contact</span>
           </Link>
         </div>
 
@@ -144,16 +144,16 @@ export function Navbar() {
                 Publications
               </Link>
               <Link
+                href="/projects"
+                className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
+              >
+                Projects
+              </Link>
+              <Link
                 href="/news"
                 className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
               >
                 News
-              </Link>
-              <Link
-                href="/contact"
-                className="text-left px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50"
-              >
-                Contact
               </Link>
               <div className="border-t border-border/50 pt-4 mt-4">
                 <Link
