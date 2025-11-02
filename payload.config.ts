@@ -15,6 +15,26 @@ import { Projects } from './collections/Projects'
 const Logo = process.env.NODE_ENV === 'production' ? require('./components/payload/Logo').default : undefined
 const Icon = process.env.NODE_ENV === 'production' ? require('./components/payload/Icon').default : undefined
 
+// Helper function to filter media based on user role
+// This ensures students only see their own uploaded media when selecting files
+export const mediaFilterOptions = ({ user }: { user: any }) => {
+  if (!user) return false
+  
+  // Professors can see all media
+  if (user.role === 'professor') return true
+  
+  // Students can only see their own uploads
+  if (user.role === 'student') {
+    return {
+      uploadedBy: {
+        equals: user.id,
+      },
+    }
+  }
+  
+  return false
+}
+
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
   editor: lexicalEditor(),

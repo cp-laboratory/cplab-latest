@@ -520,10 +520,33 @@ export const Projects: CollectionConfig = {
           type: 'upload',
           relationTo: 'media',
           required: true,
-          filterOptions: {
-            mimeType: {
-              contains: 'image',
-            },
+          filterOptions: ({ user }) => {
+            const baseFilter = {
+              mimeType: {
+                contains: 'image',
+              },
+            }
+            
+            if (!user) return baseFilter
+            
+            // Professors see all media
+            if (user.role === 'professor') return baseFilter
+            
+            // Students only see their own uploads
+            if (user.role === 'student') {
+              return {
+                and: [
+                  baseFilter,
+                  {
+                    uploadedBy: {
+                      equals: user.id,
+                    },
+                  },
+                ],
+              }
+            }
+            
+            return baseFilter
           },
         },
         {
@@ -568,10 +591,33 @@ export const Projects: CollectionConfig = {
       admin: {
         description: 'Main cover/featured image - Max 5MB',
       },
-      filterOptions: {
-        mimeType: {
-          contains: 'image',
-        },
+      filterOptions: ({ user }) => {
+        const baseFilter = {
+          mimeType: {
+            contains: 'image',
+          },
+        }
+        
+        if (!user) return baseFilter
+        
+        // Professors see all media
+        if (user.role === 'professor') return baseFilter
+        
+        // Students only see their own uploads
+        if (user.role === 'student') {
+          return {
+            and: [
+              baseFilter,
+              {
+                uploadedBy: {
+                  equals: user.id,
+                },
+              },
+            ],
+          }
+        }
+        
+        return baseFilter
       },
     },
     
@@ -583,10 +629,33 @@ export const Projects: CollectionConfig = {
       admin: {
         description: 'Project logo or icon - Max 5MB',
       },
-      filterOptions: {
-        mimeType: {
-          contains: 'image',
-        },
+      filterOptions: ({ user }) => {
+        const baseFilter = {
+          mimeType: {
+            contains: 'image',
+          },
+        }
+        
+        if (!user) return baseFilter
+        
+        // Professors see all media
+        if (user.role === 'professor') return baseFilter
+        
+        // Students only see their own uploads
+        if (user.role === 'student') {
+          return {
+            and: [
+              baseFilter,
+              {
+                uploadedBy: {
+                  equals: user.id,
+                },
+              },
+            ],
+          }
+        }
+        
+        return baseFilter
       },
     },
     
@@ -603,6 +672,23 @@ export const Projects: CollectionConfig = {
           type: 'upload',
           relationTo: 'media',
           required: true,
+          filterOptions: ({ user }) => {
+            if (!user) return true
+            
+            // Professors see all media
+            if (user.role === 'professor') return true
+            
+            // Students only see their own uploads
+            if (user.role === 'student') {
+              return {
+                uploadedBy: {
+                  equals: user.id,
+                },
+              }
+            }
+            
+            return true
+          },
         },
         {
           name: 'documentType',

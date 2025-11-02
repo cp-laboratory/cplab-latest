@@ -386,10 +386,33 @@ export const Publications: CollectionConfig = {
           type: 'upload',
           relationTo: 'media',
           required: true,
-          filterOptions: {
-            mimeType: {
-              contains: 'pdf',
-            },
+          filterOptions: ({ user }) => {
+            const baseFilter = {
+              mimeType: {
+                contains: 'pdf',
+              },
+            }
+            
+            if (!user) return baseFilter
+            
+            // Professors see all media
+            if (user.role === 'professor') return baseFilter
+            
+            // Students only see their own uploads
+            if (user.role === 'student') {
+              return {
+                and: [
+                  baseFilter,
+                  {
+                    uploadedBy: {
+                      equals: user.id,
+                    },
+                  },
+                ],
+              }
+            }
+            
+            return baseFilter
           },
         },
         {
@@ -439,6 +462,23 @@ export const Publications: CollectionConfig = {
           type: 'upload',
           relationTo: 'media',
           required: true,
+          filterOptions: ({ user }) => {
+            if (!user) return true
+            
+            // Professors see all media
+            if (user.role === 'professor') return true
+            
+            // Students only see their own uploads
+            if (user.role === 'student') {
+              return {
+                uploadedBy: {
+                  equals: user.id,
+                },
+              }
+            }
+            
+            return true
+          },
         },
         {
           name: 'caption',
@@ -471,6 +511,34 @@ export const Publications: CollectionConfig = {
       relationTo: 'media',
       admin: {
         description: 'Cover image or graphical abstract for showcase',
+      },
+      filterOptions: ({ user }) => {
+        const baseFilter = {
+          mimeType: {
+            contains: 'image',
+          },
+        }
+        
+        if (!user) return baseFilter
+        
+        // Professors see all media
+        if (user.role === 'professor') return baseFilter
+        
+        // Students only see their own uploads
+        if (user.role === 'student') {
+          return {
+            and: [
+              baseFilter,
+              {
+                uploadedBy: {
+                  equals: user.id,
+                },
+              },
+            ],
+          }
+        }
+        
+        return baseFilter
       },
     },
     

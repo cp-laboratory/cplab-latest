@@ -61,6 +61,34 @@ export const News: CollectionConfig = {
       admin: {
         description: 'Main image for the news article',
       },
+      filterOptions: ({ user }) => {
+        const baseFilter = {
+          mimeType: {
+            contains: 'image',
+          },
+        }
+        
+        if (!user) return baseFilter
+        
+        // Professors see all media
+        if (user.role === 'professor') return baseFilter
+        
+        // Students only see their own uploads
+        if (user.role === 'student') {
+          return {
+            and: [
+              baseFilter,
+              {
+                uploadedBy: {
+                  equals: user.id,
+                },
+              },
+            ],
+          }
+        }
+        
+        return baseFilter
+      },
     },
     {
       name: 'author',
