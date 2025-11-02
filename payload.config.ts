@@ -9,6 +9,7 @@ import path from 'path'
 import { Users } from './collections/Users'
 import { News } from './collections/News'
 import { Publications } from './collections/Publications'
+import { Projects } from './collections/Projects'
 import Logo from './components/payload/Logo'
 import Icon from './components/payload/Icon'
 
@@ -21,6 +22,7 @@ export default buildConfig({
     Users, // Custom users collection with role-based access
     News, // News articles
     Publications, // Research publications
+    Projects, // Research and student projects
     // Add your collections here
     // Media collection with Cloudflare R2 upload
     {
