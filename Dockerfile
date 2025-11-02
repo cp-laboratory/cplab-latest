@@ -26,7 +26,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Use placeholder values for build to satisfy Payload CMS
 # Real secrets will be provided at runtime via environment variables
-ENV MONGODB_URI="mongodb://placeholder:27017/placeholder"
+# NOTE: Sitemap is now force-dynamic, so DB won't be accessed during build
+ENV MONGODB_URI="mongodb://localhost:27017/placeholder"
 ENV PAYLOAD_SECRET="placeholder-secret-key-minimum-32-characters-long-for-build"
 ENV NEXT_PUBLIC_SERVER_URL="http://localhost:3000"
 ENV S3_ENDPOINT="https://placeholder.r2.cloudflarestorage.com"
@@ -35,7 +36,7 @@ ENV S3_ACCESS_KEY_ID="placeholder"
 ENV S3_SECRET_ACCESS_KEY="placeholder"
 ENV S3_REGION="auto"
 ENV EMAIL_FROM="noreply@placeholder.com"
-ENV SMTP_HOST="smtp.placeholder.com"
+ENV SMTP_HOST="localhost"
 ENV SMTP_PORT="587"
 ENV SMTP_USER="placeholder"
 ENV SMTP_PASS="placeholder"
