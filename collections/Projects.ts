@@ -420,7 +420,8 @@ export const Projects: CollectionConfig = {
           name: 'youtube',
           type: 'text',
           admin: {
-            description: 'YouTube video URL (demo, tutorial, etc.)',
+            description: 'YouTube video ID only (e.g., "dQw4w9WgXcQ" from https://youtube.com/watch?v=dQw4w9WgXcQ)',
+            placeholder: 'dQw4w9WgXcQ',
           },
         },
         {

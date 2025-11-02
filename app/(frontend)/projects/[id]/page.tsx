@@ -420,13 +420,14 @@ export default function ProjectDetailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                <h2 className="text-2xl font-bold mb-6">Video Demo</h2>
-                <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border">
+                <h2 className="text-2xl font-bold mb-6">🎥 Video Demo</h2>
+                <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-border bg-black">
                   <iframe
-                    src={project.links.youtube.replace("watch?v=", "embed/")}
+                    src={`https://www.youtube.com/embed/${project.links.youtube}`}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                    title="Project video demo"
                   />
                 </div>
               </motion.section>
