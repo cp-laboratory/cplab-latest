@@ -11,23 +11,28 @@ export const FAQ: CollectionConfig = {
     useAsTitle: 'question',
     defaultColumns: ['question', 'category', 'order', 'isPublished'],
     description: 'Manage frequently asked questions displayed on the homepage',
+    // Hide from students in the admin panel
+    hidden: ({ user }) => {
+      if (!user) return true
+      return user.role !== 'professor'
+    },
   },
   access: {
-    // Only admins can create FAQs
+    // Only professors can create FAQs
     create: ({ req: { user } }) => {
-      return user?.role === 'admin'
+      return user?.role === 'professor'
     },
-    // Only admins can read FAQs in admin panel
+    // Only professors can read FAQs in admin panel
     read: ({ req: { user } }) => {
-      return user?.role === 'admin'
+      return user?.role === 'professor'
     },
-    // Only admins can update FAQs
+    // Only professors can update FAQs
     update: ({ req: { user } }) => {
-      return user?.role === 'admin'
+      return user?.role === 'professor'
     },
-    // Only admins can delete FAQs
+    // Only professors can delete FAQs
     delete: ({ req: { user } }) => {
-      return user?.role === 'admin'
+      return user?.role === 'professor'
     },
   },
   fields: [
