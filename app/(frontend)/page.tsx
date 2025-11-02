@@ -6,6 +6,7 @@ import ResearchFeatures from "@/components/home/research-features"
 import { LabTestimonialsSection } from "@/components/home/lab-testimonials"
 import { LabFactsSection } from "@/components/home/lab-facts"
 import LabHighlights from "@/components/home/lab-highlights"
+import { LabProjectsCarousel } from "@/components/home/lab-projects-carousel"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { NewsletterSection } from "@/components/home/newsletter-section"
@@ -65,6 +66,11 @@ export default function Home() {
       {/* Research Areas Section */}
       <div id="research">
         <ResearchAreas />
+      </div>
+
+      {/* Lab Projects Carousel */}
+      <div id="projects-carousel">
+        <LabProjectsCarousel />
       </div>
 
       {/* Research Features Section with Animations */}
