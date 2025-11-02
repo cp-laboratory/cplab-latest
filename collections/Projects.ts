@@ -61,11 +61,9 @@ export const Projects: CollectionConfig = {
       if (user?.role === 'professor') return true
       
       // Public and students: only published projects
-      // Note: Students will see all published projects
-      // For stricter filtering, implement in frontend
       return {
-        status: {
-          equals: 'published',
+        published: {
+          equals: true,
         },
       }
     },
@@ -163,9 +161,6 @@ export const Projects: CollectionConfig = {
         { label: 'In Progress', value: 'in-progress' },
         { label: 'Completed', value: 'completed' },
         { label: 'On Hold', value: 'on-hold' },
-        { label: 'Cancelled', value: 'cancelled' },
-        { label: 'Published', value: 'published' },
-        { label: 'Archived', value: 'archived' },
       ],
       defaultValue: 'in-progress',
       admin: {
@@ -875,6 +870,15 @@ export const Projects: CollectionConfig = {
     },
     
     // Visibility & Features
+    {
+      name: 'published',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Make this project visible on the public projects page',
+        position: 'sidebar',
+      },
+    },
     {
       name: 'featured',
       type: 'checkbox',
