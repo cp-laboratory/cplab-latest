@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Sparkles } from "lucide-react"
+import { LayoutTextFlip } from "@/components/ui/layout-text-flip"
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
@@ -43,7 +44,18 @@ export default function Hero() {
             >
               <h1 id="main-title" className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
                 Cyber Physical <strong>Laboratory</strong> <br />
-                <span className="text-primary">Research & Innovation</span>
+                <LayoutTextFlip
+                  text=""
+                  words={[
+                    "Research & Innovation",
+                    "Machine Learning",
+                    "Blockchain Technology",
+                    "Internet of Things",
+                    "Cyber-Physical Systems",
+                    "Application Development"
+                  ]}
+                  textColor="text-yellow-500"
+                />
               </h1>
             </motion.div>
 
