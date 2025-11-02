@@ -10,8 +10,10 @@ import { Users } from './collections/Users'
 import { News } from './collections/News'
 import { Publications } from './collections/Publications'
 import { Projects } from './collections/Projects'
-import Logo from './components/payload/Logo'
-import Icon from './components/payload/Icon'
+
+// Conditionally import Logo and Icon only in production
+const Logo = process.env.NODE_ENV === 'production' ? require('./components/payload/Logo').default : undefined
+const Icon = process.env.NODE_ENV === 'production' ? require('./components/payload/Icon').default : undefined
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -247,12 +249,14 @@ export default buildConfig({
     },
     user: 'users',
     // Customize admin panel based on user role
-    components: {
-      graphics: {
-        Logo: Logo as any,
-        Icon: Icon as any,
+    ...(process.env.NODE_ENV === 'production' && Logo && Icon ? {
+      components: {
+        graphics: {
+          Logo: Logo as any,
+          Icon: Icon as any,
+        },
       },
-    },
+    } : {}),
   },
 
   // Configure TypeScript
