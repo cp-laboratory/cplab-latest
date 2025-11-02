@@ -120,23 +120,30 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-full relative bg-black">
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background: "radial-gradient(ellipse 50% 35% at 50% 0%, rgba(226, 232, 240, 0.12), transparent 60%), #000000",
+        }}
+      />
+
       <Navbar />
-      
-      <main className="container mx-auto px-4 py-20">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-            Our Projects
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Explore our innovative research projects, student work, and open-source contributions
-          </p>
-        </motion.div>
+
+      <div className="relative z-10">
+        <div className="container mx-auto px-4 py-24 sm:py-32">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">Projects</h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Explore our innovative research projects, student work, and open-source contributions.
+            </p>
+          </motion.div>
 
         {/* Search and Filters */}
         <div className="mb-12 space-y-6">
@@ -349,7 +356,8 @@ export default function ProjectsPage() {
             )}
           </motion.div>
         )}
-      </main>
+        </div>
+      </div>
 
       <Footer />
     </div>

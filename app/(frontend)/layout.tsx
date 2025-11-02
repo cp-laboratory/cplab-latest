@@ -4,7 +4,6 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Cyber Physical Laboratory",
   description: "Research insights on Application Development, Machine Learning, Blockchain, IoT and more",
-  generator: "v0.app",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
