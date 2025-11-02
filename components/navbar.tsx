@@ -89,10 +89,10 @@ export function Navbar() {
 
         <div className="flex items-center gap-4 relative z-50">
           <Link
-            href="/admin"
+            href="/contact"
             className="font-medium transition-colors hover:text-foreground text-muted-foreground text-sm"
           >
-            Dashboard
+            Contact
           </Link>
         </div>
       </header>
@@ -157,10 +157,10 @@ export function Navbar() {
               </Link>
               <div className="border-t border-border/50 pt-4 mt-4">
                 <Link
-                  href="/admin"
+                  href="/contact"
                   className="px-4 py-3 text-lg font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-background/50 block"
                 >
-                  Dashboard
+                  Contact
                 </Link>
               </div>
             </nav>
