@@ -1,90 +1,92 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 
-const publications = [
-  {
-    id: 1,
-    title: "Deep Learning Architectures for Real-time IoT Processing",
-    authors: "Sarah Johnson, Michael Chen, Alex Kumar",
-    type: "Conference Paper",
-    venue: "IEEE IoT Conference 2024",
-    year: 2024,
-    abstract:
-      "This paper presents novel deep learning architectures optimized for real-time processing on IoT devices with limited computational resources.",
-    citations: 45,
-  },
-  {
-    id: 2,
-    title: "Blockchain-based Security Framework for Distributed Systems",
-    authors: "Emily Rodriguez, Lisa Wang",
-    type: "Journal Article",
-    venue: "IEEE Transactions on Distributed Systems",
-    year: 2024,
-    abstract:
-      "We propose a comprehensive security framework leveraging blockchain technology to protect distributed cyber-physical systems.",
-    citations: 28,
-  },
-  {
-    id: 3,
-    title: "Edge Computing Optimization for Latency-Critical Applications",
-    authors: "Michael Chen, James O'Brien",
-    type: "Conference Paper",
-    venue: "ACM Edge Computing Summit 2023",
-    year: 2023,
-    abstract:
-      "This work addresses latency optimization in edge computing environments through intelligent resource allocation.",
-    citations: 32,
-  },
-  {
-    id: 4,
-    title: "Federated Learning in Heterogeneous IoT Networks",
-    authors: "Sarah Johnson, Alex Kumar",
-    type: "Research Paper",
-    venue: "arXiv Preprint",
-    year: 2024,
-    abstract:
-      "We explore federated learning techniques for training models across heterogeneous IoT networks while preserving privacy.",
-    citations: 15,
-  },
-  {
-    id: 5,
-    title: "Intrusion Detection Systems for Cyber-Physical Systems",
-    authors: "Lisa Wang, Emily Rodriguez",
-    type: "Conference Paper",
-    venue: "IEEE Cybersecurity Conference 2023",
-    year: 2023,
-    abstract: "Novel approaches to detecting and mitigating intrusions in cyber-physical system architectures.",
-    citations: 22,
-  },
-  {
-    id: 6,
-    title: "Microservices Architecture for Scalable CPS Applications",
-    authors: "Alex Kumar, Sarah Johnson",
-    type: "Journal Article",
-    venue: "Journal of Systems Architecture",
-    year: 2023,
-    abstract:
-      "Design patterns and best practices for building scalable microservices-based cyber-physical system applications.",
-    citations: 18,
-  },
-]
+interface Publication {
+  id: string
+  title?: string
+  publicationType?: string
+  year?: number
+  authors?: Array<{
+    author?: {
+      firstName?: string
+      lastName?: string
+    }
+    externalAuthor?: string
+  }>
+  venue?: string
+  abstract?: string
+  doi?: string
+  url?: string
+  status?: string
+}
+
+const publicationTypeLabels: Record<string, string> = {
+  journal: "Journal Article",
+  conference: "Conference Paper",
+  "book-chapter": "Book Chapter",
+  "technical-report": "Technical Report",
+  thesis: "Thesis/Dissertation",
+  preprint: "Preprint",
+}
 
 export default function PublicationsPage() {
+  const [publications, setPublications] = useState<Publication[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedYear, setSelectedYear] = useState<number | null>(null)
 
-  const types = ["All", "Conference Paper", "Journal Article", "Research Paper"]
-  const years = ["All", 2024, 2023, 2022]
+  useEffect(() => {
+    const fetchPublications = async () => {
+      try {
+        const response = await fetch("/api/publications?depth=2&limit=100")
+        const data = await response.json()
+        setPublications(data.docs || [])
+      } catch (error) {
+        console.error("Error fetching publications:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPublications()
+  }, [])
+
+  const types = ["All", "Journal Article", "Conference Paper", "Book Chapter", "Technical Report", "Thesis/Dissertation", "Preprint"]
+  
+  // Get unique years from publications, filtering out undefined
+  const years = [
+    "All", 
+    ...Array.from(new Set(publications.map(pub => pub.year).filter((year): year is number => year !== undefined)))
+      .sort((a, b) => b - a)
+  ]
 
   const filteredPublications = publications.filter((pub) => {
-    const typeMatch = !selectedType || selectedType === "All" || pub.type === selectedType
+    const pubTypeLabel = pub.publicationType ? (publicationTypeLabels[pub.publicationType] || pub.publicationType) : ""
+    const typeMatch = !selectedType || selectedType === "All" || pubTypeLabel === selectedType
     const yearMatch = !selectedYear || selectedYear === 0 || pub.year === selectedYear
     return typeMatch && yearMatch
   })
+
+  // Format authors string
+  const formatAuthors = (authors?: Publication["authors"]) => {
+    if (!authors || authors.length === 0) return "No authors listed"
+    
+    return authors
+      .map((author) => {
+        if (author?.author) {
+          const firstName = author.author.firstName || ""
+          const lastName = author.author.lastName || ""
+          return `${firstName} ${lastName}`.trim() || "Unknown"
+        }
+        return author?.externalAuthor || "Unknown"
+      })
+      .filter(name => name !== "Unknown")
+      .join(", ") || "No authors listed"
+  }
 
   return (
     <div className="min-h-screen w-full relative bg-black">
@@ -162,44 +164,97 @@ export default function PublicationsPage() {
 
           {/* Publications List */}
           <div className="space-y-4">
-            {filteredPublications.map((pub, index) => (
-              <motion.div
-                key={pub.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Loading publications...</p>
+              </div>
+            ) : filteredPublications.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No publications found.</p>
+              </div>
+            ) : (
+              filteredPublications.map((pub, index) => (
+                <motion.div
+                  key={pub.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                <div className="relative z-10">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
-                    <div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">{pub.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-2">{pub.authors}</p>
+                  <div className="relative z-10">
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-semibold text-foreground mb-2">
+                          {pub.title || "Untitled Publication"}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {formatAuthors(pub.authors)}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {pub.publicationType && (
+                          <span className="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
+                            {publicationTypeLabels[pub.publicationType] || pub.publicationType}
+                          </span>
+                        )}
+                        {pub.year && (
+                          <span className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-medium">
+                            {pub.year}
+                          </span>
+                        )}
+                        {pub.status && (
+                          <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-500 text-xs font-medium capitalize">
+                            {pub.status}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
-                        {pub.type}
-                      </span>
-                      <span className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-medium">
-                        {pub.year}
-                      </span>
+
+                    {pub.venue && (
+                      <p className="text-sm text-muted-foreground mb-3">
+                        <span className="font-medium">Venue:</span> {pub.venue}
+                      </p>
+                    )}
+                    
+                    {pub.abstract && (
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                        {pub.abstract}
+                      </p>
+                    )}
+
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex gap-3">
+                        {pub.doi && (
+                          <a
+                            href={`https://doi.org/${pub.doi}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-primary hover:text-primary/80 transition-colors underline underline-offset-2"
+                          >
+                            DOI: {pub.doi}
+                          </a>
+                        )}
+                        {pub.url && (
+                          <a
+                            href={pub.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                          >
+                            <span>View Publication</span>
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
-
-                  <p className="text-sm text-muted-foreground mb-3">{pub.venue}</p>
-                  <p className="text-sm text-muted-foreground mb-4">{pub.abstract}</p>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">{pub.citations} citations</span>
-                    <button className="text-primary text-sm font-medium hover:text-primary/80 transition-colors">
-                      Read More →
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
       </div>
