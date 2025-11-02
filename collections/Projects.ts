@@ -879,7 +879,7 @@ export const Projects: CollectionConfig = {
       type: 'checkbox',
       defaultValue: false,
       admin: {
-        description: 'Feature this project on homepage',
+        description: 'Feature this project on project page',
         position: 'sidebar',
       },
     },
