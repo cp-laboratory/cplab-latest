@@ -41,6 +41,8 @@ export default function FAQSection() {
 
   return (
     <section id="faq" className="relative overflow-hidden py-12 md:py-20">
+      <div className="bg-primary absolute -top-10 left-1/2 h-16 w-44 -translate-x-1/2 rounded-full opacity-40 blur-3xl select-none"></div>
+      <div className="via-primary/50 absolute top-0 left-1/2 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent transition-all ease-in-out"></div>
       {/* Background blur effects */}
       <div className="bg-primary/20 absolute top-1/2 -right-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
       <div className="bg-primary/20 absolute top-1/2 -left-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
@@ -86,10 +88,10 @@ export default function FAQSection() {
               onClick={() => toggleItem(index)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => {
+              onKeyDown={(e: { key: string; preventDefault: () => void }) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault()
-                  toggleItem(index)
+                  e.preventDefault();
+                  toggleItem(index);
                 }
               }}
               {...(index === faqs.length - 1 && { "data-faq": faq.question })}
@@ -102,9 +104,15 @@ export default function FAQSection() {
                   className=""
                 >
                   {openItems.includes(index) ? (
-                    <Minus className="text-primary flex-shrink-0 transition duration-300" size={24} />
+                    <Minus
+                      className="text-primary flex-shrink-0 transition duration-300"
+                      size={24}
+                    />
                   ) : (
-                    <Plus className="text-primary flex-shrink-0 transition duration-300" size={24} />
+                    <Plus
+                      className="text-primary flex-shrink-0 transition duration-300"
+                      size={24}
+                    />
                   )}
                 </motion.div>
               </div>
@@ -130,5 +138,5 @@ export default function FAQSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -32,6 +32,8 @@ export default function LabHighlights() {
 
   return (
     <section className="relative overflow-hidden py-12 md:py-20">
+      <div className="bg-primary absolute -top-10 left-1/2 h-16 w-44 -translate-x-1/2 rounded-full opacity-40 blur-3xl select-none"></div>
+      <div className="via-primary/50 absolute top-0 left-1/2 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent transition-all ease-in-out"></div>
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
@@ -40,9 +42,12 @@ export default function LabHighlights() {
         className="container mx-auto px-4"
       >
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">Lab Highlights</h2>
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">
+            Lab Highlights
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our achievements and contributions to the field of cyber-physical systems research.
+            Our achievements and contributions to the field of cyber-physical
+            systems research.
           </p>
         </div>
 
@@ -59,14 +64,20 @@ export default function LabHighlights() {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
               <div className="relative z-10">
-                <div className="text-5xl font-bold text-primary mb-2">{highlight.number}</div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">{highlight.label}</h3>
-                <p className="text-sm text-muted-foreground">{highlight.description}</p>
+                <div className="text-5xl font-bold text-primary mb-2">
+                  {highlight.number}
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">
+                  {highlight.label}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {highlight.description}
+                </p>
               </div>
             </motion.div>
           ))}
         </div>
       </motion.div>
     </section>
-  )
+  );
 }

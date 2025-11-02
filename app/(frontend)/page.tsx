@@ -68,9 +68,9 @@ export default function Home() {
       </div>
 
       {/* Research Features Section with Animations */}
-      <div id="features">
+      {/* <div id="features">
         <ResearchFeatures />
-      </div>
+      </div> */}
 
       {/* Lab Facts Section */}
       <div id="facts">
@@ -87,14 +87,14 @@ export default function Home() {
         <LabHighlights />
       </div>
 
-      {/* Newsletter Section */}
-      <div className="container mx-auto px-4">
-        <NewsletterSection />
-      </div>
-
       {/* FAQ Section */}
       <div>
         <FAQSection />
+      </div>
+
+      {/* Newsletter Section */}
+      <div className="container mx-auto px-4">
+        <NewsletterSection />
       </div>
 
       <Footer />

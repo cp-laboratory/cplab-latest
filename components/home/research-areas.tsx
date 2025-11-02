@@ -43,6 +43,7 @@ export default function ResearchAreas() {
   return (
     <section className="relative overflow-hidden py-12 sm:py-24 md:py-32">
       <div className="bg-primary absolute -top-10 left-1/2 h-16 w-44 -translate-x-1/2 rounded-full opacity-40 blur-3xl select-none"></div>
+      <div className="via-primary/50 absolute top-0 left-1/2 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent transition-all ease-in-out"></div>
 
       <motion.div
         ref={ref}
@@ -52,9 +53,12 @@ export default function ResearchAreas() {
         className="container mx-auto flex flex-col items-center gap-12 px-4"
       >
         <div className="text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">Research Areas</h2>
+          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">
+            Research Areas
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our laboratory focuses on cutting-edge research across multiple domains of cyber-physical systems.
+            Our laboratory focuses on cutting-edge research across multiple
+            domains of cyber-physical systems.
           </p>
         </div>
 
@@ -72,13 +76,17 @@ export default function ResearchAreas() {
 
               <div className="relative z-10">
                 <div className="text-4xl mb-4">{area.icon}</div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">{area.title}</h3>
-                <p className="text-muted-foreground text-sm">{area.description}</p>
+                <h3 className="text-xl font-semibold text-foreground mb-2">
+                  {area.title}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {area.description}
+                </p>
               </div>
             </motion.div>
           ))}
         </div>
       </motion.div>
     </section>
-  )
+  );
 }
