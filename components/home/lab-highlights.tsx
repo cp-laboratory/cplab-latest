@@ -41,7 +41,7 @@ export default function LabHighlights() {
   useEffect(() => {
     const fetchHighlights = async () => {
       try {
-        const response = await fetch('/api/lab-highlights', {
+        const response = await fetch('/api/public-lab-highlights', {
           cache: 'no-store',
           headers: {
             'Cache-Control': 'no-cache',

@@ -51,7 +51,7 @@ export default function ResearchAreas() {
   useEffect(() => {
     const fetchResearchAreas = async () => {
       try {
-        const response = await fetch('/api/research-areas', {
+        const response = await fetch('/api/public-research-areas', {
           cache: 'no-store',
           headers: {
             'Cache-Control': 'no-cache',
