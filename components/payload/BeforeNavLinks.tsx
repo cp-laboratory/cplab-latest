@@ -13,12 +13,10 @@ export const BeforeNavLinks: React.FC = () => {
         rel="noopener noreferrer"
         style={{
           display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          padding: '0.75rem 1rem',
+          alignItems: 'left',
           color: 'var(--theme-text)',
           textDecoration: 'none',
-          borderBottom: '1px solid var(--theme-elevation-150)',
+        //   borderBottom: '1px solid var(--theme-elevation-150)',
         }}
       >
         {/* <svg 
