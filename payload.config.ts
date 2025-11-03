@@ -260,15 +260,19 @@ export default buildConfig({
       titleSuffix: '- CPLab CMS',
     },
     user: 'users',
-    // Customize admin panel based on user role
-    ...(process.env.NODE_ENV === 'production' && Logo && Icon ? {
-      components: {
+    // Add link to homepage in admin panel
+    components: {
+      ...(process.env.NODE_ENV === 'production' && Logo && Icon ? {
         graphics: {
           Logo: Logo as any,
           Icon: Icon as any,
         },
-      },
-    } : {}),
+      } : {}),
+      // Add custom actions to navbar
+      beforeNavLinks: [
+        '/components/payload/BeforeNavLinks#BeforeNavLinks',
+      ],
+    },
   },
 
   // Configure TypeScript

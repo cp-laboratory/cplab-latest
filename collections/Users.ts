@@ -6,6 +6,9 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     defaultColumns: ['email', 'role', 'firstName', 'lastName'],
+    // Hide Users collection from students in admin panel
+    // Students can still manage their profile at /admin/account
+    hidden: ({ user }) => user?.role === 'student',
   },
   access: {
     // Admins (professors) can read all users
