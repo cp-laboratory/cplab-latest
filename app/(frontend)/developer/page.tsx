@@ -63,6 +63,16 @@ interface DevToArticle {
   reading_time_minutes: number
 }
 
+interface MediumArticle {
+  title: string
+  description: string
+  url: string
+  published_at: string
+  cover_image: string | null
+  categories: string[]
+  reading_time_minutes: number
+}
+
 const techStack = [
   "JavaScript",
   "TypeScript",
@@ -118,6 +128,7 @@ export default function DeveloperPage() {
   const [user, setUser] = useState<GitHubUser | null>(null)
   const [repos, setRepos] = useState<GitHubRepo[]>([])
   const [articles, setArticles] = useState<DevToArticle[]>([])
+  const [mediumArticles, setMediumArticles] = useState<MediumArticle[]>([])
   const [loading, setLoading] = useState(true)
 
   const username = "hasanshahriar32"
@@ -138,9 +149,22 @@ export default function DeveloperPage() {
         setRepos(reposData)
 
         // Fetch Dev.to articles
-        const devToResponse = await fetch(`https://dev.to/api/articles?username=${username}`)
-        const devToData = await devToResponse.json()
-        setArticles(devToData.slice(0, 4))
+        try {
+          const devToResponse = await fetch(`https://dev.to/api/articles?username=${username}`)
+          const devToData = await devToResponse.json()
+          setArticles(devToData.slice(0, 4))
+        } catch (error) {
+          console.error("Error fetching Dev.to articles:", error)
+        }
+
+        // Fetch Medium articles
+        try {
+          const mediumResponse = await fetch(`/api/medium-articles?username=${username}`)
+          const mediumData = await mediumResponse.json()
+          setMediumArticles(mediumData.slice(0, 4))
+        } catch (error) {
+          console.error("Error fetching Medium articles:", error)
+        }
       } catch (error) {
         console.error("Error fetching data:", error)
       } finally {
@@ -352,71 +376,149 @@ export default function DeveloperPage() {
               </motion.div>
 
               {/* Blog Posts */}
-              {articles.length > 0 && (
+              {(articles.length > 0 || mediumArticles.length > 0) && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <h2 className="text-2xl font-bold mb-6">Recent Blog Posts</h2>
-                  <div className="space-y-4">
-                    {articles.map((article) => (
-                      <a
-                        key={article.id}
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group"
-                      >
-                        <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 hover:shadow-xl transition-all duration-300">
-                          <div className="flex gap-4">
-                            {article.cover_image && (
-                              <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                                <Image
-                                  src={article.cover_image}
-                                  alt={article.title}
-                                  width={96}
-                                  height={96}
-                                  className="object-cover w-full h-full"
-                                />
-                              </div>
-                            )}
-                            <div className="flex-1">
-                              <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
-                                {article.title}
-                              </h3>
-                              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                                {article.description}
-                              </p>
-                              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                                <span>
-                                  {new Date(article.published_at).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                  })}
-                                </span>
-                                <span>•</span>
-                                <span>{article.reading_time_minutes} min read</span>
-                                {article.tag_list.length > 0 && (
-                                  <>
-                                    <span>•</span>
-                                    <div className="flex gap-2">
-                                      {article.tag_list.slice(0, 2).map((tag) => (
-                                        <Badge key={tag} variant="outline" className="text-xs">
-                                          #{tag}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  </>
+                  
+                  {/* Medium Articles */}
+                  {mediumArticles.length > 0 && (
+                    <div className="mb-8">
+                      <div className="flex items-center gap-2 mb-4">
+                        <BookOpen className="w-5 h-5 text-primary" />
+                        <h3 className="text-lg font-semibold">From Medium</h3>
+                      </div>
+                      <div className="space-y-4">
+                        {mediumArticles.map((article, index) => (
+                          <a
+                            key={`medium-${index}`}
+                            href={article.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group"
+                          >
+                            <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 hover:shadow-xl transition-all duration-300">
+                              <div className="flex gap-4">
+                                {article.cover_image && (
+                                  <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                                    <Image
+                                      src={article.cover_image}
+                                      alt={article.title}
+                                      width={96}
+                                      height={96}
+                                      className="object-cover w-full h-full"
+                                    />
+                                  </div>
                                 )}
+                                <div className="flex-1">
+                                  <h4 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                                    {article.title}
+                                  </h4>
+                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                    {article.description}
+                                  </p>
+                                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                    <span>
+                                      {new Date(article.published_at).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                      })}
+                                    </span>
+                                    <span>•</span>
+                                    <span>{article.reading_time_minutes} min read</span>
+                                    {article.categories.length > 0 && (
+                                      <>
+                                        <span>•</span>
+                                        <div className="flex gap-2">
+                                          {article.categories.slice(0, 2).map((category, idx) => (
+                                            <Badge key={idx} variant="outline" className="text-xs">
+                                              {category}
+                                            </Badge>
+                                          ))}
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Dev.to Articles */}
+                  {articles.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <BookOpen className="w-5 h-5 text-primary" />
+                        <h3 className="text-lg font-semibold">From Dev.to</h3>
+                      </div>
+                      <div className="space-y-4">
+                        {articles.map((article) => (
+                          <a
+                            key={article.id}
+                            href={article.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group"
+                          >
+                            <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 hover:shadow-xl transition-all duration-300">
+                              <div className="flex gap-4">
+                                {article.cover_image && (
+                                  <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                                    <Image
+                                      src={article.cover_image}
+                                      alt={article.title}
+                                      width={96}
+                                      height={96}
+                                      className="object-cover w-full h-full"
+                                    />
+                                  </div>
+                                )}
+                                <div className="flex-1">
+                                  <h4 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                                    {article.title}
+                                  </h4>
+                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                                    {article.description}
+                                  </p>
+                                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                    <span>
+                                      {new Date(article.published_at).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                      })}
+                                    </span>
+                                    <span>•</span>
+                                    <span>{article.reading_time_minutes} min read</span>
+                                    {article.tag_list.length > 0 && (
+                                      <>
+                                        <span>•</span>
+                                        <div className="flex gap-2">
+                                          {article.tag_list.slice(0, 2).map((tag) => (
+                                            <Badge key={tag} variant="outline" className="text-xs">
+                                              #{tag}
+                                            </Badge>
+                                          ))}
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </div>
