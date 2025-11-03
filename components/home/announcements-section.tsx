@@ -23,73 +23,23 @@ export default function AnnouncementsSection() {
     // Fetch announcements from API
     const fetchAnnouncements = async () => {
       try {
-        // TODO: Replace with actual API call
-        // const response = await fetch('/api/announcements')
-        // const data = await response.json()
+        const response = await fetch('/api/notices', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
         
-        // Mock data for now
-        const mockData: Announcement[] = [
-          {
-            id: "1",
-            title: "New Research Grant Awarded",
-            description: "We are pleased to announce that our lab has been awarded a significant research grant for advancing IoT technologies.",
-            link: "/news/research-grant",
-            pdfUrl: "/announcements/grant-2025.pdf",
-            date: "2025-11-01"
-          },
-          {
-            id: "2",
-            title: "Workshop on Machine Learning",
-            description: "Join us for an intensive workshop on advanced machine learning techniques and applications.",
-            link: "/news/ml-workshop",
-            date: "2025-10-28"
-          },
-          {
-            id: "3",
-            title: "Publication in Top Journal",
-            description: "Our latest research paper has been accepted in IEEE Transactions on Cyber-Physical Systems.",
-            link: "/publications",
-            pdfUrl: "/papers/latest-publication.pdf",
-            date: "2025-10-15"
-          },
-          {
-            id: "4",
-            title: "Student Achievement Award",
-            description: "Congratulations to our team members who won the Best Paper Award at the International Conference.",
-            link: "/team",
-            date: "2025-10-10"
-          },
-          {
-            id: "5",
-            title: "Lab Expansion Announcement",
-            description: "We are expanding our research facilities with new state-of-the-art equipment for blockchain research.",
-            date: "2025-09-25"
-          },
-          {
-            id: "6",
-            title: "Guest Lecture Series",
-            description: "Industry experts will be visiting our lab for a series of lectures on emerging technologies.",
-            link: "/news/guest-lectures",
-            date: "2025-09-18"
-          },
-          {
-            id: "7",
-            title: "Open House Event",
-            description: "Join us for our annual open house event where we showcase our latest research and projects.",
-            date: "2025-08-30"
-          },
-          {
-            id: "8",
-            title: "New Research Collaboration",
-            description: "We've partnered with leading universities for collaborative research in cyber security.",
-            link: "/news/collaboration",
-            date: "2025-08-15"
-          }
-        ]
+        if (!response.ok) {
+          throw new Error('Failed to fetch notices')
+        }
         
-        setAnnouncements(mockData)
+        const data = await response.json()
+        // Handle both array and object with error property
+        setAnnouncements(Array.isArray(data) ? data : (data.notices || []))
       } catch (error) {
         console.error("Error fetching announcements:", error)
+        setAnnouncements([])
       } finally {
         setLoading(false)
       }
