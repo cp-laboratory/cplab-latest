@@ -1,9 +1,15 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 
-const highlights = [
+interface Highlight {
+  number: string
+  label: string
+  description: string
+}
+
+const defaultHighlights: Highlight[] = [
   {
     number: "50+",
     label: "Research Papers",
@@ -29,6 +35,37 @@ const highlights = [
 export default function LabHighlights() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const [highlights, setHighlights] = useState<Highlight[]>(defaultHighlights)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchHighlights = async () => {
+      try {
+        const response = await fetch('/api/lab-highlights', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch lab highlights')
+        }
+        
+        const data = await response.json()
+        if (Array.isArray(data) && data.length > 0) {
+          setHighlights(data)
+        }
+      } catch (error) {
+        console.error('Error fetching lab highlights:', error)
+        // Keep default highlights on error
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchHighlights()
+  }, [])
 
   return (
     <section className="relative overflow-hidden py-12 md:py-20">

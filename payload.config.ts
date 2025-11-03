@@ -12,6 +12,8 @@ import { Publications } from './collections/Publications'
 import { Projects } from './collections/Projects'
 import { FAQ } from './collections/FAQ'
 import { Notices } from './collections/Notices'
+import { LabHighlights } from './collections/LabHighlights'
+import { ResearchAreas } from './collections/ResearchAreas'
 
 // Conditionally import Logo and Icon only in production
 const Logo = process.env.NODE_ENV === 'production' ? require('./components/payload/Logo').default : undefined
@@ -49,6 +51,8 @@ export default buildConfig({
     Projects, // Research and student projects
     FAQ, // Frequently Asked Questions (Admin only)
     Notices, // Notices/Announcements (Admin only)
+    LabHighlights, // Lab Highlights statistics (Admin only)
+    ResearchAreas, // Research Areas (Admin only)
     // Add your collections here
     // Media collection with Cloudflare R2 upload
     {

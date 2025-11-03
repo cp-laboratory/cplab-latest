@@ -1,9 +1,15 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 
-const researchAreas = [
+interface ResearchArea {
+  title: string
+  description: string
+  icon: string
+}
+
+const defaultResearchAreas: ResearchArea[] = [
   {
     title: "Application Development",
     description: "Building scalable and efficient applications using modern frameworks and best practices.",
@@ -39,6 +45,37 @@ const researchAreas = [
 export default function ResearchAreas() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
+  const [researchAreas, setResearchAreas] = useState<ResearchArea[]>(defaultResearchAreas)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchResearchAreas = async () => {
+      try {
+        const response = await fetch('/api/research-areas', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        })
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch research areas')
+        }
+        
+        const data = await response.json()
+        if (Array.isArray(data) && data.length > 0) {
+          setResearchAreas(data)
+        }
+      } catch (error) {
+        console.error('Error fetching research areas:', error)
+        // Keep default research areas on error
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchResearchAreas()
+  }, [])
 
   return (
     <section className="relative overflow-hidden py-12 sm:py-24 md:py-32">
