@@ -23,7 +23,7 @@ export default function AnnouncementsSection() {
     // Fetch announcements from API
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch('/api/notices', {
+        const response = await fetch('/api/public-notices', {
           cache: 'no-store',
           headers: {
             'Cache-Control': 'no-cache',
