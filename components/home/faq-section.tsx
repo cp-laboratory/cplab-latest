@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Plus, Minus } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -13,38 +13,12 @@ interface FAQ {
   isPublished: boolean
 }
 
-export default function FAQSection() {
+interface FAQSectionProps {
+  faqs: FAQ[]
+}
+
+export default function FAQSection({ faqs }: FAQSectionProps) {
   const [openItems, setOpenItems] = useState<number[]>([])
-  const [faqs, setFaqs] = useState<FAQ[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchFAQs = async () => {
-      try {
-        const response = await fetch('/api/faqs', {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache',
-          },
-        })
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch FAQs')
-        }
-        
-        const data = await response.json()
-        // Handle both array and object with docs property
-        setFaqs(Array.isArray(data) ? data : (data.docs || []))
-      } catch (error) {
-        console.error('Error fetching FAQs:', error)
-        setFaqs([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchFAQs()
-  }, [])
 
   const toggleItem = (index: number) => {
     setOpenItems((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
@@ -85,11 +59,7 @@ export default function FAQSection() {
           </span>
         </motion.h2>
 
-        {loading ? (
-          <div className="mx-auto mt-12 flex max-w-xl justify-center">
-            <p className="text-muted-foreground">Loading FAQs...</p>
-          </div>
-        ) : faqs.length === 0 ? (
+        {faqs.length === 0 ? (
           <div className="mx-auto mt-12 flex max-w-xl justify-center">
             <p className="text-muted-foreground">No FAQs available at the moment.</p>
           </div>

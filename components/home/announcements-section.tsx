@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, ExternalLink, FileText } from "lucide-react"
 
@@ -13,40 +13,13 @@ interface Announcement {
   date: string
 }
 
-export default function AnnouncementsSection() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([])
-  const [loading, setLoading] = useState(true)
+interface AnnouncementsSectionProps {
+  announcements: Announcement[]
+}
+
+export default function AnnouncementsSection({ announcements }: AnnouncementsSectionProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 5 // Show 5 announcements per page
-
-  useEffect(() => {
-    // Fetch announcements from API
-    const fetchAnnouncements = async () => {
-      try {
-        const response = await fetch('/api/public-notices', {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache',
-          },
-        })
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch notices')
-        }
-        
-        const data = await response.json()
-        // Handle both array and object with error property
-        setAnnouncements(Array.isArray(data) ? data : (data.notices || []))
-      } catch (error) {
-        console.error("Error fetching announcements:", error)
-        setAnnouncements([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchAnnouncements()
-  }, [])
 
   // Sort announcements by date (latest first)
   const sortedAnnouncements = [...announcements].sort((a, b) => 
@@ -136,11 +109,7 @@ export default function AnnouncementsSection() {
 
         {/* Announcements List */}
         <div className="mx-auto mt-12 max-w-4xl">
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading announcements...</p>
-            </div>
-          ) : announcements.length === 0 ? (
+          {announcements.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No announcements available.</p>
             </div>

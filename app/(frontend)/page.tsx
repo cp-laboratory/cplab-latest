@@ -1,5 +1,3 @@
-"use client"
-import { useState, useEffect } from "react"
 import Hero from "@/components/home/hero"
 import ResearchAreas from "@/components/home/research-areas"
 import ResearchFeatures from "@/components/home/research-features"
@@ -11,42 +9,89 @@ import { LabTestimonialsSection } from "@/components/home/lab-testimonials"
 import FAQSection from "@/components/home/faq-section"
 import { NewsletterSection } from "@/components/home/newsletter-section"
 import { Footer } from "@/components/footer"
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
-export default function Home() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+// Enable ISR with 1 hour revalidation
+export const revalidate = 3600 // 1 hour in seconds
 
-  useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove("light", "system")
-    root.classList.add("dark")
-  }, [])
+interface Announcement {
+  id: string
+  title: string
+  description: string
+  link?: string
+  pdfUrl?: string
+  date: string
+}
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100)
-    }
+interface FAQ {
+  id: string
+  question: string
+  answer: string
+  category: string
+  order: number
+  isPublished: boolean
+}
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+async function getAnnouncements(): Promise<Announcement[]> {
+  try {
+    const payload = await getPayload({ config })
+    
+    const notices = await payload.find({
+      collection: 'notices',
+      where: {
+        isPublished: {
+          equals: true,
+        },
+      },
+      sort: '-date',
+      limit: 100,
+    })
 
-  const handleMobileNavClick = (elementId: string) => {
-    setIsMobileMenuOpen(false)
-    setTimeout(() => {
-      const element = document.getElementById(elementId)
-      if (element) {
-        const headerOffset = 120
-        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-        const offsetPosition = elementPosition - headerOffset
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        })
-      }
-    }, 100)
+    return notices.docs.map((notice: any) => ({
+      id: notice.id,
+      title: notice.title,
+      description: notice.description,
+      link: notice.link || undefined,
+      pdfUrl: typeof notice.pdfFile === 'object' && notice.pdfFile?.url 
+        ? notice.pdfFile.url 
+        : undefined,
+      date: notice.date,
+    }))
+  } catch (error) {
+    console.error('Error fetching announcements:', error)
+    return []
   }
+}
+
+async function getFAQs(): Promise<FAQ[]> {
+  try {
+    const payload = await getPayload({ config })
+    
+    const faqs = await payload.find({
+      collection: 'faq',
+      where: {
+        isPublished: {
+          equals: true,
+        },
+      },
+      sort: 'order',
+      limit: 100,
+    })
+
+    return faqs.docs as FAQ[]
+  } catch (error) {
+    console.error('Error fetching FAQs:', error)
+    return []
+  }
+}
+
+export default async function Home() {
+  // Fetch data at build time
+  const [announcements, faqs] = await Promise.all([
+    getAnnouncements(),
+    getFAQs(),
+  ])
 
   return (
     <div className="min-h-screen w-full relative bg-black">
@@ -70,7 +115,7 @@ export default function Home() {
 
       {/* Announcements Section */}
       <div id="announcements">
-        <AnnouncementsSection />
+        <AnnouncementsSection announcements={announcements} />
       </div>
 
       {/* Lab Projects Carousel */}
@@ -100,7 +145,7 @@ export default function Home() {
 
       {/* FAQ Section */}
       <div>
-        <FAQSection />
+        <FAQSection faqs={faqs} />
       </div>
 
       {/* Newsletter Section */}
