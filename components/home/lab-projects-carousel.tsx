@@ -119,10 +119,10 @@ export function LabProjectsCarousel() {
       >
         <div className="text-center mb-8 px-4">
           <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">
-            Latest News & Updates
+            Research & Innovation
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with our recent achievements, research breakthroughs, and laboratory activities
+            Explore our cutting-edge research projects across AI, blockchain, IoT, and cybersecurity
           </p>
         </div>
         <Carousel items={cards} />

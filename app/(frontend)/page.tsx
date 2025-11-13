@@ -8,6 +8,7 @@ import { Navbar } from "@/components/navbar"
 import { LabTestimonialsSection } from "@/components/home/lab-testimonials"
 import FAQSection from "@/components/home/faq-section"
 import { NewsletterSection } from "@/components/home/newsletter-section"
+import { LatestNewsSection } from "@/components/home/latest-news-section"
 import { Footer } from "@/components/footer"
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -31,6 +32,25 @@ interface FAQ {
   category: string
   order: number
   isPublished: boolean
+}
+
+interface NewsArticle {
+  id: string
+  title: string
+  excerpt: string
+  content: any
+  publishedDate: string
+  author: {
+    id: string
+    email: string
+    name: string
+  }
+  featuredImage?: {
+    id: string
+    url: string
+    alt: string
+  }
+  slug: string
 }
 
 async function getAnnouncements(): Promise<Announcement[]> {
@@ -86,11 +106,49 @@ async function getFAQs(): Promise<FAQ[]> {
   }
 }
 
+async function getNews(): Promise<NewsArticle[]> {
+  try {
+    const payload = await getPayload({ config })
+    
+    const news = await payload.find({
+      collection: 'news',
+      where: {
+        status: {
+          equals: 'published',
+        },
+      },
+      sort: '-publishedDate',
+      limit: 6, // Get latest 6 news articles
+    })
+
+    return news.docs.map((article: any) => ({
+      id: article.id,
+      title: article.title,
+      excerpt: article.excerpt,
+      content: article.content,
+      publishedDate: article.publishedDate,
+      author: article.author,
+      featuredImage: typeof article.featuredImage === 'object' && article.featuredImage?.url 
+        ? {
+            id: article.featuredImage.id,
+            url: article.featuredImage.url,
+            alt: article.featuredImage.alt || article.title,
+          }
+        : undefined,
+      slug: article.slug,
+    }))
+  } catch (error) {
+    console.error('Error fetching news:', error)
+    return []
+  }
+}
+
 export default async function Home() {
-  // Fetch data at build time
-  const [announcements, faqs] = await Promise.all([
+  // Fetch data at build time with ISR
+  const [announcements, faqs, news] = await Promise.all([
     getAnnouncements(),
     getFAQs(),
+    getNews(),
   ])
 
   return (
@@ -119,8 +177,13 @@ export default async function Home() {
       </div>
 
       {/* Lab Projects Carousel */}
-      <div id="projects-carousel">
+      {/* <div id="projects-carousel">
         <LabProjectsCarousel />
+      </div> */}
+
+      {/* Latest News Section */}
+      <div id="news">
+        <LatestNewsSection articles={news} />
       </div>
 
       {/* Research Features Section with Animations */}
@@ -142,6 +205,7 @@ export default async function Home() {
       <div id="highlights">
         <LabHighlights />
       </div>
+
 
       {/* FAQ Section */}
       <div>

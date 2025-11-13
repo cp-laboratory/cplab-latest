@@ -266,7 +266,7 @@ function TextNode({ node }: { node: any }) {
   return <span className="text-foreground">{text}</span>
 }
 
-export function NewsDetailArticle({ article }: { article: NewsDetail }) {
+export function NewsDetailArticle({ article, hideBackLink = false, hideTitle = false, hideMetadata = false }: { article: NewsDetail; hideBackLink?: boolean; hideTitle?: boolean; hideMetadata?: boolean }) {
   return (
     <article className="relative z-10 max-w-7xl mx-auto px-4 py-24">
       <motion.div
@@ -277,27 +277,33 @@ export function NewsDetailArticle({ article }: { article: NewsDetail }) {
       >
         {/* Header */}
         <div className="mb-8">
-          <Link href="/news" className="text-primary hover:underline text-sm mb-4 inline-block">
-            ← Back to News
-          </Link>
+          {!hideBackLink && (
+            <Link href="/news" className="text-primary hover:underline text-sm mb-4 inline-block">
+              ← Back to News
+            </Link>
+          )}
 
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{article.title}</h1>
+          {!hideTitle && (
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">{article.title}</h1>
+          )}
 
-          <div className="flex items-center justify-between text-muted-foreground text-sm mb-8 pb-8 border-b border-border/50">
-            <div className="flex items-center gap-4">
-              {article.author?.name && <span>{article.author.name}</span>}
-              {article.author?.name && article.publishedDate && <span>•</span>}
-              {article.publishedDate && (
-                <span>
-                  {new Date(article.publishedDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
-              )}
+          {!hideMetadata && (
+            <div className="flex items-center justify-between text-muted-foreground text-sm mb-8 pb-8 border-b border-border/50">
+              <div className="flex items-center gap-4">
+                {article.author?.name && <span>{article.author.name}</span>}
+                {article.author?.name && article.publishedDate && <span>•</span>}
+                {article.publishedDate && (
+                  <span>
+                    {new Date(article.publishedDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Featured Image */}
