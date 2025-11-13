@@ -57,7 +57,7 @@ function LexicalNode({ node }: { node: any }) {
   switch (node.type) {
     case 'paragraph':
       return (
-        <p className="text-foreground mb-4">
+        <p className="text-foreground mb-4 leading-relaxed">
           {node.children?.map((child: any, idx: number) => (
             <span key={idx}>
               <TextNode node={child} />
@@ -68,43 +68,84 @@ function LexicalNode({ node }: { node: any }) {
 
     case 'heading':
       const level = node.tag?.replace('h', '') || '2'
+      const HeadingTag = node.tag || 'h2'
       const headingClasses: Record<string, string> = {
-        '1': 'text-4xl font-bold mb-4',
-        '2': 'text-3xl font-bold mb-4',
-        '3': 'text-2xl font-bold mb-3',
-        '4': 'text-xl font-bold mb-2',
-        '5': 'text-lg font-bold mb-2',
-        '6': 'text-base font-bold mb-2',
+        '1': 'text-4xl font-bold mb-6 mt-8 text-foreground',
+        '2': 'text-3xl font-bold mb-5 mt-7 text-foreground',
+        '3': 'text-2xl font-bold mb-4 mt-6 text-foreground',
+        '4': 'text-xl font-bold mb-3 mt-5 text-foreground',
+        '5': 'text-lg font-bold mb-2 mt-4 text-foreground',
+        '6': 'text-base font-bold mb-2 mt-3 text-foreground',
       }
       return (
-        <div className={headingClasses[level] || 'text-2xl font-bold mb-4'}>
+        <HeadingTag className={headingClasses[level] || 'text-2xl font-bold mb-4 text-foreground'}>
           {node.children?.map((child: any, idx: number) => (
             <span key={idx}>
               <TextNode node={child} />
             </span>
           ))}
-        </div>
+        </HeadingTag>
       )
 
     case 'list':
       const ListTag = node.listType === 'number' ? 'ol' : 'ul'
+      const listTypeClass = node.listType === 'number' ? 'list-decimal' : 'list-disc'
       return (
-        <ListTag className={`mb-4 pl-6 ${node.listType === 'number' ? 'list-decimal' : 'list-disc'}`}>
+        <ListTag className={`mb-4 pl-6 space-y-2 ${listTypeClass} text-foreground`}>
           {node.children?.map((item: any, idx: number) => (
-            <li key={idx} className="text-foreground mb-2">
-              {item.children?.map((child: any, cidx: number) => (
-                <span key={cidx}>
-                  <TextNode node={child} />
-                </span>
-              ))}
-            </li>
+            <LexicalNode key={idx} node={item} />
           ))}
         </ListTag>
       )
 
+    case 'listitem':
+      return (
+        <li className="text-foreground leading-relaxed">
+          {node.children?.map((child: any, idx: number) => {
+            // Handle nested lists
+            if (child.type === 'list') {
+              return <LexicalNode key={idx} node={child} />
+            }
+            return (
+              <span key={idx}>
+                <TextNode node={child} />
+              </span>
+            )
+          })}
+        </li>
+      )
+
+    case 'checklist':
+      return (
+        <ul className="mb-4 space-y-2">
+          {node.children?.map((item: any, idx: number) => (
+            <LexicalNode key={idx} node={item} />
+          ))}
+        </ul>
+      )
+
+    case 'listitemcheck':
+      return (
+        <li className="flex items-start gap-2 text-foreground">
+          <input
+            type="checkbox"
+            checked={node.checked}
+            readOnly
+            className="mt-1 cursor-default accent-primary"
+          />
+          <span className="flex-1">
+            {node.children?.map((child: any, idx: number) => (
+              <span key={idx}>
+                <TextNode node={child} />
+              </span>
+            ))}
+          </span>
+        </li>
+      )
+
     case 'quote':
       return (
-        <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground my-4">
+        <blockquote className="border-l-4 border-primary pl-6 py-2 italic text-muted-foreground my-6 bg-muted/30 rounded-r">
           {node.children?.map((child: any, idx: number) => (
             <div key={idx}>
               <LexicalNode node={child} />
@@ -113,13 +154,16 @@ function LexicalNode({ node }: { node: any }) {
         </blockquote>
       )
 
+    case 'horizontalrule':
+      return <hr className="my-8 border-t border-border/50" />
+
     case 'link':
       return (
         <a
-          href={node.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:underline"
+          href={node.fields?.url || node.url}
+          target={node.fields?.newTab ? '_blank' : '_self'}
+          rel={node.fields?.newTab ? 'noopener noreferrer' : undefined}
+          className="text-primary hover:underline font-medium transition-colors"
         >
           {node.children?.map((child: any, idx: number) => (
             <span key={idx}>
@@ -127,6 +171,82 @@ function LexicalNode({ node }: { node: any }) {
             </span>
           ))}
         </a>
+      )
+
+    case 'autolink':
+      return (
+        <a
+          href={node.fields?.url || node.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline transition-colors"
+        >
+          {node.children?.map((child: any, idx: number) => (
+            <span key={idx}>
+              <TextNode node={child} />
+            </span>
+          ))}
+        </a>
+      )
+
+    case 'upload':
+      const uploadData = node.value
+      const imageUrl = typeof uploadData === 'object' && uploadData?.url ? uploadData.url : null
+      const altText = typeof uploadData === 'object' && uploadData?.alt ? uploadData.alt : 'Uploaded image'
+      
+      if (!imageUrl) return null
+      
+      return (
+        <figure className="my-8">
+          <div className="relative w-full h-auto rounded-lg overflow-hidden border border-border/50">
+            <Image
+              src={imageUrl}
+              alt={altText}
+              width={1200}
+              height={800}
+              className="w-full h-auto object-cover"
+              unoptimized
+            />
+          </div>
+          {node.fields?.caption && (
+            <figcaption className="text-sm text-muted-foreground mt-2 text-center italic">
+              {node.fields.caption}
+            </figcaption>
+          )}
+        </figure>
+      )
+
+    case 'relationship':
+      const relationData = node.value
+      if (!relationData) return null
+      
+      return (
+        <div className="my-6 p-4 border border-border/50 rounded-lg bg-muted/20">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            <span>Related: {node.relationTo || 'content'}</span>
+          </div>
+          <p className="text-foreground font-medium">
+            {typeof relationData === 'object' && relationData?.title 
+              ? relationData.title 
+              : typeof relationData === 'string' 
+              ? relationData 
+              : 'Related content'}
+          </p>
+        </div>
+      )
+
+    case 'block':
+      // Handle custom blocks if you have any
+      return (
+        <div className="my-6 p-6 border border-border/50 rounded-lg bg-muted/10">
+          <p className="text-sm text-muted-foreground mb-2">Custom Block: {node.fields?.blockType}</p>
+          <pre className="text-xs overflow-auto">
+            {JSON.stringify(node.fields, null, 2)}
+          </pre>
+        </div>
       )
 
     default:
