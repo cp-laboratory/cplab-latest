@@ -188,16 +188,18 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
     connectOptions: {
-      // MongoDB Atlas SSL/TLS configuration for production (Vercel)
+      // MongoDB Atlas SSL/TLS configuration
       retryWrites: true,
       w: 'majority',
-      serverSelectionTimeoutMS: 10000,
-      socketTimeoutMS: 45000,
-      // Connection pool settings for serverless
-      maxPoolSize: 20,
-      minPoolSize: 2,
-      maxIdleTimeMS: 60000,
-      waitQueueTimeoutMS: 10000,
+      // Increased timeouts for development stability
+      serverSelectionTimeoutMS: 30000, // 30s instead of 10s
+      socketTimeoutMS: 75000, // 75s instead of 45s
+      connectTimeoutMS: 30000, // 30s connection timeout
+      // Connection pool settings - more relaxed for development
+      maxPoolSize: process.env.NODE_ENV === 'production' ? 10 : 5,
+      minPoolSize: process.env.NODE_ENV === 'production' ? 2 : 1,
+      maxIdleTimeMS: 120000, // 2 minutes instead of 1
+      waitQueueTimeoutMS: 30000, // 30s instead of 10s
       family: 4,
     },
   }),
