@@ -194,8 +194,11 @@ export default buildConfig({
       serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
       // Connection pool settings for serverless
-      maxPoolSize: 10,
-      minPoolSize: 1,
+      maxPoolSize: 20,
+      minPoolSize: 2,
+      maxIdleTimeMS: 60000,
+      waitQueueTimeoutMS: 10000,
+      family: 4,
     },
   }),
 
