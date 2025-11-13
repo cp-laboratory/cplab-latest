@@ -138,7 +138,7 @@ export default function ProjectDetailPage() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container mx-auto px-4 py-20 text-center">
+        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
           <div className="inline-block w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           <p className="mt-4 text-muted-foreground">Loading project...</p>
         </div>
@@ -151,7 +151,7 @@ export default function ProjectDetailPage() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container mx-auto px-4 py-20 text-center">
+        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
           <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
           <p className="text-muted-foreground mb-6">The project you're looking for doesn't exist.</p>
           <Link href="/projects">
@@ -188,7 +188,7 @@ export default function ProjectDetailPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-20">
+      <main className="max-w-7xl mx-auto px-4 py-20">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

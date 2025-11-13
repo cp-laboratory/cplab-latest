@@ -124,7 +124,7 @@ export default function TeamMemberPage() {
 
       <div className="relative z-10">
         {/* Back Button */}
-        <div className="container mx-auto px-4 pt-8">
+        <div className="max-w-7xl mx-auto px-4 pt-8">
           <Link
             href="/team"
             className="inline-flex items-center text-primary hover:text-primary/80 transition-colors mb-8"
@@ -137,7 +137,7 @@ export default function TeamMemberPage() {
         </div>
 
         {/* Profile Content */}
-        <div className="container mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-4 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
