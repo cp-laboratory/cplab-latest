@@ -1,83 +1,149 @@
-"use client"
-
-import { useState } from "react"
-import { motion } from "framer-motion"
+import { Suspense } from "react"
 import Link from "next/link"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import NewsHeader from "./components/news-header"
+import { NewsCard } from "./components/news-card"
 
-const newsArticles = [
-  {
-    id: 1,
-    title: "Lab Receives Major Grant for IoT Security Research",
-    excerpt:
-      "The Cyber Physical Laboratory has been awarded a $2M grant to advance research in IoT security and distributed systems.",
-    date: "2024-01-15",
-    author: "Dr. Sarah Johnson",
-    category: "Funding",
-    image: "/research-lab.jpg",
-  },
-  {
-    id: 2,
-    title: "New Publication on Federated Learning Accepted at Top Conference",
-    excerpt:
-      "Our latest research on federated learning in heterogeneous networks has been accepted for presentation at IEEE IoT Conference 2024.",
-    date: "2024-01-10",
-    author: "Alex Kumar",
-    category: "Publication",
-    image: "/business-conference.png",
-  },
-  {
-    id: 3,
-    title: "Team Member Wins Best Paper Award",
-    excerpt:
-      "Emily Rodriguez received the Best Paper Award at the IEEE Cybersecurity Conference for her work on blockchain-based security frameworks.",
-    date: "2024-01-05",
-    author: "Lab News",
-    category: "Achievement",
-    image: "/golden-trophy-on-pedestal.png",
-  },
-  {
-    id: 4,
-    title: "Collaboration with Industry Partners Announced",
-    excerpt:
-      "The lab has established new partnerships with leading tech companies to accelerate research in edge computing and AI.",
-    date: "2023-12-28",
-    author: "Prof. Michael Chen",
-    category: "Partnership",
-    image: "/partnership-hands.png",
-  },
-  {
-    id: 5,
-    title: "New Research Initiative on Cyber-Physical System Security",
-    excerpt:
-      "We are launching a new research initiative focused on securing critical infrastructure through advanced cyber-physical system architectures.",
-    date: "2023-12-20",
-    author: "Dr. Sarah Johnson",
-    category: "Research",
-    image: "/digital-security-abstract.png",
-  },
-  {
-    id: 6,
-    title: "Lab Hosts International Workshop on IoT",
-    excerpt:
-      "The laboratory successfully hosted an international workshop bringing together researchers from around the world to discuss IoT innovations.",
-    date: "2023-12-15",
-    author: "Lab News",
-    category: "Event",
-    image: "/workshop.png",
-  },
-]
+// Enable ISR with 1 hour revalidation
+export const revalidate = 3600
 
-export default function NewsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+const ITEMS_PER_PAGE = 6
 
-  const categories = ["All", "Funding", "Publication", "Achievement", "Partnership", "Research", "Event"]
+interface NewsArticle {
+  id: string
+  title: string
+  excerpt: string
+  publishedDate: string
+  author: {
+    id: string
+    email: string
+    name: string
+  }
+  featuredImage?: {
+    id: string
+    url: string
+    alt: string
+  }
+  slug: string
+}
 
-  const filteredNews =
-    selectedCategory && selectedCategory !== "All"
-      ? newsArticles.filter((article) => article.category === selectedCategory)
-      : newsArticles
+async function getNews(page: number = 1): Promise<{
+  articles: NewsArticle[]
+  totalPages: number
+  currentPage: number
+  totalDocs: number
+}> {
+  try {
+    const payload = await getPayload({ config })
+    
+    const skip = (page - 1) * ITEMS_PER_PAGE
+
+    const result = await payload.find({
+      collection: 'news',
+      where: {
+        status: {
+          equals: 'published',
+        },
+      },
+      sort: '-publishedDate',
+      limit: ITEMS_PER_PAGE,
+      offset: skip,
+    } as any)
+
+    return {
+      articles: result.docs.map((doc: any) => ({
+        id: doc.id,
+        title: doc.title,
+        excerpt: doc.excerpt,
+        publishedDate: doc.publishedDate,
+        author: doc.author || { id: '', email: '', name: 'Unknown' },
+        featuredImage: doc.featuredImage,
+        slug: doc.slug,
+      })),
+      totalPages: Math.ceil(result.totalDocs / ITEMS_PER_PAGE),
+      currentPage: page,
+      totalDocs: result.totalDocs,
+    }
+  } catch (error) {
+    console.error('Error fetching news:', error)
+    return {
+      articles: [],
+      totalPages: 0,
+      currentPage: 1,
+      totalDocs: 0,
+    }
+  }
+}
+
+async function NewsGrid({ page }: { page: number }): Promise<JSX.Element> {
+  const { articles, totalPages, currentPage } = await getNews(page)
+
+  if (articles.length === 0) {
+    return (
+      <div className="col-span-full text-center py-12">
+        <p className="text-muted-foreground">No news articles found.</p>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {articles.map((article, index) => (
+          <NewsCard key={article.id} article={article} index={index} />
+        ))}
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-12">
+          {page > 1 && (
+            <Link href={`/news?page=${page - 1}`}>
+              <button className="px-4 py-2 rounded-lg border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all">
+                ← Previous
+              </button>
+            </Link>
+          )}
+          
+          <div className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <Link key={p} href={`/news?page=${p}`}>
+                <button
+                  className={`px-3 py-2 rounded-lg transition-all ${
+                    p === currentPage
+                      ? 'bg-primary text-primary-foreground'
+                      : 'border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                  }`}
+                >
+                  {p}
+                </button>
+              </Link>
+            ))}
+          </div>
+
+          {page < totalPages && (
+            <Link href={`/news?page=${page + 1}`}>
+              <button className="px-4 py-2 rounded-lg border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all">
+                Next →
+              </button>
+            </Link>
+          )}
+        </div>
+      )}
+    </>
+  )
+}
+
+export default async function NewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
+  const params = await searchParams
+  const page = parseInt(params.page || '1', 10)
 
   return (
     <div className="min-h-screen w-full relative bg-black">
@@ -93,90 +159,13 @@ export default function NewsPage() {
       <div className="relative z-10">
         {/* Header */}
         <div className="container mx-auto px-4 py-24 sm:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">Lab News & Updates</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Stay updated with the latest news, achievements, and announcements from our laboratory.
-            </p>
-          </motion.div>
-
-          {/* Category Filter */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-wrap justify-center gap-3 mb-12"
-          >
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category === "All" ? null : category)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                  (category === "All" && !selectedCategory) || selectedCategory === category
-                    ? "bg-primary text-primary-foreground"
-                    : "border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </motion.div>
+          <NewsHeader />
 
           {/* News Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {filteredNews.map((article, index) => (
-              <motion.div
-                key={article.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Link href={`/news/${article.id}`}>
-                  <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 cursor-pointer h-full flex flex-col">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                    <div className="relative z-10 flex flex-col h-full">
-                      <div className="overflow-hidden rounded-t-lg">
-                        <img
-                          src={article.image || "/placeholder.svg"}
-                          alt={article.title}
-                          className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-
-                      <div className="p-6 flex flex-col flex-grow">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
-                            {article.category}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {new Date(article.date).toLocaleDateString()}
-                          </span>
-                        </div>
-
-                        <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                          {article.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-4 flex-grow">{article.excerpt}</p>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                          <span className="text-xs text-muted-foreground">{article.author}</span>
-                          <span className="text-primary text-sm font-medium group-hover:translate-x-2 transition-transform duration-300">
-                            Read →
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+          <Suspense fallback={<div className="text-center py-12 text-muted-foreground">Loading news...</div>}>
+            {/* @ts-ignore - Async component */}
+            <NewsGrid page={page} />
+          </Suspense>
         </div>
       </div>
 
