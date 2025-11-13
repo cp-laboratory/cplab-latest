@@ -70,7 +70,7 @@ export default function AnnouncementsSection({ announcements }: AnnouncementsSec
       <div className="bg-primary/20 absolute top-1/2 -right-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
       <div className="bg-primary/20 absolute top-1/2 -left-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
 
-      <div className="z-10 container mx-auto px-4">
+      <div className="z-10 max-w-7xl mx-auto px-4">
         <motion.div
           className="flex justify-center"
           initial={{ opacity: 0, y: 20 }}
@@ -108,7 +108,7 @@ export default function AnnouncementsSection({ announcements }: AnnouncementsSec
         </motion.p>
 
         {/* Announcements List */}
-        <div className="mx-auto mt-12 max-w-4xl">
+        <div className="mx-auto mt-12 max-w-7xl">
           {announcements.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">No announcements available.</p>

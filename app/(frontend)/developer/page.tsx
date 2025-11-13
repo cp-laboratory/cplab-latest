@@ -188,7 +188,7 @@ export default function DeveloperPage() {
       <Navbar />
 
       <div className="relative z-10">
-        <div className="container mx-auto px-4 py-24 sm:py-32">
+        <div className="max-w-7xl mx-auto px-4 py-24 sm:py-32">
           {/* Loading State */}
           {loading && (
             <div className="text-center py-20">

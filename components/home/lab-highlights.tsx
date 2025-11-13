@@ -76,7 +76,7 @@ export default function LabHighlights() {
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
         transition={{ duration: 0.5 }}
-        className="container mx-auto px-4"
+        className="max-w-7xl mx-auto px-4"
       >
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">

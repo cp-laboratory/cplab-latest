@@ -40,7 +40,7 @@ export default function OfflinePage() {
         }}
       />
 
-      <div className="relative z-10 container mx-auto px-4 py-24 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-24 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

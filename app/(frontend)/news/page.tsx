@@ -158,7 +158,7 @@ export default async function NewsPage({
 
       <div className="relative z-10">
         {/* Header */}
-        <div className="container mx-auto px-4 py-24 sm:py-32">
+        <div className="max-w-7xl mx-auto px-4 py-24 sm:py-32">
           <NewsHeader />
 
           {/* News Grid */}

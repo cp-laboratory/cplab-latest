@@ -32,7 +32,7 @@ export default function FAQSection({ faqs }: FAQSectionProps) {
       <div className="bg-primary/20 absolute top-1/2 -right-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
       <div className="bg-primary/20 absolute top-1/2 -left-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
 
-      <div className="z-10 container mx-auto px-4">
+      <div className="z-10 max-w-7xl mx-auto px-4">
         <motion.div
           className="flex justify-center"
           initial={{ opacity: 0, y: 20 }}
@@ -60,11 +60,11 @@ export default function FAQSection({ faqs }: FAQSectionProps) {
         </motion.h2>
 
         {faqs.length === 0 ? (
-          <div className="mx-auto mt-12 flex max-w-xl justify-center">
+          <div className="mx-auto mt-12 flex max-w-7xl justify-center">
             <p className="text-muted-foreground">No FAQs available at the moment.</p>
           </div>
         ) : (
-          <div className="mx-auto mt-12 flex max-w-xl flex-col gap-6">
+          <div className="mx-auto mt-12 flex max-w-7xl flex-col gap-6">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}

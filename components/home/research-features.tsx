@@ -71,7 +71,7 @@ export default function ResearchFeatures() {
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
         transition={{ duration: 0.5, delay: 0 }}
-        className="container mx-auto flex flex-col items-center gap-6 sm:gap-12"
+        className="max-w-7xl mx-auto flex flex-col items-center gap-6 sm:gap-12"
       >
         <h2
           className={cn(

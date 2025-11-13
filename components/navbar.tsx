@@ -5,32 +5,27 @@ import Link from "next/link"
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true)
-  const [lastScrollY, setLastScrollY] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
-    let ticking = false
-
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY
-
-          setIsScrolled(currentScrollY > 50)
-
-          // Show navbar when scrolling up, hide when scrolling down
-          if (currentScrollY < lastScrollY || currentScrollY < 50) {
-            setIsNavbarVisible(true)
-          } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            setIsNavbarVisible(false)
-          }
-
-          setLastScrollY(currentScrollY)
-          ticking = false
-        })
-        ticking = true
+      const currentScrollY = window.scrollY
+      
+      // Set scrolled state (compact navbar earlier)
+      setIsScrolled(currentScrollY > 50)
+      
+      // Show/hide navbar based on scroll direction
+      if (currentScrollY < lastScrollY || currentScrollY < 50) {
+        // Scrolling up or near top
+        setIsVisible(true)
+      } else if (currentScrollY > lastScrollY && currentScrollY > 200) {
+        // Scrolling down (hide later to see compact state)
+        setIsVisible(false)
       }
+      
+      setLastScrollY(currentScrollY)
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
@@ -41,14 +36,11 @@ export function Navbar() {
     <>
       {/* Desktop Header */}
       <header
-        className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-background/80 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 max-w-5xl px-4 ${
-          isScrolled ? "py-2" : "py-3"
-        } ${isNavbarVisible ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"}`}
+        className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-background/80 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-500 ease-in-out ${
+          isScrolled ? "max-w-md px-3 py-2" : "max-w-7xl px-8 py-3"
+        } ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
         style={{
-          willChange: "transform",
-          transform: "translateZ(0)",
-          backfaceVisibility: "hidden",
-          perspective: "1000px",
+          willChange: "max-width, padding, transform, opacity",
         }}
       >
         <Link className="z-50 flex items-center justify-center gap-2 transition-all duration-300" href="/">
@@ -99,9 +91,7 @@ export function Navbar() {
 
       {/* Mobile Header */}
       <header
-        className={`sticky top-4 z-[9999] mx-4 flex w-auto flex-row items-center justify-between rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg md:hidden px-4 transition-all duration-300 ${
-          isScrolled ? "py-2" : "py-3"
-        } ${isNavbarVisible ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"}`}
+        className={`sticky top-4 z-[9999] mx-4 flex w-auto flex-row items-center justify-between rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg md:hidden px-4 py-3`}
       >
         <Link className="flex items-center justify-center gap-2" href="/">
           <img src="/cpl-logo.png" alt="CPLAB Logo" className="h-7 w-7 rounded-md border border-primary/30" />

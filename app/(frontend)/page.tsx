@@ -149,7 +149,7 @@ export default async function Home() {
       </div>
 
       {/* Newsletter Section */}
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         <NewsletterSection />
       </div>
 

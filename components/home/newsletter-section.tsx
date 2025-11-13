@@ -51,7 +51,7 @@ export function NewsletterSection() {
   return (
     <section className="relative w-full py-12 md:py-20">
       
-      <div className="mx-auto max-w-4xl rounded-[40px] border border-black/5 dark:border-white/20 p-2 shadow-sm">
+      <div className="mx-auto max-w-7xl rounded-[40px] border border-black/5 dark:border-white/20 p-2 shadow-sm">
         <div className="relative mx-auto overflow-hidden rounded-[38px] border border-black/5 dark:border-white/20 bg-primary p-8 md:p-12 shadow-sm">
           {/* Subtle radial glow from center */}
           <div
