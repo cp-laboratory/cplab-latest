@@ -62,7 +62,14 @@ export function NotificationPanel() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('/api/push/notifications')
+      // Add cache-busting timestamp to force fresh data
+      const response = await fetch(`/api/push/notifications?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+        },
+      })
       const data = await response.json()
       
       console.log('Fetched notifications:', data) // Debug log

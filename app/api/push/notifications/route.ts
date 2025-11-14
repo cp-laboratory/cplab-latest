@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
+// Disable caching for this route
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export async function GET(request: NextRequest) {
   try {
     const payload = await getPayload({ config })
@@ -49,7 +53,16 @@ export async function GET(request: NextRequest) {
 
     console.log('Returning notifications:', formattedNotifications.length)
 
-    return NextResponse.json({ notifications: formattedNotifications })
+    return NextResponse.json(
+      { notifications: formattedNotifications },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    )
   } catch (error) {
     console.error('Error fetching notifications:', error)
     return NextResponse.json(
