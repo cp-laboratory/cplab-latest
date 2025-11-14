@@ -175,23 +175,15 @@ export const Notifications: CollectionConfig = {
           const { sendPushNotification } = await import('@/lib/push-notifications')
           
           try {
-            // Get absolute URLs for images
-            const getAbsoluteUrl = (url?: string) => {
-              if (!url) return undefined
-              if (url.startsWith('http')) return url
-              const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-              return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`
-            }
-
             const result = await sendPushNotification({
               title: doc.title,
               body: doc.body,
               image: typeof doc.image === 'object' && doc.image?.url 
-                ? getAbsoluteUrl(doc.image.url) 
+                ? doc.image.url  // Use direct URL from R2
                 : undefined,
               icon: typeof doc.icon === 'object' && doc.icon?.url 
-                ? getAbsoluteUrl(doc.icon.url) 
-                : getAbsoluteUrl('/icon-192x192.png'),
+                ? doc.icon.url  // Use direct URL from R2
+                : '/cpl-logo.png',
               link: doc.link,
             })
 

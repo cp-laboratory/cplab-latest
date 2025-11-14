@@ -25,7 +25,11 @@ export function NotificationPanel() {
   useEffect(() => {
     // Check if user is already subscribed
     checkSubscriptionStatus()
-    
+    // Fetch notifications on mount
+    fetchNotifications()
+  }, [])
+
+  useEffect(() => {
     // Fetch notifications when panel opens
     if (isOpen) {
       fetchNotifications()
@@ -54,14 +58,23 @@ export function NotificationPanel() {
     try {
       const response = await fetch('/api/push/notifications')
       const data = await response.json()
-      setNotifications(data.notifications || [])
       
-      // Get read notifications from localStorage
-      const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]')
-      const unread = data.notifications.filter((n: Notification) => !readNotifications.includes(n.id))
-      setUnreadCount(unread.length)
+      console.log('Fetched notifications:', data) // Debug log
+      
+      if (data.notifications && Array.isArray(data.notifications)) {
+        setNotifications(data.notifications)
+        
+        // Get read notifications from localStorage
+        const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]')
+        const unread = data.notifications.filter((n: Notification) => !readNotifications.includes(n.id))
+        setUnreadCount(unread.length)
+      } else {
+        console.error('Invalid notifications data:', data)
+        setNotifications([])
+      }
     } catch (error) {
       console.error('Error fetching notifications:', error)
+      setNotifications([])
     }
   }
 
