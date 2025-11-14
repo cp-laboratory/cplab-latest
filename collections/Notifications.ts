@@ -163,7 +163,7 @@ export const Notifications: CollectionConfig = {
       },
     ],
     afterChange: [
-      async ({ doc, operation, previousDoc }) => {
+      async ({ doc, operation, previousDoc, req }) => {
         // Send notification after document is saved
         // Only send if status changed to 'sent' or if it was already sent and sendImmediately was checked
         const shouldSend = 
@@ -175,16 +175,23 @@ export const Notifications: CollectionConfig = {
           const { sendPushNotification } = await import('@/lib/push-notifications')
           
           try {
+            // Refetch the document with depth to ensure image/icon are fully populated
+            const fullDoc = await req.payload.findByID({
+              collection: 'push-notifications',
+              id: doc.id,
+              depth: 2,
+            })
+
             const result = await sendPushNotification({
-              title: doc.title,
-              body: doc.body,
-              image: typeof doc.image === 'object' && doc.image?.url 
-                ? doc.image.url  // Use direct URL from R2
+              title: fullDoc.title,
+              body: fullDoc.body,
+              image: typeof fullDoc.image === 'object' && fullDoc.image?.url 
+                ? fullDoc.image.url  // Use direct URL from R2
                 : undefined,
-              icon: typeof doc.icon === 'object' && doc.icon?.url 
-                ? doc.icon.url  // Use direct URL from R2
+              icon: typeof fullDoc.icon === 'object' && fullDoc.icon?.url 
+                ? fullDoc.icon.url  // Use direct URL from R2
                 : '/cpl-logo.png',
-              link: doc.link,
+              link: fullDoc.link,
             })
 
             console.log(`Notification sent successfully: ${result.success} sent, ${result.failed} failed`)
