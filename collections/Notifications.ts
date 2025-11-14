@@ -1,7 +1,7 @@
 import { CollectionConfig } from 'payload'
 
 export const Notifications: CollectionConfig = {
-  slug: 'notifications',
+  slug: 'push-notifications',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'status', 'sentAt', 'createdAt'],
@@ -169,7 +169,7 @@ export const Notifications: CollectionConfig = {
 
             // Update the document to mark as sent
             await req.payload.update({
-              collection: 'notifications',
+              collection: 'push-notifications',
               id: doc.id,
               data: {
                 status: 'sent',
@@ -182,7 +182,7 @@ export const Notifications: CollectionConfig = {
           } catch (error) {
             console.error('Failed to send notification:', error)
             await req.payload.update({
-              collection: 'notifications',
+              collection: 'push-notifications',
               id: doc.id,
               data: {
                 status: 'failed',

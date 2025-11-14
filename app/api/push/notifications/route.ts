@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
     // Get all sent notifications for public view
     const notifications = await payload.find({
-      collection: 'notifications',
+      collection: 'push-notifications',
       where: {
         status: {
           equals: 'sent',
