@@ -18,12 +18,24 @@ export async function GET(request: NextRequest) {
       limit: 50,
     })
 
+    // Helper to get absolute URLs
+    const getAbsoluteUrl = (url?: string) => {
+      if (!url) return undefined
+      if (url.startsWith('http')) return url
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+      return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`
+    }
+
     const formattedNotifications = notifications.docs.map((notif: any) => ({
       id: notif.id,
       title: notif.title,
       body: notif.body,
-      image: typeof notif.image === 'object' && notif.image?.url ? notif.image.url : undefined,
-      icon: typeof notif.icon === 'object' && notif.icon?.url ? notif.icon.url : '/icon-192x192.png',
+      image: typeof notif.image === 'object' && notif.image?.url 
+        ? getAbsoluteUrl(notif.image.url) 
+        : undefined,
+      icon: typeof notif.icon === 'object' && notif.icon?.url 
+        ? getAbsoluteUrl(notif.icon.url) 
+        : getAbsoluteUrl('/icon-192x192.png'),
       link: notif.link,
       sentAt: notif.sentAt,
     }))

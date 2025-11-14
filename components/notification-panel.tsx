@@ -199,7 +199,7 @@ export function NotificationPanel() {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-40 bg-black/50 md:bg-transparent"
+              className="fixed inset-0 z-40 bg-black/50 md:hidden"
               onClick={() => setIsOpen(false)}
             />
             
@@ -209,7 +209,7 @@ export function NotificationPanel() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
-              className="fixed md:absolute inset-0 md:inset-auto md:right-0 md:mt-2 md:w-80 lg:w-96 bg-background md:border border-border md:rounded-lg shadow-2xl z-50 flex flex-col md:max-h-[80vh]"
+              className="fixed md:absolute top-0 left-0 right-0 bottom-0 md:inset-auto md:right-0 md:top-auto md:left-auto md:bottom-auto md:mt-2 w-full md:w-80 lg:w-96 bg-background md:border border-border md:rounded-lg shadow-2xl z-50 flex flex-col max-h-screen md:max-h-[80vh]"
             >
               {/* Header */}
               <div className="p-4 md:p-4 border-b border-border">
