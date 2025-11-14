@@ -19,16 +19,21 @@ export function NotificationPanel() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isCheckingSubscription, setIsCheckingSubscription] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     // Check if user is already subscribed
     checkSubscriptionStatus()
     
-    // Fetch notifications
-    fetchNotifications()
-  }, [])
+    // Fetch notifications when panel opens
+    if (isOpen) {
+      fetchNotifications()
+    }
+  }, [isOpen])
 
   const checkSubscriptionStatus = async () => {
+    setIsCheckingSubscription(true)
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       try {
         const registration = await navigator.serviceWorker.ready
@@ -38,6 +43,7 @@ export function NotificationPanel() {
         console.error('Error checking subscription:', error)
       }
     }
+    setIsCheckingSubscription(false)
   }
 
   const fetchNotifications = async () => {
@@ -61,6 +67,7 @@ export function NotificationPanel() {
       return
     }
 
+    setIsLoading(true)
     try {
       // Request notification permission first
       const permission = await Notification.requestPermission()
@@ -68,6 +75,7 @@ export function NotificationPanel() {
       
       if (permission !== 'granted') {
         alert('Notification permission denied')
+        setIsLoading(false)
         return
       }
 
@@ -79,6 +87,7 @@ export function NotificationPanel() {
       if (!vapidPublicKey) {
         alert('VAPID public key not configured')
         console.error('NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set')
+        setIsLoading(false)
         return
       }
 
@@ -112,6 +121,8 @@ export function NotificationPanel() {
     } catch (error) {
       console.error('Error subscribing to push notifications:', error)
       alert('Failed to subscribe to notifications: ' + (error as Error).message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -210,15 +221,33 @@ export function NotificationPanel() {
                   </button>
                 </div>
                 
-                {/* Subscribe Button */}
-                {!isSubscribed && (
+                {/* Subscribe Button - Only show if checking is done and not subscribed */}
+                {isCheckingSubscription ? (
+                  <div className="flex items-center justify-center py-3">
+                    <svg className="w-5 h-5 animate-spin text-muted-foreground" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                ) : !isSubscribed ? (
                   <button
                     onClick={subscribeToPush}
-                    className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
+                    disabled={isLoading}
+                    className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    🔔 Enable Push Notifications
+                    {isLoading ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Subscribing...
+                      </span>
+                    ) : (
+                      '🔔 Enable Push Notifications'
+                    )}
                   </button>
-                )}
+                ) : null}
               </div>
 
               {/* Notifications List */}
