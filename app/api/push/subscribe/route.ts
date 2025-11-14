@@ -13,7 +13,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    await saveSubscription(subscription, userId)
+    // Get user agent from request headers
+    const userAgent = request.headers.get('user-agent') || 'Unknown'
+
+    await saveSubscription(subscription, userId, userAgent)
 
     return NextResponse.json({ success: true })
   } catch (error) {

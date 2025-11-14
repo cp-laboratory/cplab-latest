@@ -106,11 +106,16 @@ export async function sendPushNotification(payload: PushNotificationPayload) {
   }
 }
 
-export async function saveSubscription(subscription: PushSubscription, userId?: string) {
+export async function saveSubscription(
+  subscription: any,
+  userId?: string,
+  userAgent?: string
+) {
   try {
     const payload = await getPayload({ config })
 
-    const subscriptionData = subscription.toJSON()
+    // subscription is already in JSON format from the client
+    const subscriptionData = subscription
 
     // Check if subscription already exists
     const existing = await payload.find({
@@ -134,7 +139,7 @@ export async function saveSubscription(subscription: PushSubscription, userId?: 
           },
           userId,
           isActive: true,
-          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+          userAgent: userAgent || 'Unknown',
         },
       })
     } else {
@@ -149,7 +154,7 @@ export async function saveSubscription(subscription: PushSubscription, userId?: 
           },
           userId,
           isActive: true,
-          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+          userAgent: userAgent || 'Unknown',
         },
       })
     }
