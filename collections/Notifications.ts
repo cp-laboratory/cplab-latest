@@ -151,10 +151,26 @@ export const Notifications: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeChange: [
+      async ({ data, operation }) => {
+        // If sendImmediately is checked, set status to 'sent' and sentAt timestamp
+        if (data.sendImmediately && (operation === 'create' || operation === 'update')) {
+          data.status = 'sent'
+          data.sentAt = new Date().toISOString()
+          data.sendImmediately = false
+        }
+        return data
+      },
+    ],
     afterChange: [
-      async ({ doc, req, operation }) => {
-        // Only send on create or update when sendImmediately is checked
-        if (doc.sendImmediately && (operation === 'create' || operation === 'update')) {
+      async ({ doc, operation, previousDoc }) => {
+        // Send notification after document is saved
+        // Only send if status changed to 'sent' or if it was already sent and sendImmediately was checked
+        const shouldSend = 
+          (operation === 'create' && doc.status === 'sent') ||
+          (operation === 'update' && doc.status === 'sent' && previousDoc?.status !== 'sent')
+
+        if (shouldSend) {
           // Import the send notification function
           const { sendPushNotification } = await import('@/lib/push-notifications')
           
@@ -167,28 +183,9 @@ export const Notifications: CollectionConfig = {
               link: doc.link,
             })
 
-            // Update the document to mark as sent
-            await req.payload.update({
-              collection: 'push-notifications',
-              id: doc.id,
-              data: {
-                status: 'sent',
-                sentAt: new Date().toISOString(),
-                sentTo: result.success,
-                failedCount: result.failed,
-                sendImmediately: false,
-              },
-            })
+            console.log(`Notification sent successfully: ${result.success} sent, ${result.failed} failed`)
           } catch (error) {
             console.error('Failed to send notification:', error)
-            await req.payload.update({
-              collection: 'push-notifications',
-              id: doc.id,
-              data: {
-                status: 'failed',
-                sendImmediately: false,
-              },
-            })
           }
         }
       },
