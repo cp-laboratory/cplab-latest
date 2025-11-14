@@ -99,15 +99,19 @@ export function Navbar() {
           <img src="/cpl-logo.png" alt="CPLAB Logo" className="h-7 w-7 rounded-md border border-primary/30" />
         </Link>
 
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-background/50 border border-border/50 transition-colors hover:bg-background/80"
-          aria-label="Toggle menu"
-        >
-          <div className="flex flex-col items-center justify-center w-5 h-5 space-y-1">
-            <span
-              className={`block w-4 h-0.5 bg-foreground transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}
-            ></span>
+        <div className="flex items-center gap-2">
+          {/* Notification Bell for Mobile */}
+          <NotificationPanel />
+          
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-background/50 border border-border/50 transition-colors hover:bg-background/80"
+            aria-label="Toggle menu"
+          >
+            <div className="flex flex-col items-center justify-center w-5 h-5 space-y-1">
+              <span
+                className={`block w-4 h-0.5 bg-foreground transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}
+              ></span>
             <span
               className={`block w-4 h-0.5 bg-foreground transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}
             ></span>
@@ -116,6 +120,7 @@ export function Navbar() {
             ></span>
           </div>
         </button>
+        </div>
       </header>
 
       {/* Mobile Menu Overlay */}

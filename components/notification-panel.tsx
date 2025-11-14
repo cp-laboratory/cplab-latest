@@ -62,23 +62,38 @@ export function NotificationPanel() {
     }
 
     try {
-      const registration = await navigator.serviceWorker.ready
-      
-      // Request notification permission
+      // Request notification permission first
       const permission = await Notification.requestPermission()
+      console.log('Permission result:', permission)
+      
       if (permission !== 'granted') {
         alert('Notification permission denied')
         return
       }
 
+      const registration = await navigator.serviceWorker.ready
+      console.log('Service worker ready:', registration)
+
+      // Convert VAPID key from base64 to Uint8Array
+      const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
+      if (!vapidPublicKey) {
+        alert('VAPID public key not configured')
+        console.error('NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set')
+        return
+      }
+
+      const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey)
+
       // Subscribe to push notifications
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+        applicationServerKey: convertedVapidKey,
       })
 
+      console.log('Subscription created:', subscription)
+
       // Send subscription to server
-      await fetch('/api/push/subscribe', {
+      const response = await fetch('/api/push/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,12 +103,32 @@ export function NotificationPanel() {
         }),
       })
 
+      if (!response.ok) {
+        throw new Error('Failed to save subscription')
+      }
+
       setIsSubscribed(true)
       alert('Successfully subscribed to notifications!')
     } catch (error) {
       console.error('Error subscribing to push notifications:', error)
-      alert('Failed to subscribe to notifications')
+      alert('Failed to subscribe to notifications: ' + (error as Error).message)
     }
+  }
+
+  // Helper function to convert base64 VAPID key to Uint8Array
+  const urlBase64ToUint8Array = (base64String: string) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4)
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/')
+
+    const rawData = window.atob(base64)
+    const outputArray = new Uint8Array(rawData.length)
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i)
+    }
+    return outputArray
   }
 
   const markAsRead = (notificationId: string) => {
@@ -122,7 +157,7 @@ export function NotificationPanel() {
         aria-label="Notifications"
       >
         <svg
-          className="w-6 h-6 text-foreground"
+          className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -130,7 +165,7 @@ export function NotificationPanel() {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth={2}
+            strokeWidth={1.5}
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
@@ -149,25 +184,25 @@ export function NotificationPanel() {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 z-40"
+              className="fixed inset-0 z-40 bg-black/50 md:bg-transparent"
               onClick={() => setIsOpen(false)}
             />
             
-            {/* Panel */}
+            {/* Panel - Full screen on mobile, dropdown on desktop */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 mt-2 w-80 md:w-96 bg-background border border-border rounded-lg shadow-2xl z-50 max-h-[80vh] overflow-hidden flex flex-col"
+              className="fixed md:absolute inset-0 md:inset-auto md:right-0 md:mt-2 md:w-80 lg:w-96 bg-background md:border border-border md:rounded-lg shadow-2xl z-50 flex flex-col md:max-h-[80vh]"
             >
               {/* Header */}
-              <div className="p-4 border-b border-border">
+              <div className="p-4 md:p-4 border-b border-border">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-foreground">Notifications</h3>
+                  <h3 className="text-lg md:text-lg font-semibold text-foreground">Notifications</h3>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground p-2 hover:bg-muted/20 rounded-full transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
