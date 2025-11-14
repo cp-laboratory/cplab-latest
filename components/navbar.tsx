@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { NotificationPanel } from "./notification-panel"
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -80,6 +81,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4 relative z-50">
+          <NotificationPanel />
           <Link
             href="/contact"
             className="font-medium transition-colors hover:text-foreground text-muted-foreground text-sm"

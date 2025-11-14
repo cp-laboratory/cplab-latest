@@ -1,0 +1,267 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
+
+interface Notification {
+  id: string
+  title: string
+  body: string
+  image?: string
+  icon: string
+  link?: string
+  sentAt: string
+}
+
+export function NotificationPanel() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [unreadCount, setUnreadCount] = useState(0)
+  const [isSubscribed, setIsSubscribed] = useState(false)
+
+  useEffect(() => {
+    // Check if user is already subscribed
+    checkSubscriptionStatus()
+    
+    // Fetch notifications
+    fetchNotifications()
+  }, [])
+
+  const checkSubscriptionStatus = async () => {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      try {
+        const registration = await navigator.serviceWorker.ready
+        const subscription = await registration.pushManager.getSubscription()
+        setIsSubscribed(!!subscription)
+      } catch (error) {
+        console.error('Error checking subscription:', error)
+      }
+    }
+  }
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('/api/push/notifications')
+      const data = await response.json()
+      setNotifications(data.notifications || [])
+      
+      // Get read notifications from localStorage
+      const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]')
+      const unread = data.notifications.filter((n: Notification) => !readNotifications.includes(n.id))
+      setUnreadCount(unread.length)
+    } catch (error) {
+      console.error('Error fetching notifications:', error)
+    }
+  }
+
+  const subscribeToPush = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert('Push notifications are not supported in your browser')
+      return
+    }
+
+    try {
+      const registration = await navigator.serviceWorker.ready
+      
+      // Request notification permission
+      const permission = await Notification.requestPermission()
+      if (permission !== 'granted') {
+        alert('Notification permission denied')
+        return
+      }
+
+      // Subscribe to push notifications
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+      })
+
+      // Send subscription to server
+      await fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subscription: subscription.toJSON(),
+        }),
+      })
+
+      setIsSubscribed(true)
+      alert('Successfully subscribed to notifications!')
+    } catch (error) {
+      console.error('Error subscribing to push notifications:', error)
+      alert('Failed to subscribe to notifications')
+    }
+  }
+
+  const markAsRead = (notificationId: string) => {
+    const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]')
+    if (!readNotifications.includes(notificationId)) {
+      readNotifications.push(notificationId)
+      localStorage.setItem('readNotifications', JSON.stringify(readNotifications))
+      setUnreadCount(prev => Math.max(0, prev - 1))
+    }
+  }
+
+  const handleNotificationClick = (notification: Notification) => {
+    markAsRead(notification.id)
+    if (notification.link) {
+      window.location.href = notification.link
+    }
+    setIsOpen(false)
+  }
+
+  return (
+    <div className="relative">
+      {/* Bell Icon */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 rounded-full hover:bg-muted/20 transition-colors"
+        aria-label="Notifications"
+      >
+        <svg
+          className="w-6 h-6 text-foreground"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
+        </svg>
+        
+        {/* Unread Badge */}
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        )}
+      </button>
+
+      {/* Notification Panel */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setIsOpen(false)}
+            />
+            
+            {/* Panel */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute right-0 mt-2 w-80 md:w-96 bg-background border border-border rounded-lg shadow-2xl z-50 max-h-[80vh] overflow-hidden flex flex-col"
+            >
+              {/* Header */}
+              <div className="p-4 border-b border-border">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-foreground">Notifications</h3>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Subscribe Button */}
+                {!isSubscribed && (
+                  <button
+                    onClick={subscribeToPush}
+                    className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
+                  >
+                    🔔 Enable Push Notifications
+                  </button>
+                )}
+              </div>
+
+              {/* Notifications List */}
+              <div className="overflow-y-auto flex-1">
+                {notifications.length === 0 ? (
+                  <div className="p-8 text-center text-muted-foreground">
+                    <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                    <p className="text-sm">No notifications yet</p>
+                  </div>
+                ) : (
+                  notifications.map((notification) => {
+                    const isRead = JSON.parse(localStorage.getItem('readNotifications') || '[]').includes(notification.id)
+                    
+                    return (
+                      <div
+                        key={notification.id}
+                        onClick={() => handleNotificationClick(notification)}
+                        className={`p-4 border-b border-border hover:bg-muted/50 cursor-pointer transition-colors ${
+                          !isRead ? 'bg-primary/5' : ''
+                        }`}
+                      >
+                        <div className="flex gap-3">
+                          {/* Icon/Image */}
+                          <div className="flex-shrink-0">
+                            <Image
+                              src={notification.icon}
+                              alt=""
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className="text-sm font-semibold text-foreground line-clamp-1">
+                                {notification.title}
+                              </h4>
+                              {!isRead && (
+                                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1" />
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                              {notification.body}
+                            </p>
+                            {notification.image && (
+                              <div className="mt-2 rounded-md overflow-hidden">
+                                <Image
+                                  src={notification.image}
+                                  alt=""
+                                  width={300}
+                                  height={150}
+                                  className="w-full h-auto object-cover"
+                                />
+                              </div>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-2">
+                              {new Date(notification.sentAt).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
