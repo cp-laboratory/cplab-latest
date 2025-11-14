@@ -34,16 +34,20 @@ export function NotificationPanel() {
 
   const checkSubscriptionStatus = async () => {
     setIsCheckingSubscription(true)
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      try {
+    try {
+      if ('serviceWorker' in navigator && 'PushManager' in window) {
         const registration = await navigator.serviceWorker.ready
         const subscription = await registration.pushManager.getSubscription()
         setIsSubscribed(!!subscription)
-      } catch (error) {
-        console.error('Error checking subscription:', error)
+      } else {
+        setIsSubscribed(false)
       }
+    } catch (error) {
+      console.error('Error checking subscription:', error)
+      setIsSubscribed(false)
+    } finally {
+      setIsCheckingSubscription(false)
     }
-    setIsCheckingSubscription(false)
   }
 
   const fetchNotifications = async () => {
