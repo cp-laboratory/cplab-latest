@@ -276,16 +276,31 @@ export function NotificationPanel() {
                         }`}
                       >
                         <div className="flex gap-3">
-                          {/* Icon/Image */}
-                          <div className="flex-shrink-0">
-                            <Image
-                              src={notification.icon}
-                              alt=""
-                              width={40}
-                              height={40}
-                              className="rounded-full"
-                            />
-                          </div>
+                          {/* Icon - Only show if no image */}
+                          {!notification.image && (
+                            <div className="flex-shrink-0">
+                              <Image
+                                src={notification.icon}
+                                alt=""
+                                width={40}
+                                height={40}
+                                className="rounded-full object-cover"
+                              />
+                            </div>
+                          )}
+                          
+                          {/* Image - Show as thumbnail if present */}
+                          {notification.image && (
+                            <div className="flex-shrink-0">
+                              <Image
+                                src={notification.image}
+                                alt=""
+                                width={60}
+                                height={60}
+                                className="rounded-md object-cover"
+                              />
+                            </div>
+                          )}
                           
                           {/* Content */}
                           <div className="flex-1 min-w-0">
@@ -300,17 +315,6 @@ export function NotificationPanel() {
                             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                               {notification.body}
                             </p>
-                            {notification.image && (
-                              <div className="mt-2 rounded-md overflow-hidden">
-                                <Image
-                                  src={notification.image}
-                                  alt=""
-                                  width={300}
-                                  height={150}
-                                  className="w-full h-auto object-cover"
-                                />
-                              </div>
-                            )}
                             <p className="text-xs text-muted-foreground mt-2">
                               {new Date(notification.sentAt).toLocaleDateString('en-US', {
                                 month: 'short',
