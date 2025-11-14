@@ -364,7 +364,7 @@ export function NotificationPanel() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[101] bg-background flex flex-col"
+              className="fixed inset-0 z-[101] bg-background flex flex-col pt-16"
             >
               {/* Mobile Header */}
               <div className="p-4 border-b border-border flex-shrink-0">
@@ -410,7 +410,7 @@ export function NotificationPanel() {
               </div>
 
               {/* Mobile Notifications List */}
-              <div className="overflow-y-auto flex-1">
+              <div className="overflow-y-auto flex-1 pb-20">
                 {notifications.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground">
                     <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -484,6 +484,16 @@ export function NotificationPanel() {
                     )
                   })
                 )}
+              </div>
+
+              {/* Mobile Close Button at Bottom */}
+              <div className="p-4 border-t border-border flex-shrink-0 bg-background">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="w-full px-4 py-3 bg-muted text-foreground rounded-md hover:bg-muted/80 transition-colors text-sm font-medium"
+                >
+                  Close
+                </button>
               </div>
             </motion.div>
           </div>
