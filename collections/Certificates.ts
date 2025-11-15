@@ -15,6 +15,7 @@ export const Certificates: CollectionConfig = {
   admin: {
     useAsTitle: 'certificateName',
     defaultColumns: ['certificateName', 'recipientUser', 'shortCode', 'issuedAt'],
+    group: 'Administrative',
     // Only professors can see this collection
     hidden: ({ user }) => {
       if (!user) return true
