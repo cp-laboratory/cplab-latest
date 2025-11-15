@@ -16,6 +16,7 @@ import { LabHighlights } from './collections/LabHighlights'
 import { ResearchAreas } from './collections/ResearchAreas'
 import { Notifications } from './collections/Notifications'
 import { PushSubscriptions } from './collections/PushSubscriptions'
+import { Certificates } from './collections/Certificates'
 
 // Conditionally import Logo and Icon only in production
 const Logo = process.env.NODE_ENV === 'production' ? require('./components/payload/Logo').default : undefined
@@ -57,6 +58,7 @@ export default buildConfig({
     ResearchAreas, // Research Areas (Admin only)
     Notifications, // Push Notifications (Professor only)
     PushSubscriptions, // Push Subscription storage (Professor only)
+    Certificates, // Certificates (Professor only)
     // Add your collections here
     // Media collection with Cloudflare R2 upload
     {
