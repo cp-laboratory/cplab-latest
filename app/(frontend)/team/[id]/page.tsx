@@ -13,9 +13,9 @@ import { Badge } from "@/components/ui/badge"
 interface Profile {
   id: string
   slug: string
-  personalInfo: {
-    fullName: string
-    memberType: string
+  personalInfo?: {
+    fullName?: string
+    memberType?: string
     designation?: string
     profileImage?: {
       url: string
@@ -183,6 +183,8 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
     return null
   }
 
+  const fullName = profile.personalInfo?.fullName || "Team Member"
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -195,34 +197,36 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
           {/* Header Section */}
           <header className="flex flex-col md:flex-row items-center gap-8 mb-12">
             <div className="relative w-40 h-40 rounded-full overflow-hidden flex-shrink-0 border-4 border-primary/20 shadow-lg">
-              {profile.personalInfo.profileImage?.url ? (
+              {profile.personalInfo?.profileImage?.url ? (
                 <Image
                   src={profile.personalInfo.profileImage.url}
-                  alt={profile.personalInfo.profileImage.alt || profile.personalInfo.fullName}
+                  alt={profile.personalInfo.profileImage.alt || fullName}
                   fill
                   className="object-cover"
                 />
               ) : (
                 <div className="w-full h-full bg-primary/10 flex items-center justify-center text-6xl font-bold text-primary">
-                  {profile.personalInfo.fullName.charAt(0)}
+                  {fullName.charAt(0)}
                 </div>
               )}
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-4xl font-bold mb-2">{profile.personalInfo.fullName}</h1>
-              {profile.personalInfo.designation && (
+              <h1 className="text-4xl font-bold mb-2">{fullName}</h1>
+              {profile.personalInfo?.designation && (
                 <p className="text-xl text-primary mb-3">{profile.personalInfo.designation}</p>
               )}
-              {profile.personalInfo.bio && (
+              {profile.personalInfo?.bio && (
                 <p className="text-muted-foreground max-w-xl">{profile.personalInfo.bio}</p>
               )}
-              <div className="flex gap-4 mt-4 justify-center md:justify-start">
-                {profile.socialMedia?.linkedin && <SocialLink href={profile.socialMedia.linkedin} icon="linkedin" />}
-                {profile.socialMedia?.twitter && <SocialLink href={profile.socialMedia.twitter} icon="twitter" />}
-                {profile.socialMedia?.github && <SocialLink href={profile.socialMedia.github} icon="github" />}
-                {profile.socialMedia?.googleScholar && <SocialLink href={profile.socialMedia.googleScholar} icon="scholar" />}
-                {profile.socialMedia?.website && <SocialLink href={profile.socialMedia.website} icon="website" />}
-              </div>
+              {profile.socialMedia && (
+                <div className="flex gap-4 mt-4 justify-center md:justify-start">
+                  {profile.socialMedia.linkedin && <SocialLink href={profile.socialMedia.linkedin} icon="linkedin" />}
+                  {profile.socialMedia.twitter && <SocialLink href={profile.socialMedia.twitter} icon="twitter" />}
+                  {profile.socialMedia.github && <SocialLink href={profile.socialMedia.github} icon="github" />}
+                  {profile.socialMedia.googleScholar && <SocialLink href={profile.socialMedia.googleScholar} icon="scholar" />}
+                  {profile.socialMedia.website && <SocialLink href={profile.socialMedia.website} icon="website" />}
+                </div>
+              )}
             </div>
           </header>
 
@@ -255,7 +259,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column */}
             <div className="lg:col-span-2 space-y-12">
-              {profile.personalInfo.about && (
+              {profile.personalInfo?.about && (
                 <Section title="About Me">
                   <RichTextRenderer content={profile.personalInfo.about} />
                 </Section>
