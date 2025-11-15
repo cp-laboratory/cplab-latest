@@ -1021,5 +1021,28 @@ export const Projects: CollectionConfig = {
         rows: 3,
       },
     },
+    
+    // Track who created this project
+    {
+      name: 'createdBy',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'User who created this project',
+      },
+      hooks: {
+        beforeChange: [
+          ({ req, value }) => {
+            // Auto-set on creation
+            if (!value && req.user) {
+              return req.user.id
+            }
+            return value
+          },
+        ],
+      },
+    },
   ],
 }

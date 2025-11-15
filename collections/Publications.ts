@@ -699,5 +699,28 @@ export const Publications: CollectionConfig = {
         rows: 3,
       },
     },
+    
+    // Track who created this publication
+    {
+      name: 'createdBy',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'User who created this publication',
+      },
+      hooks: {
+        beforeChange: [
+          ({ req, value }) => {
+            // Auto-set on creation
+            if (!value && req.user) {
+              return req.user.id
+            }
+            return value
+          },
+        ],
+      },
+    },
   ],
 }
