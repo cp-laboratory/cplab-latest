@@ -3,7 +3,7 @@ import { CollectionConfig } from 'payload'
 export const Profiles: CollectionConfig = {
   slug: 'profiles',
   admin: {
-    useAsTitle: 'personalInfo.fullName',
+    useAsTitle: 'displayName',
     defaultColumns: ['personalInfo.fullName', 'personalInfo.memberType', 'user', 'personalInfo.designation', 'showPublic'],
     group: 'Content',
   },
@@ -99,6 +99,22 @@ export const Profiles: CollectionConfig = {
     ],
   },
   fields: [
+    {
+      name: 'displayName',
+      type: 'text',
+      admin: {
+        hidden: true,
+        readOnly: true,
+      },
+      hooks: {
+        beforeChange: [
+          ({ siblingData }) => {
+            // Automatically set displayName from personalInfo.fullName
+            return siblingData?.personalInfo?.fullName || 'Unnamed Profile'
+          },
+        ],
+      },
+    },
     {
       name: 'user',
       type: 'relationship',
