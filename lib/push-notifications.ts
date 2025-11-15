@@ -21,7 +21,6 @@ interface PushNotificationPayload {
   title: string
   body: string
   image?: string
-  icon?: string
   link?: string
   badge?: string
   tag?: string
@@ -51,8 +50,8 @@ export async function sendPushNotification(payload: PushNotificationPayload) {
     const notificationPayload = JSON.stringify({
       title: payload.title,
       body: payload.body,
-      icon: payload.icon || '/icon-192x192.png',
-      badge: payload.badge || '/icon-192x192.png',
+      icon: '/cpl-logo.png',
+      badge: '/cpl-logo.png',
       image: payload.image,
       data: {
         url: payload.link || '/',
@@ -61,6 +60,8 @@ export async function sendPushNotification(payload: PushNotificationPayload) {
       tag: payload.tag || 'default',
       requireInteraction: payload.requireInteraction || false,
     })
+
+    console.log('Push payload:', notificationPayload)
 
     let successCount = 0
     let failedCount = 0

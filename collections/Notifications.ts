@@ -68,19 +68,6 @@ export const Notifications: CollectionConfig = {
       },
     },
     {
-      name: 'icon',
-      type: 'upload',
-      relationTo: 'media',
-      admin: {
-        description: 'Icon for notification (optional, will use default app icon if not set)',
-      },
-      filterOptions: {
-        mimeType: {
-          contains: 'image',
-        },
-      },
-    },
-    {
       name: 'status',
       type: 'select',
       required: true,
@@ -175,22 +162,24 @@ export const Notifications: CollectionConfig = {
           const { sendPushNotification } = await import('@/lib/push-notifications')
           
           try {
-            // Refetch the document with depth to ensure image/icon are fully populated
+            // Refetch the document with depth to ensure image is fully populated
             const fullDoc = await req.payload.findByID({
               collection: 'push-notifications',
               id: doc.id,
               depth: 2,
             })
 
+            // Get image URL if exists
+            const imageUrl = typeof fullDoc.image === 'object' && fullDoc.image?.url 
+              ? fullDoc.image.url 
+              : undefined
+
+            console.log('Sending notification with image:', imageUrl)
+
             const result = await sendPushNotification({
               title: fullDoc.title,
               body: fullDoc.body,
-              image: typeof fullDoc.image === 'object' && fullDoc.image?.url 
-                ? fullDoc.image.url  // Use direct URL from R2
-                : undefined,
-              icon: typeof fullDoc.icon === 'object' && fullDoc.icon?.url 
-                ? fullDoc.icon.url  // Use direct URL from R2
-                : '/cpl-logo.png',
+              image: imageUrl,
               link: fullDoc.link,
             })
 

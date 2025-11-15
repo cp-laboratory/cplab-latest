@@ -43,9 +43,7 @@ export async function GET(request: NextRequest) {
         image: typeof notif.image === 'object' && notif.image?.url 
           ? notif.image.url // Use direct URL from R2
           : undefined,
-        icon: typeof notif.icon === 'object' && notif.icon?.url 
-          ? notif.icon.url // Use direct URL from R2
-          : '/cpl-logo.png',
+        icon: '/cpl-logo.png', // Always use default icon
         link: notif.link,
         sentAt: notif.sentAt,
       }
