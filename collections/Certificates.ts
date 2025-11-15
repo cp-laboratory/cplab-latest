@@ -75,11 +75,6 @@ export const Certificates: CollectionConfig = {
       admin: {
         description: 'Upload the certificate PDF/image file',
       },
-      filterOptions: {
-        mimeType: {
-          contains: 'image',
-        },
-      },
     },
     {
       name: 'reason',

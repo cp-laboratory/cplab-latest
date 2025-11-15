@@ -7,6 +7,106 @@ import { motion } from "framer-motion"
 import { notFound } from "next/navigation"
 import Image from "next/image"
 
+// Import the Lexical renderer from news components
+function LexicalNode({ node }: { node: any }) {
+  if (!node) return null
+
+  switch (node.type) {
+    case 'paragraph':
+      return (
+        <p className="mb-4 leading-relaxed">
+          {node.children?.map((child: any, idx: number) => (
+            <span key={idx}>
+              <TextNode node={child} />
+            </span>
+          ))}
+        </p>
+      )
+    case 'heading':
+      const HeadingTag = node.tag || 'h2'
+      return (
+        <HeadingTag className="text-2xl font-bold mb-4">
+          {node.children?.map((child: any, idx: number) => (
+            <span key={idx}>
+              <TextNode node={child} />
+            </span>
+          ))}
+        </HeadingTag>
+      )
+    case 'list':
+      const ListTag = node.listType === 'number' ? 'ol' : 'ul'
+      const listTypeClass = node.listType === 'number' ? 'list-decimal' : 'list-disc'
+      return (
+        <ListTag className={`mb-4 pl-6 space-y-2 ${listTypeClass}`}>
+          {node.children?.map((item: any, idx: number) => (
+            <LexicalNode key={idx} node={item} />
+          ))}
+        </ListTag>
+      )
+    case 'listitem':
+      return (
+        <li className="leading-relaxed">
+          {node.children?.map((child: any, idx: number) => (
+            <span key={idx}>
+              <TextNode node={child} />
+            </span>
+          ))}
+        </li>
+      )
+    default:
+      return null
+  }
+}
+
+function TextNode({ node }: { node: any }) {
+  if (!node) return null
+
+  if (node.type === 'text') {
+    let text = node.text || ''
+    if (node.format === 1) return <strong>{text}</strong>
+    if (node.format === 2) return <em>{text}</em>
+    if (node.format === 8) return <code className="bg-muted px-1 rounded">{text}</code>
+    return <>{text}</>
+  }
+
+  if (node.type === 'link') {
+    return (
+      <a href={node.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+        {node.children?.map((child: any, idx: number) => (
+          <TextNode key={idx} node={child} />
+        ))}
+      </a>
+    )
+  }
+
+  return null
+}
+
+function RichTextRenderer({ content }: { content: any }) {
+  if (!content) return null
+
+  let data = content
+  if (typeof content === 'string') {
+    try {
+      data = JSON.parse(content)
+    } catch {
+      return <p className="whitespace-pre-wrap">{content}</p>
+    }
+  }
+
+  if (data.root && data.root.children) {
+    return (
+      <div className="prose prose-sm max-w-none dark:prose-invert">
+        {data.root.children.map((node: any, idx: number) => (
+          <LexicalNode key={idx} node={node} />
+        ))}
+      </div>
+    )
+  }
+
+  return <p>{String(content)}</p>
+}
+
 interface CertificateData {
   id: string
   certificateName: string
@@ -222,13 +322,7 @@ export default function CertificateDetailPage({ params }: { params: { id: string
             {certificate.reason && (
               <div className="pt-6 border-t border-border">
                 <p className="text-sm text-muted-foreground mb-2">Reason for Award</p>
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  {typeof certificate.reason === 'string' ? (
-                    <p>{certificate.reason}</p>
-                  ) : (
-                    <div dangerouslySetInnerHTML={{ __html: JSON.stringify(certificate.reason) }} />
-                  )}
-                </div>
+                <RichTextRenderer content={certificate.reason} />
               </div>
             )}
 

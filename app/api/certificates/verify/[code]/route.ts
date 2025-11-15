@@ -49,7 +49,10 @@ export async function GET(
       issuedAt: cert.issuedAt,
       shortCode: cert.shortCode,
       certificateFile: typeof cert.certificateFile === 'object' && cert.certificateFile?.url
-        ? cert.certificateFile.url
+        ? {
+            url: cert.certificateFile.url,
+            alt: cert.certificateFile.alt || cert.certificateName,
+          }
         : null,
       tags: cert.tags || [],
     }
