@@ -3,7 +3,7 @@ import { CollectionConfig } from 'payload'
 export const Profiles: CollectionConfig = {
   slug: 'profiles',
   admin: {
-    useAsTitle: 'fullName',
+    useAsTitle: 'personalInfo.fullName',
     defaultColumns: ['personalInfo.fullName', 'personalInfo.memberType', 'user', 'personalInfo.designation', 'showPublic'],
     group: 'Content',
   },
