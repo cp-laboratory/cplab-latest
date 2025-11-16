@@ -3,8 +3,8 @@ import { CollectionConfig } from 'payload'
 export const Recruitment: CollectionConfig = {
   slug: 'recruitment',
   admin: {
-    useAsTitle: 'applicantName',
-    defaultColumns: ['applicantName', 'department', 'level', 'semester', 'status', 'submittedAt'],
+    useAsTitle: 'displayName',
+    defaultColumns: ['displayName', 'department', 'level', 'semester', 'status', 'submittedAt'],
     group: 'Administrative',
     description: 'Student recruitment applications and information',
   },
@@ -31,6 +31,26 @@ export const Recruitment: CollectionConfig = {
     },
   },
   fields: [
+    // Virtual field for admin title (synced from personalInfo.applicantName)
+    {
+      name: 'displayName',
+      type: 'text',
+      admin: {
+        hidden: true,
+        readOnly: true,
+      },
+      hooks: {
+        beforeChange: [
+          ({ data }) => {
+            // Sync displayName from personalInfo.applicantName
+            if (data?.personalInfo?.applicantName) {
+              return data.personalInfo.applicantName
+            }
+            return data?.displayName || 'Untitled Application'
+          },
+        ],
+      },
+    },
     // Personal Information
     {
       name: 'personalInfo',
