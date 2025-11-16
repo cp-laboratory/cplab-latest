@@ -9,6 +9,7 @@ import { LabTestimonialsSection } from "@/components/home/lab-testimonials"
 import FAQSection from "@/components/home/faq-section"
 import { NewsletterSection } from "@/components/home/newsletter-section"
 import { LatestNewsSection } from "@/components/home/latest-news-section"
+import { ProfessorsSection } from "@/components/home/professors-section"
 import { Footer } from "@/components/footer"
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -51,6 +52,23 @@ interface NewsArticle {
     alt: string
   }
   slug: string
+}
+
+interface Professor {
+  id: string
+  slug: string
+  personalInfo: {
+    fullName: string
+    designation?: string
+    profileImage?: {
+      url: string
+      alt?: string
+    }
+    bio?: string
+  }
+  contact?: {
+    email?: string
+  }
 }
 
 async function getAnnouncements(): Promise<Announcement[]> {
@@ -143,12 +161,62 @@ async function getNews(): Promise<NewsArticle[]> {
   }
 }
 
+async function getProfessors(): Promise<Professor[]> {
+  try {
+    const payload = await getPayload({ config })
+    
+    const profiles = await payload.find({
+      collection: 'profiles',
+      where: {
+        and: [
+          {
+            showPublic: {
+              equals: true,
+            },
+          },
+          {
+            'personalInfo.memberType': {
+              equals: 'professor',
+            },
+          },
+        ],
+      },
+      sort: 'displayOrder',
+      limit: 6, // Get up to 6 professors
+      depth: 2,
+    })
+
+    return profiles.docs.map((profile: any) => ({
+      id: profile.id,
+      slug: profile.slug,
+      personalInfo: {
+        fullName: profile.personalInfo?.fullName,
+        designation: profile.personalInfo?.designation,
+        profileImage: typeof profile.personalInfo?.profileImage === 'object' && profile.personalInfo?.profileImage?.url
+          ? {
+              url: profile.personalInfo.profileImage.url,
+              alt: profile.personalInfo.profileImage.alt || profile.personalInfo?.fullName,
+            }
+          : undefined,
+        bio: profile.personalInfo?.bio,
+      },
+      contact: {
+        email: profile.contact?.email,
+      },
+    }))
+  } catch (error) {
+    console.error('Error fetching professors:', error)
+    return []
+  }
+}
+
 export default async function Home() {
   // Fetch data at build time with ISR
-  const [announcements, faqs, news] = await Promise.all([
+  const [announcements, faqs, news, professors] = await Promise.all([
     getAnnouncements(),
     getFAQs(),
     getNews(),
+    getProfessors(),
   ])
 
   return (
@@ -169,6 +237,11 @@ export default async function Home() {
       {/* Research Areas Section */}
       <div id="research">
         <ResearchAreas />
+      </div>
+
+      {/* Professors Section */}
+      <div id="professors">
+        <ProfessorsSection professors={professors} />
       </div>
 
       {/* Announcements Section */}
