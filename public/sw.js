@@ -1,7 +1,6 @@
-const CACHE_NAME = "cpl-v1"
+const CACHE_NAME = "cpl-v2" // Increment version to force cache refresh
 const OFFLINE_URL = "/offline"
 const urlsToCache = [
-  "/",
   "/offline",
   "/cpl-logo.png",
   "/manifest.json"
@@ -18,17 +17,63 @@ self.addEventListener("install", (event) => {
   self.skipWaiting()
 })
 
-// Fetch event - serve from cache, fallback to network, show offline page if both fail
+// Fetch event - Network first, fallback to cache for better freshness
 self.addEventListener("fetch", (event) => {
   // Only handle GET requests
   if (event.request.method !== 'GET') return
 
+  // Skip caching for API routes (always fetch fresh)
+  if (event.request.url.includes('/api/')) {
+    event.respondWith(fetch(event.request))
+    return
+  }
+
+  // Skip caching for admin routes (always fetch fresh)
+  if (event.request.url.includes('/admin')) {
+    event.respondWith(fetch(event.request))
+    return
+  }
+
+  // Use network-first strategy for HTML pages
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Clone and cache the response
+          const responseToCache = response.clone()
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache)
+          })
+          return response
+        })
+        .catch(() => {
+          // If network fails, try cache
+          return caches.match(event.request).then((cachedResponse) => {
+            return cachedResponse || caches.match(OFFLINE_URL)
+          })
+        })
+    )
+    return
+  }
+
+  // For static assets (images, CSS, JS), use cache-first with network fallback
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
+        // Return cached version but also fetch in background to update cache
+        fetch(event.request).then((response) => {
+          if (response && response.status === 200) {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, response.clone())
+            })
+          }
+        }).catch(() => {
+          // Ignore fetch errors for background updates
+        })
         return cachedResponse
       }
 
+      // Not in cache, fetch from network
       return fetch(event.request)
         .then((response) => {
           // Check if we received a valid response
@@ -39,20 +84,20 @@ self.addEventListener("fetch", (event) => {
           // Clone the response
           const responseToCache = response.clone()
 
-          // Cache the new response
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache)
-          })
+          // Cache the new response for static assets only
+          if (event.request.destination === 'image' || 
+              event.request.destination === 'style' || 
+              event.request.destination === 'script' ||
+              event.request.destination === 'font') {
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache)
+            })
+          }
 
           return response
         })
         .catch(() => {
-          // If both cache and network fail, show offline page for navigation requests
-          if (event.request.mode === 'navigate') {
-            return caches.match(OFFLINE_URL)
-          }
-          
-          // For other requests (images, API calls, etc.), return a basic offline response
+          // Return basic offline response
           return new Response('Offline', {
             status: 503,
             statusText: 'Service Unavailable',
