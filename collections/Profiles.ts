@@ -94,6 +94,28 @@ export const Profiles: CollectionConfig = {
         if (operation === 'create' && req.user && req.user.role === 'student') {
           data.user = req.user.id
         }
+
+        // Security: Enforce memberType based on user role
+        if (req.user) {
+          // If a professor is creating/updating a profile for themselves
+          const isOwnProfile = data.user === req.user.id || 
+                              (operation === 'create' && req.user.role === 'professor')
+          
+          if (isOwnProfile && req.user.role === 'professor') {
+            // Professors must have memberType 'professor'
+            if (!data.personalInfo) data.personalInfo = {}
+            data.personalInfo.memberType = 'professor'
+          }
+
+          // Students cannot set memberType to professor or scholar
+          if (req.user.role === 'student' && data.personalInfo?.memberType) {
+            if (!['student', 'alumni'].includes(data.personalInfo.memberType)) {
+              // Force it back to student
+              data.personalInfo.memberType = 'student'
+            }
+          }
+        }
+
         return data
       },
     ],
@@ -157,7 +179,19 @@ export const Profiles: CollectionConfig = {
             { label: 'Research Scholar', value: 'scholar' },
           ],
           admin: {
-            description: 'Type of team member',
+            description: 'Type of team member. Note: Students can only select "Current Student" or "Alumni".',
+          },
+          access: {
+            // Students cannot change memberType to 'professor' or 'scholar' via API
+            update: ({ req, data }: any) => {
+              if (req.user?.role === 'student') {
+                // Block if trying to set professor or scholar
+                if (data?.memberType && !['student', 'alumni'].includes(data.memberType)) {
+                  return false
+                }
+              }
+              return true
+            },
           },
         },
         {
