@@ -18,6 +18,7 @@ import { Notifications } from './collections/Notifications'
 import { PushSubscriptions } from './collections/PushSubscriptions'
 import { Certificates } from './collections/Certificates'
 import { Profiles } from './collections/Profiles'
+import { Recruitment } from './collections/Recruitment'
 
 // Conditionally import Logo and Icon only in production
 const Logo = process.env.NODE_ENV === 'production' ? require('./components/payload/Logo').default : undefined
@@ -51,6 +52,7 @@ export default buildConfig({
   collections: [
     Users, // Custom users collection with role-based access
     Profiles, // User profiles/portfolios (Students: own only, Professors: all)
+    Recruitment, // Student recruitment applications (Professor only)
     News, // News articles
     Publications, // Research publications
     Projects, // Research and student projects

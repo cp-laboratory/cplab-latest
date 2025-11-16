@@ -10,6 +10,7 @@ import FAQSection from "@/components/home/faq-section"
 import { NewsletterSection } from "@/components/home/newsletter-section"
 import { LatestNewsSection } from "@/components/home/latest-news-section"
 import { ProfessorsSection } from "@/components/home/professors-section"
+import { RecruitmentBanner } from "@/components/home/recruitment-banner"
 import { Footer } from "@/components/footer"
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -242,6 +243,11 @@ export default async function Home() {
       {/* Professors Section */}
       <div id="professors">
         <ProfessorsSection professors={professors} />
+      </div>
+
+      {/* Recruitment Banner */}
+      <div id="recruitment" className="max-w-7xl mx-auto px-4">
+        <RecruitmentBanner />
       </div>
 
       {/* Announcements Section */}
