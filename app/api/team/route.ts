@@ -30,10 +30,12 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        professors,
-        students,
-        alumni,
-        scholars,
+        members: {
+          professors,
+          students,
+          alumni,
+          scholars,
+        },
         total: profiles.docs.length,
       },
       {
