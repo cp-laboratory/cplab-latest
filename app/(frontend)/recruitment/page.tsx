@@ -413,17 +413,19 @@ export default function RecruitmentPage() {
 
           {/* Progress Bar */}
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              {[1, 2, 3, 4, 5, 6].map((step) => (
-                <div key={step} className="flex items-center flex-1">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold transition-colors ${
-                      currentStep >= step
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {step}
+            <div className="flex w-full items-center mb-2">
+              {[1, 2, 3, 4, 5, 6].map((step, index) => (
+                <>
+                  <div key={step} className="flex flex-col items-center">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold transition-colors ${
+                        currentStep >= step
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {step}
+                    </div>
                   </div>
                   {step < 6 && (
                     <div
@@ -432,10 +434,10 @@ export default function RecruitmentPage() {
                       }`}
                     />
                   )}
-                </div>
+                </>
               ))}
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
+            <div className="flex w-full justify-between text-xs text-muted-foreground mt-2">
               <span>Personal</span>
               <span>Academic</span>
               <span>Research</span>
