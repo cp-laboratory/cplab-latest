@@ -226,7 +226,8 @@ export default async function Home() {
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: "radial-gradient(ellipse 50% 35% at 50% 0%, rgba(226, 232, 240, 0.12), transparent 60%), #000000",
+          background:
+            "radial-gradient(ellipse 50% 35% at 50% 0%, rgba(226, 232, 240, 0.12), transparent 60%), #000000",
         }}
       />
 
@@ -240,6 +241,11 @@ export default async function Home() {
         <ResearchAreas />
       </div>
 
+      {/* Announcements Section */}
+      <div id="announcements">
+        <AnnouncementsSection announcements={announcements} />
+      </div>
+
       {/* Professors Section */}
       <div id="professors">
         <ProfessorsSection professors={professors} />
@@ -248,11 +254,6 @@ export default async function Home() {
       {/* Recruitment Banner */}
       <div id="recruitment" className="max-w-7xl mx-auto px-4">
         <RecruitmentBanner />
-      </div>
-
-      {/* Announcements Section */}
-      <div id="announcements">
-        <AnnouncementsSection announcements={announcements} />
       </div>
 
       {/* Lab Projects Carousel */}
@@ -285,7 +286,6 @@ export default async function Home() {
         <LabHighlights />
       </div>
 
-
       {/* FAQ Section */}
       <div>
         <FAQSection faqs={faqs} />
@@ -298,5 +298,5 @@ export default async function Home() {
 
       <Footer />
     </div>
-  )
+  );
 }
