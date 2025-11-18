@@ -6,7 +6,7 @@ import { useState, useRef } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
-import { Upload, X, Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -99,46 +99,55 @@ interface FormData {
   }>
 }
 
+const createInitialFormState = (): FormData => ({
+  applicantName: "",
+  email: "",
+  phone: "",
+  alternateEmail: "",
+  address: "",
+  city: "",
+  state: "",
+  country: "",
+  zipCode: "",
+  department: "",
+  faculty: "",
+  university: "",
+  level: "",
+  semester: "",
+  cgpa: "",
+  expectedGraduation: "",
+  researchInterests: [{ area: "", description: "" }],
+  skills: [{ category: "", name: "", proficiency: "" }],
+  education: [],
+  publications: [],
+  projects: [],
+  linkedin: "",
+  github: "",
+  googleScholar: "",
+  researchGate: "",
+  website: "",
+  resumeLink: "",
+  statementOfPurpose: "",
+  startDate: "",
+  hoursPerWeek: "",
+  duration: "",
+  references: [{
+    name: "",
+    designation: "",
+    organization: "",
+    email: "",
+    phone: "",
+    relationship: "",
+  }],
+})
+
 export default function RecruitmentPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
   const formRef = useRef<HTMLDivElement>(null)
 
-  const [formData, setFormData] = useState<FormData>({
-    applicantName: "",
-    email: "",
-    phone: "",
-    alternateEmail: "",
-    address: "",
-    city: "",
-    state: "",
-    country: "",
-    zipCode: "",
-    department: "",
-    faculty: "",
-    university: "",
-    level: "",
-    semester: "",
-    cgpa: "",
-    expectedGraduation: "",
-    researchInterests: [{ area: "", description: "" }],
-    skills: [{ category: "", name: "", proficiency: "" }],
-    education: [],
-    publications: [],
-    projects: [],
-    linkedin: "",
-    github: "",
-    googleScholar: "",
-    researchGate: "",
-    website: "",
-    resumeLink: "",
-    statementOfPurpose: "",
-    startDate: "",
-    hoursPerWeek: "",
-    duration: "",
-    references: [{ name: "", designation: "", organization: "", email: "", phone: "", relationship: "" }],
-  })
+  const [formData, setFormData] = useState<FormData>(createInitialFormState())
 
   const totalSteps = 6
 
@@ -180,32 +189,188 @@ export default function RecruitmentPage() {
     }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
+    console.log('handleSubmit called, currentStep:', currentStep, 'isSubmitting:', isSubmitting)
+    
+    // Prevent multiple simultaneous submissions
+    if (isSubmitting) {
+      console.log('Already submitting, bailing out')
+      return
+    }
+    // Bail out if we somehow receive a submit event before the final step.
+    if (currentStep !== totalSteps) {
+      console.log('Not on final step, bailing out. CurrentStep:', currentStep, 'totalSteps:', totalSteps)
+      return
+    }
+
+    // Basic field validations before attempting submission.
+    if (!formData.applicantName.trim() || !formData.email.trim() || !formData.phone.trim()) {
+      setSubmitMessage("Please complete your personal information (name, email, phone) before submitting.")
+      return
+    }
+
+    if (!formData.university.trim() || !formData.department.trim() || !formData.level.trim()) {
+      setSubmitMessage("Please complete the academic information section before submitting.")
+      return
+    }
+
+    const filteredResearchInterests = formData.researchInterests
+      .filter((item) => item.area.trim() || item.description.trim())
+      .map((item) => ({
+        area: item.area.trim(),
+        description: item.description.trim(),
+      }))
+
+    if (filteredResearchInterests.length === 0) {
+      setSubmitMessage("Please provide at least one research interest.")
+      return
+    }
+
+    if (!formData.statementOfPurpose.trim()) {
+      setSubmitMessage("Tell us about your motivation in the statement of purpose section.")
+      return
+    }
+
+    if (!formData.resumeLink.trim()) {
+      setSubmitMessage("Please provide a link to your resume or CV before submitting.")
+      return
+    }
+
+    const parseNumber = (value: string) => {
+      const parsed = Number(value)
+      return Number.isNaN(parsed) ? undefined : parsed
+    }
+
+    const formatEducation = formData.education
+      .filter((item) => item.degree.trim() || item.field.trim() || item.institution.trim())
+      .map((item) => ({
+        degree: item.degree.trim(),
+        field: item.field.trim(),
+        institution: item.institution.trim(),
+        startYear: item.startYear ? parseNumber(item.startYear) : undefined,
+        endYear: item.endYear ? parseNumber(item.endYear) : undefined,
+        grade: item.grade.trim(),
+      }))
+
+    const formatSkills = formData.skills
+      .filter((item) => item.name.trim())
+      .map((item) => ({
+        category: item.category || "other",
+        name: item.name.trim(),
+        proficiency: item.proficiency || undefined,
+      }))
+
+    const formatPublications = formData.publications
+      .filter((item) => item.title.trim())
+      .map((item) => ({
+        title: item.title.trim(),
+        authors: item.authors.trim(),
+        venue: item.venue.trim(),
+        year: item.year ? parseNumber(item.year) : undefined,
+        publicationType: item.publicationType || undefined,
+        url: item.url.trim(),
+      }))
+
+    const formatProjects = formData.projects
+      .filter((item) => item.title.trim())
+      .map((item) => ({
+        title: item.title.trim(),
+        role: item.role.trim(),
+        organization: item.organization.trim(),
+        startDate: item.startDate || undefined,
+        endDate: item.endDate || undefined,
+        description: item.description.trim(),
+        technologies: item.technologies.trim(),
+        url: item.url.trim(),
+      }))
+
+    const formatReferences = formData.references
+      .filter((item) => item.name.trim() || item.email.trim())
+      .map((item) => ({
+        name: item.name.trim(),
+        designation: item.designation.trim(),
+        organization: item.organization.trim(),
+        email: item.email.trim(),
+        phone: item.phone.trim(),
+        relationship: item.relationship.trim(),
+      }))
+
+    const payloadBody = {
+      personalInfo: {
+        applicantName: formData.applicantName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        alternateEmail: formData.alternateEmail.trim() || undefined,
+        address: formData.address.trim() || undefined,
+        city: formData.city.trim() || undefined,
+        state: formData.state.trim() || undefined,
+        country: formData.country.trim() || undefined,
+        zipCode: formData.zipCode.trim() || undefined,
+      },
+      academicInfo: {
+        department: formData.department,
+        faculty: formData.faculty.trim() || undefined,
+        university: formData.university.trim(),
+        level: formData.level,
+        semester: formData.semester ? parseNumber(formData.semester) : undefined,
+        cgpa: formData.cgpa ? Number(formData.cgpa) : undefined,
+        expectedGraduation: formData.expectedGraduation || undefined,
+      },
+      researchInterests: filteredResearchInterests,
+      skills: formatSkills,
+      education: formatEducation,
+      publications: formatPublications,
+      projects: formatProjects,
+      socialMedia: {
+        linkedin: formData.linkedin.trim() || undefined,
+        github: formData.github.trim() || undefined,
+        googleScholar: formData.googleScholar.trim() || undefined,
+        researchGate: formData.researchGate.trim() || undefined,
+        website: formData.website.trim() || undefined,
+      },
+      resume: {
+        resumeLink: formData.resumeLink.trim(),
+      },
+      statementOfPurpose: formData.statementOfPurpose.trim(),
+      availability: {
+        startDate: formData.startDate || undefined,
+        hoursPerWeek: formData.hoursPerWeek ? parseNumber(formData.hoursPerWeek) : undefined,
+        duration: formData.duration || undefined,
+      },
+      references: formatReferences,
+    }
+
     setIsSubmitting(true)
     setSubmitMessage("")
 
     try {
-      // Simulate API call - replace with actual endpoint later
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      
+      const response = await fetch('/api/recruitment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payloadBody),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null)
+        throw new Error(errorData?.error || 'Failed to submit the application. Please try again.')
+      }
+
       setSubmitMessage("Application submitted successfully! We'll review your application and get back to you soon.")
-      
-      // Reset form
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" })
-        setCurrentStep(1)
-        setSubmitMessage("")
-      }, 5000)
+      setFormData(createInitialFormState())
+      setCurrentStep(1)
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     } catch (error) {
-      console.error("Submission error:", error)
-      setSubmitMessage("Failed to submit application. Please try again.")
+      console.error('Recruitment submission error:', error)
+      setSubmitMessage(error instanceof Error ? error.message : 'Failed to submit the application. Please try again later.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const nextStep = () => {
+    console.log('nextStep called, currentStep:', currentStep, 'totalSteps:', totalSteps)
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -216,6 +381,12 @@ export default function RecruitmentPage() {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }
+
+  const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === 'Enter' && (event.target as HTMLElement).tagName !== 'TEXTAREA') {
+      event.preventDefault()
     }
   }
 
@@ -295,7 +466,7 @@ export default function RecruitmentPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="bg-card border border-border rounded-2xl p-8 shadow-lg"
           >
-            <form onSubmit={handleSubmit}>
+            <form onKeyDown={handleFormKeyDown}>
               {/* Step 1: Personal Information */}
               {currentStep === 1 && (
                 <div className="space-y-6">
@@ -1098,7 +1269,7 @@ export default function RecruitmentPage() {
                     Next
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button type="button" onClick={handleSubmit} disabled={isSubmitting}>
                     {isSubmitting ? "Submitting..." : "Submit Application"}
                   </Button>
                 )}
