@@ -354,7 +354,10 @@ export default function RecruitmentPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.error || 'Failed to submit the application. Please try again.')
+        const errorMessage = errorData?.details && Array.isArray(errorData.details)
+          ? errorData.details.join(', ')
+          : errorData?.error || 'Failed to submit the application. Please try again.'
+        throw new Error(errorMessage)
       }
 
       setSubmitMessage("Application submitted successfully! We'll review your application and get back to you soon.")
@@ -369,8 +372,93 @@ export default function RecruitmentPage() {
     }
   }
 
+  const validateStep = (step: number): boolean => {
+    setSubmitMessage("")
+
+    // Step 1: Personal Information
+    if (step === 1) {
+      if (!formData.applicantName.trim()) {
+        setSubmitMessage("Please enter your full name.")
+        return false
+      }
+      if (!formData.email.trim()) {
+        setSubmitMessage("Please enter your email address.")
+        return false
+      }
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        setSubmitMessage("Please enter a valid email address.")
+        return false
+      }
+      if (!formData.phone.trim()) {
+        setSubmitMessage("Please enter your phone number.")
+        return false
+      }
+    }
+
+    // Step 2: Academic Information
+    if (step === 2) {
+      if (!formData.university.trim()) {
+        setSubmitMessage("Please enter your university/institution name.")
+        return false
+      }
+      if (!formData.department.trim()) {
+        setSubmitMessage("Please select your department.")
+        return false
+      }
+      if (!formData.level.trim()) {
+        setSubmitMessage("Please select your academic level.")
+        return false
+      }
+    }
+
+    // Step 3: Research Interests
+    if (step === 3) {
+      const hasValidResearchInterest = formData.researchInterests.some(
+        (item) => item.area.trim() !== ""
+      )
+      if (!hasValidResearchInterest) {
+        setSubmitMessage("Please add at least one research interest area.")
+        return false
+      }
+    }
+
+    // Step 5: Links & Resume
+    if (step === 5) {
+      if (!formData.resumeLink.trim()) {
+        setSubmitMessage("Please provide a link to your resume or CV.")
+        return false
+      }
+      // Basic URL validation
+      try {
+        new URL(formData.resumeLink)
+      } catch {
+        setSubmitMessage("Please enter a valid URL for your resume.")
+        return false
+      }
+    }
+
+    // Step 6: Final Review
+    if (step === 6) {
+      if (!formData.statementOfPurpose.trim()) {
+        setSubmitMessage("Please provide your statement of purpose.")
+        return false
+      }
+    }
+
+    return true
+  }
+
   const nextStep = () => {
     console.log('nextStep called, currentStep:', currentStep, 'totalSteps:', totalSteps)
+    
+    // Validate current step before moving to next
+    if (!validateStep(currentStep)) {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+      return
+    }
+
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
