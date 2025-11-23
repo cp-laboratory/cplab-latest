@@ -20,5 +20,9 @@ export default function FrontendLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <>{children}</>
+  return (
+    <div className="frontend-wrapper" suppressHydrationWarning>
+      {children}
+    </div>
+  )
 }

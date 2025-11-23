@@ -1,0 +1,28 @@
+/* Scoped Payload CMS styles - only apply to admin routes */
+/* This ensures Payload styles don't leak into the main application */
+
+/* Force reset any Payload-specific styling when not in admin */
+.frontend-app {
+  /* Reset any Payload CSS variables that might persist */
+  --payload-color-base-0: unset;
+  --payload-color-base-50: unset;
+  --payload-color-base-100: unset;
+  --payload-color-base-150: unset;
+  --payload-color-base-200: unset;
+  --payload-color-base-250: unset;
+  --payload-color-base-300: unset;
+  --payload-color-base-350: unset;
+  --payload-color-base-400: unset;
+  --payload-color-base-450: unset;
+  --payload-color-base-500: unset;
+  --payload-color-base-550: unset;
+  --payload-color-base-600: unset;
+  --payload-color-base-650: unset;
+  --payload-color-base-700: unset;
+  --payload-color-base-750: unset;
+  --payload-color-base-800: unset;
+  --payload-color-base-850: unset;
+  --payload-color-base-900: unset;
+  --payload-color-base-950: unset;
+  --payload-color-base-1000: unset;
+}

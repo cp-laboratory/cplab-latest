@@ -243,3 +243,15 @@ body {
 .animate-shiny-text {
   animation: shiny-text 3s ease-in-out infinite;
 }
+
+/* Theme Isolation - Ensure frontend app is not affected by Payload CMS styles */
+.frontend-app {
+  /* Force recalculation of all CSS custom properties */
+  isolation: isolate;
+}
+
+/* Ensure frontend wrapper maintains app styles */
+.frontend-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}

@@ -5,6 +5,8 @@ import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { ServiceWorkerRegister } from "@/components/service-worker-register"
+import { NotificationProvider } from "@/contexts/notification-context"
+import { ThemeIsolator } from "@/components/theme-isolator"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -31,10 +33,14 @@ html {
         <link rel="icon" href="/cpl-logo.png" />
       </head>
       <body className="antialiased">
-        <ServiceWorkerRegister />
-        {children}
-        <Analytics />
-        <SpeedInsights />
+        <ThemeIsolator>
+          <NotificationProvider>
+            <ServiceWorkerRegister />
+            {children}
+            <Analytics />
+            <SpeedInsights />
+          </NotificationProvider>
+        </ThemeIsolator>
       </body>
     </html>
   )

@@ -4,184 +4,27 @@ import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
-
-interface Notification {
-  id: string
-  title: string
-  body: string
-  image?: string
-  icon: string
-  link?: string
-  sentAt: string
-}
+import { useNotifications } from "@/contexts/notification-context"
 
 export function NotificationPanel() {
   const [isOpen, setIsOpen] = useState(false)
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [isSubscribed, setIsSubscribed] = useState(false)
-  const [isCheckingSubscription, setIsCheckingSubscription] = useState(true)
-  const [isLoading, setIsLoading] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  
+  const {
+    notifications,
+    unreadCount,
+    isSubscribed,
+    isCheckingSubscription,
+    isLoading,
+    subscribeToPush,
+    markAsRead,
+  } = useNotifications()
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  useEffect(() => {
-    // Check if user is already subscribed
-    checkSubscriptionStatus()
-    // Fetch notifications on mount
-    fetchNotifications()
-  }, [])
-
-  useEffect(() => {
-    // Fetch notifications when panel opens
-    if (isOpen) {
-      fetchNotifications()
-    }
-  }, [isOpen])
-
-  const checkSubscriptionStatus = async () => {
-    setIsCheckingSubscription(true)
-    try {
-      if ('serviceWorker' in navigator && 'PushManager' in window) {
-        const registration = await navigator.serviceWorker.ready
-        const subscription = await registration.pushManager.getSubscription()
-        setIsSubscribed(!!subscription)
-      } else {
-        setIsSubscribed(false)
-      }
-    } catch (error) {
-      console.error('Error checking subscription:', error)
-      setIsSubscribed(false)
-    } finally {
-      setIsCheckingSubscription(false)
-    }
-  }
-
-  const fetchNotifications = async () => {
-    try {
-      // Add cache-busting timestamp to force fresh data
-      const response = await fetch(`/api/push/notifications?t=${Date.now()}`, {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-        },
-      })
-      const data = await response.json()
-      
-      console.log('Fetched notifications:', data) // Debug log
-      
-      if (data.notifications && Array.isArray(data.notifications)) {
-        setNotifications(data.notifications)
-        
-        // Get read notifications from localStorage
-        const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]')
-        const unread = data.notifications.filter((n: Notification) => !readNotifications.includes(n.id))
-        setUnreadCount(unread.length)
-      } else {
-        console.error('Invalid notifications data:', data)
-        setNotifications([])
-      }
-    } catch (error) {
-      console.error('Error fetching notifications:', error)
-      setNotifications([])
-    }
-  }
-
-  const subscribeToPush = async () => {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      alert('Push notifications are not supported in your browser')
-      return
-    }
-
-    setIsLoading(true)
-    try {
-      // Request notification permission first
-      const permission = await Notification.requestPermission()
-      console.log('Permission result:', permission)
-      
-      if (permission !== 'granted') {
-        alert('Notification permission denied')
-        setIsLoading(false)
-        return
-      }
-
-      const registration = await navigator.serviceWorker.ready
-      console.log('Service worker ready:', registration)
-
-      // Convert VAPID key from base64 to Uint8Array
-      const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
-      if (!vapidPublicKey) {
-        alert('VAPID public key not configured')
-        console.error('NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set')
-        setIsLoading(false)
-        return
-      }
-
-      const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey)
-
-      // Subscribe to push notifications
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: convertedVapidKey,
-      })
-
-      console.log('Subscription created:', subscription)
-
-      // Send subscription to server
-      const response = await fetch('/api/push/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          subscription: subscription.toJSON(),
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to save subscription')
-      }
-
-      setIsSubscribed(true)
-      alert('Successfully subscribed to notifications!')
-    } catch (error) {
-      console.error('Error subscribing to push notifications:', error)
-      alert('Failed to subscribe to notifications: ' + (error as Error).message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // Helper function to convert base64 VAPID key to Uint8Array
-  const urlBase64ToUint8Array = (base64String: string) => {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4)
-    const base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/')
-
-    const rawData = window.atob(base64)
-    const outputArray = new Uint8Array(rawData.length)
-
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i)
-    }
-    return outputArray
-  }
-
-  const markAsRead = (notificationId: string) => {
-    const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]')
-    if (!readNotifications.includes(notificationId)) {
-      readNotifications.push(notificationId)
-      localStorage.setItem('readNotifications', JSON.stringify(readNotifications))
-      setUnreadCount(prev => Math.max(0, prev - 1))
-    }
-  }
-
-  const handleNotificationClick = (notification: Notification) => {
+  const handleNotificationClick = (notification: { id: string; link?: string }) => {
     markAsRead(notification.id)
     if (notification.link) {
       window.location.href = notification.link
