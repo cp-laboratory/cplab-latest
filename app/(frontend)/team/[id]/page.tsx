@@ -281,14 +281,30 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
 
               {profile.publications && profile.publications.length > 0 && (
                 <Section title="Publications">
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {profile.publications.map(pub => (
-                      <div key={pub.id} className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors">
-                        <Link href={`/publications/${pub.slug || pub.id}`} className="font-semibold hover:text-primary block">
-                          {pub.title}
-                        </Link>
-                        <p className="text-sm text-muted-foreground mt-1">{pub.year} - {pub.publicationType}</p>
-                      </div>
+                      <Link 
+                        key={pub.id} 
+                        href={`/publications/${pub.slug || pub.id}`}
+                        className="block group"
+                      >
+                        <div className="p-5 bg-card border border-border rounded-lg hover:border-primary/50 hover:shadow-md transition-all duration-300">
+                          <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-2 leading-relaxed">
+                            {pub.title}
+                          </h3>
+                          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 text-primary rounded-md font-medium">
+                              {pub.publicationType}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              {pub.year}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 </Section>
