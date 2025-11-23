@@ -176,7 +176,7 @@ export default function PublicationDetailsPage() {
       <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
         <main className="flex-1 pt-32 pb-20">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="animate-pulse space-y-8">
               <div className="h-8 bg-muted rounded w-3/4"></div>
               <div className="h-4 bg-muted rounded w-1/2"></div>
@@ -194,7 +194,7 @@ export default function PublicationDetailsPage() {
       <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
         <main className="flex-1 pt-32 pb-20">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-2xl font-bold text-foreground mb-4">Publication Not Found</h1>
             <p className="text-muted-foreground mb-8">{error}</p>
             <Link
@@ -216,7 +216,7 @@ export default function PublicationDetailsPage() {
       <Navbar />
       
       <main className="flex-1 pt-32 pb-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
