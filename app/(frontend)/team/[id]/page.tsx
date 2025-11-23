@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { notFound } from "next/navigation"
 import { motion } from "framer-motion"
 import Image from "next/image"
@@ -142,6 +142,7 @@ function TextNode({ node }: { node: any }) {
 export default function TeamDetailPage({ params }: { params: { id: string } }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [pubSortBy, setPubSortBy] = useState<'year' | 'title'>('year')
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -281,8 +282,37 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
 
               {profile.publications && profile.publications.length > 0 && (
                 <Section title="Publications">
+                  <div className="flex gap-2 mb-4">
+                    <button
+                      onClick={() => setPubSortBy('year')}
+                      className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                        pubSortBy === 'year'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                      }`}
+                    >
+                      Sort by Year
+                    </button>
+                    <button
+                      onClick={() => setPubSortBy('title')}
+                      className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                        pubSortBy === 'title'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                      }`}
+                    >
+                      Sort by Title
+                    </button>
+                  </div>
                   <div className="space-y-3">
-                    {profile.publications.map(pub => (
+                    {[...profile.publications]
+                      .sort((a, b) => {
+                        if (pubSortBy === 'year') {
+                          return (b.year || 0) - (a.year || 0)
+                        }
+                        return (a.title || '').localeCompare(b.title || '')
+                      })
+                      .map(pub => (
                       <Link 
                         key={pub.id} 
                         href={`/publications/${pub.slug || pub.id}`}

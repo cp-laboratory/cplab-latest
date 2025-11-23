@@ -180,8 +180,18 @@ export default function PublicationsPage() {
       .sort((a, b) => b - a)
   ]
 
+  // Map display labels back to type values
+  const typeValueMap: Record<string, string> = {
+    "Journal Article": "journal",
+    "Conference Paper": "conference",
+    "Book Chapter": "book-chapter",
+    "Technical Report": "technical-report",
+    "Thesis/Dissertation": "thesis",
+    "Preprint": "preprint",
+  }
+
   const filteredPublications = publications.filter((pub) => {
-    const matchesType = !selectedType || pub.publicationType === selectedType
+    const matchesType = !selectedType || pub.publicationType === typeValueMap[selectedType]
     const matchesYear = !selectedYear || pub.year === selectedYear
     const matchesSearch = !searchQuery || 
       pub.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
