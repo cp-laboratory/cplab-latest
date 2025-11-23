@@ -106,7 +106,7 @@ export default function PublicationsPage() {
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch("/api/publications?depth=2&limit=100")
+        const response = await fetch("/api/public-publications?depth=2&limit=100")
         const data = await response.json()
         setPublications(data.docs || [])
       } catch (error) {
