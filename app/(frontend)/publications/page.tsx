@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
+import Link from "next/link"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 
@@ -34,7 +35,10 @@ interface Publication {
     location?: string
   }
   abstract?: string
-  keywords?: string[]
+  keywords?: Array<{
+    keyword?: string
+    id?: string
+  }>
   identifiers?: {
     doi?: string
     isbn?: string
@@ -99,7 +103,6 @@ export default function PublicationsPage() {
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedYear, setSelectedYear] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
-  const [expandedId, setExpandedId] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
@@ -183,7 +186,7 @@ export default function PublicationsPage() {
     const matchesSearch = !searchQuery || 
       pub.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pub.abstract?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pub.keywords?.some(k => k.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      pub.keywords?.some(k => k.keyword?.toLowerCase().includes(searchQuery.toLowerCase())) ||
       formatAuthors(pub.authors).toLowerCase().includes(searchQuery.toLowerCase())
     return matchesType && matchesYear && matchesSearch
   })
@@ -321,8 +324,6 @@ export default function PublicationsPage() {
                 </div>
                 
                 {paginatedPublications.map((pub, index) => {
-                  const isExpanded = expandedId === pub.id
-                  
                   return (
                     <motion.div
                       key={pub.id}
@@ -334,10 +335,10 @@ export default function PublicationsPage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                       <div className="relative z-10 p-6">
-                        {/* Compact View */}
+                        {/* Header */}
                         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                           <div className="flex-1">
-                            <h3 className="text-xl font-semibold text-foreground mb-2">
+                            <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                               {pub.title || "Untitled Publication"}
                             </h3>
                             <p className="text-sm text-muted-foreground mb-2">
@@ -369,8 +370,8 @@ export default function PublicationsPage() {
                           </p>
                         )}
                         
-                        {!isExpanded && pub.abstract && (
-                          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        {pub.abstract && (
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                             {pub.abstract}
                           </p>
                         )}
@@ -394,9 +395,49 @@ export default function PublicationsPage() {
                           )}
                         </div>
 
-                        {/* Expandable Details */}
+                        {/* Action Buttons */}
+                        <div className="flex items-center gap-3 pt-4 border-t border-border/50">
+                          <Link
+                            href={`/publications/${pub.slug || pub.id}`}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
+                          >
+                            View Details
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </Link>
+                          
+                          {pub.identifiers?.doi && (
+                            <a
+                              href={`https://doi.org/${pub.identifiers.doi}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                              Publisher
+                            </a>
+                          )}
+                          
+                          {pub.files && pub.files.length > 0 && pub.files[0].file?.url && (
+                            <a
+                              href={pub.files[0].file.url}
+                              download
+                              className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg hover:border-primary hover:text-primary transition-colors text-sm"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              PDF
+                            </a>
+                          )}
+                        </div>
+
+                        {/* Remove expandable section - now handled by detail page */}
                         <AnimatePresence>
-                          {isExpanded && (
+                          {false && (
                             <motion.div
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: "auto" }}
@@ -417,9 +458,9 @@ export default function PublicationsPage() {
                                 <div>
                                   <h4 className="text-sm font-semibold text-foreground mb-2">Keywords</h4>
                                   <div className="flex flex-wrap gap-2">
-                                    {pub.keywords.map((keyword, idx) => (
-                                      <span key={idx} className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-xs">
-                                        {keyword}
+                                    {pub.keywords.map((k, idx) => (
+                                      <span key={k.id || idx} className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-xs">
+                                        {k.keyword}
                                       </span>
                                     ))}
                                   </div>
@@ -637,28 +678,6 @@ export default function PublicationsPage() {
                             </motion.div>
                           )}
                         </AnimatePresence>
-
-                        {/* Show Details Button */}
-                        <button
-                          onClick={() => setExpandedId(isExpanded ? null : pub.id)}
-                          className="mt-4 w-full py-2 px-4 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary font-medium text-sm transition-colors flex items-center justify-center gap-2"
-                        >
-                          {isExpanded ? (
-                            <>
-                              <span>Show Less</span>
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                              </svg>
-                            </>
-                          ) : (
-                            <>
-                              <span>Show Details</span>
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </>
-                          )}
-                        </button>
                       </div>
                     </motion.div>
                   )
