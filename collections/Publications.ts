@@ -149,20 +149,49 @@ export const Publications: CollectionConfig = {
       },
       fields: [
         {
+          name: 'authorType',
+          type: 'radio',
+          required: true,
+          options: [
+            { label: 'Lab Member', value: 'internal' },
+            { label: 'External Author', value: 'external' },
+          ],
+          defaultValue: 'internal',
+          admin: {
+            description: 'Choose whether this author is from the lab or external',
+          },
+        },
+        {
           name: 'author',
           type: 'relationship',
           relationTo: 'users',
-          required: true,
           admin: {
             description: 'Select author from lab members',
+            condition: (data, siblingData) => siblingData.authorType === 'internal',
           },
         },
         {
           name: 'externalAuthor',
           type: 'text',
           admin: {
-            description: 'For authors outside the lab (e.g., "John Doe, MIT")',
-            condition: (data, siblingData) => !siblingData.author,
+            description: 'Full name of the external author (e.g., "Dr. John Doe")',
+            condition: (data, siblingData) => siblingData.authorType === 'external',
+          },
+        },
+        {
+          name: 'externalAuthorAffiliation',
+          type: 'text',
+          admin: {
+            description: 'Institution/Affiliation (e.g., "MIT, USA")',
+            condition: (data, siblingData) => siblingData.authorType === 'external',
+          },
+        },
+        {
+          name: 'externalAuthorLink',
+          type: 'text',
+          admin: {
+            description: 'Profile link (Google Scholar, LinkedIn, personal website, etc.)',
+            condition: (data, siblingData) => siblingData.authorType === 'external',
           },
         },
         {

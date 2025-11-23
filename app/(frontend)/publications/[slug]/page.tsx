@@ -31,8 +31,10 @@ interface Publication {
   month?: string
   publishedDate?: string
   authors?: Array<{
+    authorType?: 'internal' | 'external'
     author?: {
       id?: string
+      slug?: string
       firstName?: string
       lastName?: string
       profileImage?: {
@@ -40,6 +42,8 @@ interface Publication {
       }
     }
     externalAuthor?: string
+    externalAuthorAffiliation?: string
+    externalAuthorLink?: string
     isCorresponding?: boolean
   }>
   venue?: {
@@ -148,10 +152,31 @@ export default function PublicationDetailsPage() {
   }, [slug])
 
   const getAuthorName = (author: any) => {
+    if (author.authorType === 'internal' && author.author) {
+      return `${author.author.firstName || ""} ${author.author.lastName || ""}`.trim()
+    }
+    if (author.authorType === 'external' && author.externalAuthor) {
+      return author.externalAuthor
+    }
+    // Fallback for old data structure
     if (author.author) {
       return `${author.author.firstName || ""} ${author.author.lastName || ""}`.trim()
     }
     return author.externalAuthor || "Unknown Author"
+  }
+
+  const getAuthorLink = (author: any) => {
+    if (author.authorType === 'internal' && author.author?.slug) {
+      return `/team/${author.author.slug}`
+    }
+    if (author.authorType === 'external' && author.externalAuthorLink) {
+      return author.externalAuthorLink
+    }
+    // Fallback for old data structure
+    if (author.author?.slug) {
+      return `/team/${author.author.slug}`
+    }
+    return null
   }
 
   const handleShare = async () => {
@@ -271,14 +296,36 @@ export default function PublicationDetailsPage() {
             {publication.authors && publication.authors.length > 0 && (
               <div className="flex items-start gap-3 mb-4">
                 <Users className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
-                <div className="flex flex-wrap gap-2">
-                  {publication.authors.map((author, idx) => (
-                    <span key={idx} className="text-lg text-foreground">
-                      {getAuthorName(author)}
-                      {author.isCorresponding && <sup className="text-primary">*</sup>}
-                      {idx < publication.authors!.length - 1 && ", "}
-                    </span>
-                  ))}
+                <div className="flex flex-wrap gap-x-2 gap-y-1">
+                  {publication.authors.map((author, idx) => {
+                    const authorName = getAuthorName(author)
+                    const authorLink = getAuthorLink(author)
+                    const isExternal = author.authorType === 'external' || author.externalAuthorLink
+                    
+                    return (
+                      <span key={idx} className="text-lg">
+                        {authorLink ? (
+                          <Link
+                            href={authorLink}
+                            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            className="text-foreground hover:text-primary transition-colors underline decoration-transparent hover:decoration-primary"
+                          >
+                            {authorName}
+                            {author.isCorresponding && <sup className="text-primary">*</sup>}
+                          </Link>
+                        ) : (
+                          <span className="text-foreground">
+                            {authorName}
+                            {author.isCorresponding && <sup className="text-primary">*</sup>}
+                          </span>
+                        )}
+                        {author.authorType === 'external' && author.externalAuthorAffiliation && (
+                          <span className="text-sm text-muted-foreground ml-1">({author.externalAuthorAffiliation})</span>
+                        )}
+                        {idx < publication.authors!.length - 1 && <span className="text-foreground">, </span>}
+                      </span>
+                    )
+                  })}
                 </div>
               </div>
             )}
