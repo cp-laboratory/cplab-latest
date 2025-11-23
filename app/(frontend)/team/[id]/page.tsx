@@ -60,6 +60,7 @@ interface Profile {
   }>
   publications?: Array<{
     id: string
+    slug?: string
     title: string
     year: number
     publicationType: string
@@ -283,7 +284,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
                   <div className="space-y-4">
                     {profile.publications.map(pub => (
                       <div key={pub.id} className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors">
-                        <Link href={`/publications/${pub.id}`} className="font-semibold hover:text-primary block">
+                        <Link href={`/publications/${pub.slug || pub.id}`} className="font-semibold hover:text-primary block">
                           {pub.title}
                         </Link>
                         <p className="text-sm text-muted-foreground mt-1">{pub.year} - {pub.publicationType}</p>
