@@ -312,7 +312,7 @@ export default function RecruitmentPage() {
         organization: item.organization.trim(),
         startDate: item.startDate || undefined,
         endDate: item.endDate || undefined,
-        description: item.description.trim(),
+        description: convertToLexicalFormat(item.description),
         technologies: item.technologies.trim(),
         url: item.url.trim(),
       }))
