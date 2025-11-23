@@ -189,6 +189,39 @@ export default function RecruitmentPage() {
     }))
   }
 
+  // Helper function to convert plain text to Lexical editor format
+  const convertToLexicalFormat = (text: string) => {
+    if (!text.trim()) return undefined
+    
+    // Split text into paragraphs
+    const paragraphs = text.split('\n').filter(p => p.trim())
+    
+    return {
+      root: {
+        type: 'root',
+        children: paragraphs.map(paragraph => ({
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              text: paragraph,
+              format: 0,
+              version: 1,
+            },
+          ],
+          direction: 'ltr',
+          format: '',
+          indent: 0,
+          version: 1,
+        })),
+        direction: 'ltr',
+        format: '',
+        indent: 0,
+        version: 1,
+      },
+    }
+  }
+
   const handleSubmit = async () => {
     console.log('handleSubmit called, currentStep:', currentStep, 'isSubmitting:', isSubmitting)
     
@@ -203,7 +236,7 @@ export default function RecruitmentPage() {
       return
     }
 
-    // Basic field validations before attempting submission.
+    // Basic field validations before attempted submission.
     if (!formData.applicantName.trim() || !formData.email.trim() || !formData.phone.trim()) {
       setSubmitMessage("Please complete your personal information (name, email, phone) before submitting.")
       return
@@ -331,7 +364,7 @@ export default function RecruitmentPage() {
       resume: {
         resumeLink: formData.resumeLink.trim(),
       },
-      statementOfPurpose: formData.statementOfPurpose.trim(),
+      statementOfPurpose: convertToLexicalFormat(formData.statementOfPurpose),
       availability: {
         startDate: formData.startDate || undefined,
         hoursPerWeek: formData.hoursPerWeek ? parseNumber(formData.hoursPerWeek) : undefined,

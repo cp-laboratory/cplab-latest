@@ -53,6 +53,13 @@ export async function POST(request: Request) {
       errors.push('Resume link is required')
     }
 
+    // Validate Statement of Purpose (Lexical format)
+    if (!body.statementOfPurpose || typeof body.statementOfPurpose !== 'object') {
+      errors.push('Statement of purpose is required')
+    } else if (!body.statementOfPurpose.root || !body.statementOfPurpose.root.children) {
+      errors.push('Statement of purpose is required')
+    }
+
     // Return validation errors if any
     if (errors.length > 0) {
       return NextResponse.json({ 
