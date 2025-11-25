@@ -75,6 +75,7 @@ interface Profile {
     id: string
     certificateName: string
     issuedAt: string
+    shortCode?: string
   }>
   resume?: {
     resumeFile?: {
@@ -361,12 +362,18 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
                 <Section title="Certificates & Awards">
                   <div className="space-y-4">
                     {profile.certificatesReceived.map(cert => (
-                      <div key={cert.id} className="p-4 bg-card border border-border rounded-lg">
-                        <h3 className="font-semibold">{cert.certificateName}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Issued on {new Date(cert.issuedAt).toLocaleDateString()}
-                        </p>
-                      </div>
+                      <Link 
+                        key={cert.id} 
+                        href={`/certificate/${cert.shortCode || cert.id}`}
+                        className="block group"
+                      >
+                        <div className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 hover:shadow-md transition-all duration-300">
+                          <h3 className="font-semibold group-hover:text-primary transition-colors">{cert.certificateName}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Issued on {new Date(cert.issuedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </Link>
                     ))}
                   </div>
                 </Section>

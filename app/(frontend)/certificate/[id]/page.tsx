@@ -119,6 +119,7 @@ interface CertificateData {
   certificateFile: {
     url: string
     alt?: string
+    mimeType?: string
   }
   tags?: string[]
 }
@@ -255,7 +256,7 @@ export default function CertificateDetailPage({ params }: { params: { id: string
             </div>
           </div>
 
-          {/* Certificate Image */}
+          {/* Certificate Display (Image or PDF) */}
           {certificate.certificateFile?.url && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -263,14 +264,24 @@ export default function CertificateDetailPage({ params }: { params: { id: string
               transition={{ delay: 0.2 }}
               className="mb-8 rounded-lg overflow-hidden border border-border shadow-2xl"
             >
-              <div className="relative w-full aspect-[1.414/1] bg-card">
-                <Image
-                  src={certificate.certificateFile.url}
-                  alt={certificate.certificateFile.alt || certificate.certificateName}
-                  fill
-                  className="object-contain"
-                />
-              </div>
+              {certificate.certificateFile.mimeType === 'application/pdf' ? (
+                <div className="relative w-full h-[600px] bg-card">
+                  <iframe
+                    src={`${certificate.certificateFile.url}#toolbar=0`}
+                    className="w-full h-full"
+                    title={certificate.certificateName}
+                  />
+                </div>
+              ) : (
+                <div className="relative w-full aspect-[1.414/1] bg-card">
+                  <Image
+                    src={certificate.certificateFile.url}
+                    alt={certificate.certificateFile.alt || certificate.certificateName}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              )}
             </motion.div>
           )}
 
