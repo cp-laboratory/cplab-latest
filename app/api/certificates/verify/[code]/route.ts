@@ -8,10 +8,10 @@ export const revalidate = 0
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { code: string } }
+  { params }: { params: Promise<{ code: string }> }
 ) {
   try {
-    const { code } = params
+    const { code } = await params
     const payload = await getPayload({ config })
 
     // Find certificate by short code

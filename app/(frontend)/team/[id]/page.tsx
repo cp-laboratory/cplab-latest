@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, use } from "react"
 import { notFound } from "next/navigation"
 import { motion } from "framer-motion"
 import Image from "next/image"
@@ -140,7 +140,8 @@ function TextNode({ node }: { node: any }) {
   return text
 }
 
-export default function TeamDetailPage({ params }: { params: { id: string } }) {
+export default function TeamDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [pubSortBy, setPubSortBy] = useState<'year' | 'title'>('year')
@@ -148,7 +149,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`/api/team/${params.id}`)
+        const response = await fetch(`/api/team/${id}`)
         if (!response.ok) {
           notFound()
           return
@@ -164,7 +165,7 @@ export default function TeamDetailPage({ params }: { params: { id: string } }) {
     }
 
     fetchProfile()
-  }, [params.id])
+  }, [id])
 
   if (isLoading) {
     return (

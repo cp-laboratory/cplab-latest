@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, use } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
@@ -124,7 +124,8 @@ interface CertificateData {
   tags?: string[]
 }
 
-export default function CertificateDetailPage({ params }: { params: { id: string } }) {
+export default function CertificateDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [certificate, setCertificate] = useState<CertificateData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
@@ -133,7 +134,7 @@ export default function CertificateDetailPage({ params }: { params: { id: string
   useEffect(() => {
     const fetchCertificate = async () => {
       try {
-        const response = await fetch(`/api/certificates/verify/${params.id}`)
+        const response = await fetch(`/api/certificates/verify/${id}`)
         const data = await response.json()
 
         if (!response.ok) {
@@ -151,7 +152,7 @@ export default function CertificateDetailPage({ params }: { params: { id: string
     }
 
     fetchCertificate()
-  }, [params.id])
+  }, [id])
 
   const handleShare = (platform: string) => {
     const url = window.location.href
@@ -264,13 +265,27 @@ export default function CertificateDetailPage({ params }: { params: { id: string
               transition={{ delay: 0.2 }}
               className="mb-8 rounded-lg overflow-hidden border border-border shadow-2xl"
             >
-              {certificate.certificateFile.mimeType === 'application/pdf' ? (
-                <div className="relative w-full h-[600px] bg-card">
-                  <iframe
-                    src={`${certificate.certificateFile.url}#toolbar=0`}
+              {certificate.certificateFile.mimeType?.toLowerCase().includes('pdf') ? (
+                <div className="relative w-full h-[800px] bg-card">
+                  <object
+                    data={certificate.certificateFile.url}
+                    type="application/pdf"
                     className="w-full h-full"
-                    title={certificate.certificateName}
-                  />
+                  >
+                    <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-muted/20">
+                      <p className="mb-4 text-muted-foreground">
+                        Unable to display PDF directly in the browser.
+                      </p>
+                      <a 
+                        href={certificate.certificateFile.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                      >
+                        Download PDF to View
+                      </a>
+                    </div>
+                  </object>
                 </div>
               ) : (
                 <div className="relative w-full aspect-[1.414/1] bg-card">
