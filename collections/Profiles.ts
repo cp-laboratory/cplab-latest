@@ -194,19 +194,47 @@ export const Profiles: CollectionConfig = {
             { label: 'Research Scholar', value: 'scholar' },
           ],
           admin: {
-            description: 'Type of team member. Note: Students can only select "Current Student" or "Alumni".',
+            description: 'Type of team member.',
+            condition: (data, siblingData, { user }) => user?.role === 'professor',
           },
           access: {
-            // Students cannot change memberType to 'professor' or 'scholar' via API
             update: ({ req, data }: any) => {
               if (req.user?.role === 'student') {
-                // Block if trying to set professor or scholar
                 if (data?.memberType && !['student', 'alumni'].includes(data.memberType)) {
                   return false
                 }
               }
               return true
             },
+          },
+        },
+        {
+          name: 'memberTypeStudent',
+          type: 'select',
+          label: 'Member Type',
+          required: false,
+          options: [
+            { label: 'Current Student', value: 'student' },
+            { label: 'Alumni', value: 'alumni' },
+          ],
+          admin: {
+            description: 'Type of team member.',
+            condition: (data, siblingData, { user }) => user?.role === 'student',
+          },
+          hooks: {
+            beforeChange: [
+              ({ value, siblingData }) => {
+                if (value) {
+                  siblingData.memberType = value
+                }
+                return undefined
+              },
+            ],
+            afterRead: [
+              ({ siblingData }) => {
+                return siblingData.memberType
+              },
+            ],
           },
         },
         {
