@@ -52,6 +52,7 @@ export async function GET(
         ? {
             url: cert.certificateFile.url,
             alt: cert.certificateFile.alt || cert.certificateName,
+            mimeType: cert.certificateFile.mimeType,
           }
         : null,
       tags: cert.tags || [],
