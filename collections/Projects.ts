@@ -60,7 +60,16 @@ export const Projects: CollectionConfig = {
       // Professors can read all
       if (user?.role === 'professor') return true
       
-      // Public and students: only published projects
+      // Students can only see projects they are team members of
+      if (user?.role === 'student') {
+        return {
+          'teamMembers.member': {
+            equals: user.id,
+          },
+        }
+      }
+      
+      // Public: only published projects
       return {
         published: {
           equals: true,
@@ -79,9 +88,12 @@ export const Projects: CollectionConfig = {
       if (user.role === 'professor') return true
       
       // Students can only update projects where they are team members
-      // This requires custom hook validation since we can't use nested paths in access
       if (user.role === 'student') {
-        return true // Allow access, will validate in beforeChange hook
+        return {
+          'teamMembers.member': {
+            equals: user.id,
+          },
+        }
       }
       
       return false
@@ -93,9 +105,12 @@ export const Projects: CollectionConfig = {
       if (user.role === 'professor') return true
       
       // Students can only delete projects where they are team members
-      // This requires custom hook validation
       if (user.role === 'student') {
-        return true // Allow access, will validate in beforeChange hook
+        return {
+          'teamMembers.member': {
+            equals: user.id,
+          },
+        }
       }
       
       return false

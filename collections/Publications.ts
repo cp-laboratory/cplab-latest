@@ -8,7 +8,26 @@ export const Publications: CollectionConfig = {
     group: 'Research',
   },
   access: {
-    read: () => true, // Public can read all publications
+    read: ({ req: { user } }) => {
+      // Professors can read all
+      if (user?.role === 'professor') return true
+
+      // Students can only see publications they are authors of
+      if (user?.role === 'student') {
+        return {
+          'authors.author': {
+            equals: user.id,
+          },
+        }
+      }
+
+      // Public: only published publications
+      return {
+        status: {
+          equals: 'published',
+        },
+      }
+    },
     create: ({ req: { user } }) => {
       // Both professors and students can create publications
       if (!user) return false
