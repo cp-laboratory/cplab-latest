@@ -16,17 +16,24 @@ export const Certificates: CollectionConfig = {
     useAsTitle: 'certificateName',
     defaultColumns: ['certificateName', 'recipientUser', 'shortCode', 'issuedAt'],
     group: 'Administrative',
-    // Only professors can see this collection
-    hidden: ({ user }) => {
-      if (!user) return true
-      return user.role !== 'professor'
-    },
   },
   access: {
-    // Only professors can manage certificates
+    // Professors can manage all certificates
+    // Students can only read their own certificates
     read: ({ req: { user } }) => {
       if (!user) return false
-      return user.role === 'professor'
+      
+      if (user.role === 'professor') return true
+      
+      if (user.role === 'student') {
+        return {
+          recipientUser: {
+            equals: user.id,
+          },
+        }
+      }
+      
+      return false
     },
     create: ({ req: { user } }) => {
       if (!user) return false

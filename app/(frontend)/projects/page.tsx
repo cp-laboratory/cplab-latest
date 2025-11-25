@@ -59,7 +59,7 @@ export default function ProjectsPage() {
   useEffect(() => {
     async function fetchProjects() {
       try {
-        const response = await fetch("/api/projects?depth=1&limit=100")
+        const response = await fetch("/api/public-projects?depth=1&limit=100")
         const data = await response.json()
         
         if (data.docs) {

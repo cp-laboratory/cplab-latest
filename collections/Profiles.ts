@@ -26,21 +26,12 @@ export const Profiles: CollectionConfig = {
         return true
       }
 
-      // Students can only see their own profile or public ones
+      // Students can only see their own profile
       if (user.role === 'student') {
         return {
-          or: [
-            {
-              user: {
-                equals: user.id,
-              },
-            },
-            {
-              showPublic: {
-                equals: true,
-              },
-            },
-          ],
+          user: {
+            equals: user.id,
+          },
         }
       }
 
@@ -53,10 +44,34 @@ export const Profiles: CollectionConfig = {
 
     // Professors can create any profile
     // Students can only create their own profile (enforced in beforeChange hook)
-    create: ({ req: { user } }) => {
+    // AND students can only create ONE profile
+    create: async ({ req }) => {
+      const user = req.user
       if (!user) return false
-      // Both professors and students can create profiles
-      return true
+      
+      // Professors can create profiles
+      if (user.role === 'professor') {
+        return true
+      }
+
+      // Students can only create one profile
+      if (user.role === 'student') {
+        // Check if student already has a profile
+        const existingProfile = await req.payload.find({
+          collection: 'profiles',
+          where: {
+            user: {
+              equals: user.id,
+            },
+          },
+          limit: 1,
+        })
+
+        // If they have a profile, they cannot create another one
+        return existingProfile.totalDocs === 0
+      }
+
+      return false
     },
 
     // Professors can update any profile
@@ -528,7 +543,7 @@ export const Profiles: CollectionConfig = {
       filterOptions: ({ user }) => {
         if (user?.role === 'student') {
           return {
-            'createdBy': {
+            'authors.author': {
               equals: user.id,
             },
           }
@@ -550,7 +565,7 @@ export const Profiles: CollectionConfig = {
       filterOptions: ({ user }) => {
         if (user?.role === 'student') {
           return {
-            'createdBy': {
+            'teamMembers.member': {
               equals: user.id,
             },
           }

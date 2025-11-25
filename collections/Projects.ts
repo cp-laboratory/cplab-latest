@@ -10,6 +10,28 @@ export const Projects: CollectionConfig = {
   hooks: {
     beforeChange: [
       async ({ req, operation, data, originalDoc }) => {
+        // If a student creates a project, ensure they are added as a team member
+        if (operation === 'create' && req.user && req.user.role === 'student') {
+          const userId = req.user.id
+          const teamMembers = data.teamMembers || []
+          
+          // Check if already in team members
+          const isAlreadyMember = teamMembers.some((member: any) => {
+            return member.member === userId
+          })
+          
+          if (!isAlreadyMember) {
+            // Add as Project Lead or Developer
+            data.teamMembers = [
+              ...(data.teamMembers || []),
+              {
+                member: userId,
+                role: 'lead', // Default to lead for creator
+              }
+            ]
+          }
+        }
+
         // Only apply this check for students on update operations
         if (req.user && req.user.role === 'student' && operation === 'update') {
           // Get the document to check

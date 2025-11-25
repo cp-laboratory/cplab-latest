@@ -116,7 +116,7 @@ export default function ProjectDetailPage() {
   useEffect(() => {
     async function fetchProject() {
       try {
-        const response = await fetch(`/api/projects?where[slug][equals]=${params.id}&depth=2`)
+        const response = await fetch(`/api/public-projects?where[slug][equals]=${params.id}&depth=2`)
         const data = await response.json()
         
         if (data.docs && data.docs.length > 0) {

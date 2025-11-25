@@ -68,6 +68,35 @@ export const Publications: CollectionConfig = {
       return false
     },
   },
+  hooks: {
+    beforeChange: [
+      async ({ req, operation, data }) => {
+        // If a student creates a publication, ensure they are added as an author
+        if (operation === 'create' && req.user && req.user.role === 'student') {
+          const userId = req.user.id
+          const authors = data.authors || []
+          
+          // Check if already in authors
+          const isAlreadyAuthor = authors.some((author: any) => {
+            return author.author === userId
+          })
+          
+          if (!isAlreadyAuthor) {
+            // Add as Internal Author
+            data.authors = [
+              {
+                authorType: 'internal',
+                author: userId,
+                isCorresponding: true, // Default to corresponding for creator
+              },
+              ...(data.authors || []),
+            ]
+          }
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     // Basic Information
     {
