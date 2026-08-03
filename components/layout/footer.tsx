@@ -95,7 +95,7 @@ export default function Footer() {
                   aria-label={label}
                   className="w-9 h-9 rounded-lg glass flex items-center justify-center text-white/50 hover:text-white hover:border-blue-500/50 transition-all duration-200"
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon />
                 </a>
               ))}
             </div>

@@ -120,7 +120,7 @@ export default function ContactPage() {
                         aria-label={label}
                         className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-blue-500/30 transition-all"
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon />
                       </a>
                     ))}
                   </div>
