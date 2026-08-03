@@ -1,125 +1,76 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ArrowRight, Users, Lightbulb, Award, Clock } from "lucide-react"
-import Link from "next/link"
+import { motion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
-export function RecruitmentBanner() {
+export default function RecruitmentBanner() {
   return (
-    <section className="relative w-full py-12 md:py-20">
-      <div className="mx-auto max-w-7xl rounded-[40px] border border-black/5 dark:border-white/20 p-2 shadow-lg">
-        <div className="relative mx-auto overflow-hidden rounded-[38px] border border-black/5 dark:border-white/20 bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-8 md:p-12 shadow-xl">
-          {/* Animated background gradients */}
-          <div
-            className="absolute inset-0 z-0 opacity-30"
-            style={{
-              background:
-                "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255, 255, 255, 0.2), transparent 70%)",
-            }}
-          />
+    <section id="recruitment" className="section-pad">
+      <div className="container-xl">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative overflow-hidden rounded-3xl"
+        >
+          {/* Gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 via-violet-600/20 to-blue-900/40" />
+          <div className="absolute inset-0 grid-bg opacity-20" />
 
-          {/* Decorative circles */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+          {/* Glow orbs */}
+          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-blue-500/20 blur-[80px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-violet-500/20 blur-[60px] pointer-events-none" />
 
-          {/* Film grain overlay */}
-          <div
-            className="absolute inset-0 z-0 opacity-[0.02]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            }}
-          />
+          {/* Border */}
+          <div className="absolute inset-0 rounded-3xl border border-blue-500/20" />
 
-          <div className="relative z-10">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              {/* Left Content */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-              >
-                <div className="inline-block mb-4 px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium">
-                  🎓 Now Hiring
-                </div>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                  Join Our Research Team
-                </h2>
-                <p className="text-white/90 text-lg mb-6 leading-relaxed">
-                  We're looking for passionate researchers, graduate students, and undergraduates to
-                  join our cutting-edge research projects. Work on innovative problems with
-                  world-class mentors.
-                </p>
+          <div className="relative z-10 px-8 py-16 sm:px-16 flex flex-col sm:flex-row items-center justify-between gap-8">
+            {/* Text */}
+            <div className="max-w-lg text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-6">
+                <Sparkles className="w-3.5 h-3.5" /> Now Recruiting — 2024 Cohort
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+                Ready to Push the{" "}
+                <span className="gradient-text">Boundaries of Science?</span>
+              </h2>
+              <p className="text-white/60 text-lg leading-relaxed">
+                Join CPLAB as a researcher or student collaborator. We offer hands-on
+                research experience, mentorship from leading faculty, and access to
+                cutting-edge lab infrastructure.
+              </p>
 
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link
-                    href="/recruitment"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-white text-primary rounded-full font-semibold hover:bg-white/90 transition-colors shadow-lg hover:shadow-xl group"
-                  >
-                    Apply Now
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </motion.div>
-              </motion.div>
-
-              {/* Right Content - Benefits Grid */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-              >
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <Users className="w-8 h-8 text-white mb-3" />
-                  <h3 className="text-white font-semibold mb-1">Collaborative</h3>
-                  <p className="text-white/80 text-sm">Work with expert researchers</p>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <Lightbulb className="w-8 h-8 text-white mb-3" />
-                  <h3 className="text-white font-semibold mb-1">Innovative</h3>
-                  <p className="text-white/80 text-sm">Cutting-edge research areas</p>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <Award className="w-8 h-8 text-white mb-3" />
-                  <h3 className="text-white font-semibold mb-1">Publications</h3>
-                  <p className="text-white/80 text-sm">Publish in top conferences</p>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <Clock className="w-8 h-8 text-white mb-3" />
-                  <h3 className="text-white font-semibold mb-1">Flexible</h3>
-                  <p className="text-white/80 text-sm">Part-time & full-time options</p>
-                </div>
-              </motion.div>
+              <div className="flex flex-wrap gap-4 mt-6 justify-center sm:justify-start">
+                {["BSc Thesis", "MSc Research", "PhD Positions", "Industrial Projects"].map(
+                  (t) => (
+                    <span
+                      key={t}
+                      className="px-3 py-1 rounded-full text-xs text-white/60 border border-white/10"
+                    >
+                      {t}
+                    </span>
+                  )
+                )}
+              </div>
             </div>
 
-            {/* Bottom Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-              className="mt-8 pt-8 border-t border-white/20 flex flex-wrap gap-8 justify-center lg:justify-start"
-            >
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-white mb-1">Multiple</div>
-                <div className="text-white/80 text-sm">Open Positions</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-white mb-1">All Levels</div>
-                <div className="text-white/80 text-sm">Undergrad to Postdoc</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-white mb-1">24/7</div>
-                <div className="text-white/80 text-sm">Lab Access</div>
-              </div>
-            </motion.div>
+            {/* CTA */}
+            <div className="flex flex-col items-center gap-4 shrink-0">
+              <Link
+                href="/recruitment"
+                id="recruitment-banner-cta"
+                className="group flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-blue-500 to-violet-600 text-white font-semibold hover:opacity-90 transition-all shadow-2xl shadow-blue-500/30 hover:scale-105"
+              >
+                Apply Now
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <p className="text-xs text-white/30">Applications close March 31, 2024</p>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
-  )
+  );
 }

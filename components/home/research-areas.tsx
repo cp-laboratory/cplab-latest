@@ -1,129 +1,102 @@
-"use client"
+"use client";
 
-import { motion, useInView } from "framer-motion"
-import { useRef, useState, useEffect } from "react"
+import { motion } from "framer-motion";
+import { Code2, Brain, Link2, Wifi, Cpu, Layers } from "lucide-react";
 
-interface ResearchArea {
-  title: string
-  description: string
-  icon: string
-}
-
-const defaultResearchAreas: ResearchArea[] = [
+const areas = [
   {
+    icon: Code2,
     title: "Application Development",
-    description: "Building scalable and efficient applications using modern frameworks and best practices.",
-    icon: "💻",
+    description: "Building robust, scalable full-stack applications with modern frameworks and cloud-native architectures for real-world deployment.",
+    color: "from-blue-400 to-blue-600",
+    glow: "group-hover:shadow-blue-500/20",
+    span: "lg:col-span-2",
   },
   {
-    title: "Machine Learning",
-    description: "Developing intelligent systems and algorithms for pattern recognition and prediction.",
-    icon: "🤖",
+    icon: Brain,
+    title: "Machine Learning & AI",
+    description: "From federated learning to computer vision — developing AI systems that operate efficiently on resource-constrained edge devices.",
+    color: "from-violet-400 to-violet-600",
+    glow: "group-hover:shadow-violet-500/20",
+    span: "lg:col-span-1",
   },
   {
-    title: "Blockchain",
-    description: "Exploring distributed ledger technologies and decentralized systems.",
-    icon: "⛓️",
+    icon: Link2,
+    title: "Blockchain Technology",
+    description: "Designing decentralized protocols, smart contracts, and zero-knowledge proof systems for transparent and trustless applications.",
+    color: "from-emerald-400 to-emerald-600",
+    glow: "group-hover:shadow-emerald-500/20",
+    span: "lg:col-span-1",
   },
   {
-    title: "IoT & Sensors",
-    description: "Integrating physical devices with digital systems for real-time data collection.",
-    icon: "📡",
+    icon: Wifi,
+    title: "Internet of Things",
+    description: "Connecting the physical and digital worlds through intelligent sensor networks, edge computing, and real-time data processing pipelines.",
+    color: "from-amber-400 to-amber-600",
+    glow: "group-hover:shadow-amber-500/20",
+    span: "lg:col-span-1",
   },
   {
-    title: "Cyber Security",
-    description: "Protecting systems and data from cyber threats and vulnerabilities.",
-    icon: "🔒",
+    icon: Cpu,
+    title: "Cyber-Physical Systems",
+    description: "Integrating computation, networking, and physical processes to create safety-critical embedded systems for industry and healthcare.",
+    color: "from-rose-400 to-rose-600",
+    glow: "group-hover:shadow-rose-500/20",
+    span: "lg:col-span-2",
   },
-  {
-    title: "Edge Computing",
-    description: "Processing data closer to the source for reduced latency and improved performance.",
-    icon: "🌐",
-  },
-]
+];
 
 export default function ResearchAreas() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.3 })
-  const [researchAreas, setResearchAreas] = useState<ResearchArea[]>(defaultResearchAreas)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchResearchAreas = async () => {
-      try {
-        const response = await fetch('/api/public-research-areas', {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache',
-          },
-        })
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch research areas')
-        }
-        
-        const data = await response.json()
-        if (Array.isArray(data) && data.length > 0) {
-          setResearchAreas(data)
-        }
-      } catch (error) {
-        console.error('Error fetching research areas:', error)
-        // Keep default research areas on error
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchResearchAreas()
-  }, [])
-
   return (
-    <section className="relative overflow-hidden py-12 sm:py-24 md:py-32">
-      <div className="bg-primary absolute -top-10 left-1/2 h-16 w-44 -translate-x-1/2 rounded-full opacity-40 blur-3xl select-none"></div>
-      <div className="via-primary/50 absolute top-0 left-1/2 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent transition-all ease-in-out"></div>
-
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-7xl mx-auto flex flex-col items-center gap-12 px-4"
-      >
-        <div className="text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl mb-4">
-            Research Areas
+    <section id="research" className="section-pad">
+      <div className="container-xl">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Our Focus</p>
+          <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+            Research <span className="gradient-text">Areas</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our laboratory focuses on cutting-edge research across multiple
-            domains of cyber-physical systems.
+          <p className="text-white/50 text-lg max-w-2xl mx-auto">
+            Interdisciplinary research spanning the full spectrum of cyber-physical systems
+            and emerging digital technologies.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {researchAreas.map((area, index) => (
-            <motion.div
-              key={area.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-              <div className="relative z-10">
-                <div className="text-4xl mb-4">{area.icon}</div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">
-                  {area.title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {area.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {areas.map((area, i) => {
+            const Icon = area.icon;
+            return (
+              <motion.div
+                key={area.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className={area.span}
+              >
+                <div
+                  className={`group glass-hover h-full rounded-2xl p-7 cursor-default transition-all duration-300 hover:shadow-xl ${area.glow}`}
+                >
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${area.color} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-medium text-white mb-3">{area.title}</h3>
+                  <p className="text-white/50 text-sm leading-relaxed">{area.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

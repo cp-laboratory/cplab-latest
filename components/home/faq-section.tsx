@@ -1,132 +1,117 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Plus, Minus } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
-interface FAQ {
-  id: string
-  question: string
-  answer: string
-  category: string
-  order: number
-  isPublished: boolean
-}
+const faqs = [
+  {
+    q: "How can I join CPLAB as a student researcher?",
+    a: "Fill out our online application form on the Recruitment page. We accept BSc thesis students, MSc researchers, and PhD candidates. Selection is based on academic performance, research statement quality, and a brief interview. Applications are reviewed on a rolling basis.",
+  },
+  {
+    q: "What research areas does CPLAB focus on?",
+    a: "Our five main research areas are: Application Development, Machine Learning & AI (particularly federated learning and edge AI), Blockchain Technology (smart contracts, DeFi, identity systems), Internet of Things, and Cyber-Physical Systems. We welcome interdisciplinary work across these areas.",
+  },
+  {
+    q: "Does CPLAB offer internships or part-time research positions?",
+    a: "Yes, we offer semester-long part-time research positions for undergraduate students who aren't doing their thesis with us. These positions are unpaid but provide co-authorship opportunities on published work and a strong research letter of recommendation.",
+  },
+  {
+    q: "What equipment and resources does the lab provide?",
+    a: "Lab members have access to our GPU cluster (8x NVIDIA A100), Raspberry Pi and Arduino development kits, IoT sensor arrays, networking equipment, blockchain testnets, and software licenses. We also have a small budget for cloud computing resources on AWS/GCP.",
+  },
+  {
+    q: "How do I verify a certificate issued by CPLAB?",
+    a: "Visit the Certificate Verification page and enter the 12-character certificate ID printed on your document. The system will confirm the certificate's authenticity and display the recipient's name, issue date, and the associated project or achievement.",
+  },
+  {
+    q: "Can I collaborate with CPLAB as an external researcher or industry partner?",
+    a: "Absolutely. We actively seek industry collaborations and academic partnerships. Contact us at help@cplab.org with a proposal describing the collaboration scope. Industry partners can sponsor student projects, access lab expertise as consultants, or co-develop research.",
+  },
+];
 
-interface FAQSectionProps {
-  faqs: FAQ[]
-}
-
-export default function FAQSection({ faqs }: FAQSectionProps) {
-  const [openItems, setOpenItems] = useState<number[]>([])
-
-  const toggleItem = (index: number) => {
-    setOpenItems((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
-  }
+export default function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative overflow-hidden py-12 md:py-20">
-      <div className="bg-primary absolute -top-10 left-1/2 h-16 w-44 -translate-x-1/2 rounded-full opacity-40 blur-3xl select-none"></div>
-      <div className="via-primary/50 absolute top-0 left-1/2 h-px w-3/5 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent transition-all ease-in-out"></div>
-      {/* Background blur effects */}
-      <div className="bg-primary/20 absolute top-1/2 -right-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
-      <div className="bg-primary/20 absolute top-1/2 -left-20 z-[-1] h-64 w-64 rounded-full opacity-80 blur-3xl"></div>
+    <section id="faq" className="section-pad">
+      <div className="container-xl">
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+              Questions
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+              Frequently Asked{" "}
+              <span className="gradient-text">Questions</span>
+            </h2>
+            <p className="text-white/50 text-lg">
+              Everything you need to know about CPLAB and joining the team.
+            </p>
+          </motion.div>
 
-      <div className="z-10 max-w-7xl mx-auto px-4">
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <div className="border-primary/40 text-primary inline-flex items-center gap-2 rounded-full border px-3 py-1 uppercase">
-            <span>✶</span>
-            <span className="text-sm">Faqs</span>
-          </div>
-        </motion.div>
-
-        <motion.h2
-          className="mx-auto mt-6 max-w-xl text-center text-4xl font-medium md:text-[54px] md:leading-[60px]"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          Questions? We've got{" "}
-          <span className="bg-gradient-to-b from-foreground via-blue-200 to-primary bg-clip-text text-transparent">
-            answers
-          </span>
-        </motion.h2>
-
-        {faqs.length === 0 ? (
-          <div className="mx-auto mt-12 flex max-w-7xl justify-center">
-            <p className="text-muted-foreground">No FAQs available at the moment.</p>
-          </div>
-        ) : (
-          <div className="mx-auto mt-12 flex max-w-7xl flex-col gap-6">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              className="from-secondary/40 to-secondary/10 rounded-2xl border border-white/10 bg-gradient-to-b p-6 shadow-[0px_2px_0px_0px_rgba(255,255,255,0.1)_inset] transition-all duration-300 hover:border-white/20 cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => toggleItem(index)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e: { key: string; preventDefault: () => void }) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  toggleItem(index);
-                }
-              }}
-              {...(index === faqs.length - 1 && { "data-faq": faq.question })}
-            >
-              <div className="flex items-start justify-between">
-                <h3 className="m-0 font-medium pr-4">{faq.question}</h3>
-                <motion.div
-                  animate={{ rotate: openItems.includes(index) ? 180 : 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className=""
+          {/* FAQ Items */}
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+              >
+                <div
+                  className={`glass rounded-2xl overflow-hidden border transition-all duration-200 ${
+                    openIndex === i ? "border-blue-500/30" : "border-white/5"
+                  }`}
                 >
-                  {openItems.includes(index) ? (
-                    <Minus
-                      className="text-primary flex-shrink-0 transition duration-300"
-                      size={24}
-                    />
-                  ) : (
-                    <Plus
-                      className="text-primary flex-shrink-0 transition duration-300"
-                      size={24}
-                    />
-                  )}
-                </motion.div>
-              </div>
-              <AnimatePresence>
-                {openItems.includes(index) && (
-                  <motion.div
-                    className="mt-4 text-muted-foreground leading-relaxed overflow-hidden"
-                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                    animate={{ opacity: 1, height: "auto", marginTop: 16 }}
-                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                    transition={{
-                      duration: 0.4,
-                      ease: "easeInOut",
-                      opacity: { duration: 0.2 },
-                    }}
+                  <button
+                    id={`faq-${i}`}
+                    onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
                   >
-                    {faq.answer}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
+                    <span
+                      className={`font-semibold text-base leading-snug transition-colors ${
+                        openIndex === i ? "text-white" : "text-white/70"
+                      }`}
+                    >
+                      {faq.q}
+                    </span>
+                    <ChevronDown
+                      className={`w-5 h-5 shrink-0 text-white/40 transition-transform duration-300 ${
+                        openIndex === i ? "rotate-180 text-blue-400" : ""
+                      }`}
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {openIndex === i && (
+                      <motion.div
+                        key="answer"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                      >
+                        <div className="px-6 pb-5 border-t border-white/5">
+                          <p className="text-white/50 text-sm leading-relaxed pt-4">{faq.a}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
-        )}
       </div>
     </section>
   );
