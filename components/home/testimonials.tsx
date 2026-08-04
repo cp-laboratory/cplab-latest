@@ -31,7 +31,7 @@ const testimonials = [
   {
     id: "4",
     quote:
-      "Dr. Iqbal's guidance on our blockchain identity project shaped my understanding of zero-knowledge cryptography. I'm now pursuing a PhD at ETH Zürich because of the foundations built here.",
+      "Dr. Haque's guidance on our blockchain identity project shaped my understanding of zero-knowledge cryptography. I'm now pursuing a PhD at ETH Zürich because of the foundations built here.",
     name: "Tanzim Hossain",
     role: "MSc Researcher | CPLAB",
     year: "2024",
