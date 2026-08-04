@@ -4,8 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { teamMembers, TeamMember } from "@/lib/data/team";
-import { Mail, ExternalLink, ChevronRight } from "lucide-react";
+import type { TeamMember } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
+import { Mail, ExternalLink, ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -31,6 +33,9 @@ const filters: { label: string; value: FilterType }[] = [
 
 export default function TeamPage() {
   const [filter, setFilter] = useState<FilterType>("all");
+  const { data: teamMembers, loading } = useLiveCollection<TeamMember>(COLLECTIONS.team, {
+    orderByField: "name",
+  });
 
   const professors = teamMembers.filter((m) => m.memberType === "professor");
   const students = teamMembers.filter((m) => m.memberType === "student");
@@ -39,7 +44,7 @@ export default function TeamPage() {
   const show = (type: FilterType) => filter === "all" || filter === type;
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
 
       <main className="pt-32 pb-24">
@@ -51,7 +56,7 @@ export default function TeamPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">The People</p>
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">The People</p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
               Our <span className="gradient-text">Team</span>
             </h1>
@@ -75,7 +80,7 @@ export default function TeamPage() {
                 onClick={() => setFilter(f.value)}
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
                   filter === f.value
-                    ? "bg-gradient-to-r from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/20"
+                    ? "bg-gradient-to-r from-jade-500 to-jade-900 text-white shadow-lg shadow-jade-500/20"
                     : "glass border border-white/10 text-white/50 hover:text-white hover:border-white/20"
                 }`}
               >
@@ -84,13 +89,19 @@ export default function TeamPage() {
             ))}
           </motion.div>
 
+          {loading && (
+            <div className="flex justify-center py-24">
+              <Loader2 className="w-6 h-6 text-jade-400 animate-spin" />
+            </div>
+          )}
+
           {/* Faculty Section */}
           {show("professor") && professors.length > 0 && (
             <section className="mb-20">
               <SectionTitle title="Faculty & Researchers" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className={professors.length === 1 ? "" : "grid grid-cols-1 md:grid-cols-2 gap-6"}>
                 {professors.map((m, i) => (
-                  <ProfessorCard key={m.id} member={m} index={i} />
+                  <ProfessorCard key={m.id} member={m} index={i} solo={professors.length === 1} />
                 ))}
               </div>
             </section>
@@ -135,13 +146,13 @@ function SectionTitle({ title }: { title: string }) {
       viewport={{ once: true }}
       className="text-2xl font-medium text-white mb-8 flex items-center gap-3"
     >
-      <span className="w-1 h-6 rounded-full bg-gradient-to-b from-blue-500 to-violet-600 inline-block" />
+      <span className="w-1 h-6 rounded-full bg-gradient-to-b from-jade-500 to-jade-900 inline-block" />
       {title}
     </motion.h2>
   );
 }
 
-function ProfessorCard({ member, index }: { member: TeamMember; index: number }) {
+function ProfessorCard({ member, index, solo = false }: { member: TeamMember; index: number; solo?: boolean }) {
   const router = useRouter();
   return (
     <motion.div
@@ -151,31 +162,48 @@ function ProfessorCard({ member, index }: { member: TeamMember; index: number })
       transition={{ duration: 0.5, delay: index * 0.08 }}
     >
       <div onClick={() => router.push(`/team/${member.slug}`)} className="cursor-pointer">
-        <div className="group glass-hover rounded-2xl p-6 flex gap-6 h-full">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-white/10 flex items-center justify-center text-4xl font-medium text-blue-400 shrink-0">
-            {member.name.charAt(0)}
+        <div
+          className={`group glass-hover rounded-2xl h-full ${
+            solo
+              ? "p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
+              : "p-6 flex gap-6"
+          }`}
+        >
+          <div
+            className={`rounded-2xl bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 shrink-0 overflow-hidden ${
+              solo ? "w-32 h-32 sm:w-36 sm:h-36 text-5xl" : "w-24 h-24 text-4xl"
+            }`}
+          >
+            {member.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+            ) : (
+              member.name.charAt(0)
+            )}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-1">
-              <h3 className="text-lg font-medium text-white group-hover:text-blue-400 transition-colors leading-snug">
+            <div className={`flex items-start justify-between gap-2 mb-1 ${solo ? "sm:justify-start" : ""}`}>
+              <h3 className={`font-medium text-white group-hover:text-jade-400 transition-colors leading-snug ${solo ? "text-2xl" : "text-lg"}`}>
                 {member.name}
               </h3>
-              <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-blue-400 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+              {!solo && (
+                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-jade-400 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+              )}
             </div>
-            <p className="text-sm text-blue-400 font-medium mb-3">{member.designation}</p>
-            <p className="text-sm text-white/50 line-clamp-2 mb-4">{member.bio}</p>
+            <p className={`text-jade-400 font-medium mb-3 ${solo ? "text-base" : "text-sm"}`}>{member.designation}</p>
+            <p className={`text-white/50 mb-4 ${solo ? "text-base leading-relaxed" : "text-sm line-clamp-2"}`}>{member.bio}</p>
             {member.researchInterests && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {member.researchInterests.slice(0, 3).map((r) => (
-                  <span key={r} className="px-2 py-0.5 rounded-full text-xs bg-blue-500/10 text-blue-300 border border-blue-500/20">
+              <div className={`flex flex-wrap gap-2 mb-3 ${solo ? "justify-center sm:justify-start" : ""}`}>
+                {(solo ? member.researchInterests : member.researchInterests.slice(0, 3)).map((r) => (
+                  <span key={r} className="px-2 py-0.5 rounded-full text-xs bg-jade-500/10 text-jade-300 border border-jade-500/20">
                     {r}
                   </span>
                 ))}
               </div>
             )}
-            <div className="flex items-center gap-3">
+            <div className={`flex items-center gap-3 ${solo ? "justify-center sm:justify-start" : ""}`}>
               {member.email && (
-                <a href={`mailto:${member.email}`} onClick={(e) => e.stopPropagation()} className="text-white/30 hover:text-blue-400 transition-colors">
+                <a href={`mailto:${member.email}`} onClick={(e) => e.stopPropagation()} className="text-white/30 hover:text-jade-400 transition-colors">
                   <Mail className="w-4 h-4" />
                 </a>
               )}
@@ -185,7 +213,7 @@ function ProfessorCard({ member, index }: { member: TeamMember; index: number })
                 </a>
               )}
               {member.linkedin && (
-                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white/30 hover:text-blue-400 transition-colors">
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-white/30 hover:text-jade-400 transition-colors">
                   <LinkedinIcon />
                 </a>
               )}
@@ -212,13 +240,18 @@ function StudentCard({ member, index }: { member: TeamMember; index: number }) {
     >
       <Link href={`/team/${member.slug}`}>
         <div className="group glass-hover rounded-2xl p-5 flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/15 to-violet-500/15 border border-white/10 flex items-center justify-center text-2xl font-medium text-blue-400 mb-4 group-hover:scale-105 transition-transform">
-            {member.name.charAt(0)}
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-jade-500/15 to-jade-800/15 border border-white/10 flex items-center justify-center text-2xl font-medium text-jade-400 mb-4 group-hover:scale-105 transition-transform overflow-hidden">
+            {member.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+            ) : (
+              member.name.charAt(0)
+            )}
           </div>
-          <h3 className="font-medium text-white text-sm mb-1 group-hover:text-blue-400 transition-colors line-clamp-2">
+          <h3 className="font-medium text-white text-sm mb-1 group-hover:text-jade-400 transition-colors line-clamp-2">
             {member.name}
           </h3>
-          <p className="text-xs text-blue-400 mb-2">{member.designation}</p>
+          <p className="text-xs text-jade-400 mb-2">{member.designation}</p>
           {member.memberType === "alumni" && (
             <span className="px-2 py-0.5 rounded-full text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20">
               Alumni

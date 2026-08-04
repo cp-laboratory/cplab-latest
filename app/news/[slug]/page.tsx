@@ -1,13 +1,12 @@
-import { newsArticles } from "@/lib/data/news";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import { CalendarDays, Tag, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { fetchDocByField, COLLECTIONS } from "@/lib/firestore";
+import type { NewsArticle } from "@/lib/types";
 
-export function generateStaticParams() {
-  return newsArticles.map((a) => ({ slug: a.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function NewsDetailPage({
   params,
@@ -15,11 +14,11 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = newsArticles.find((a) => a.slug === slug);
+  const article = await fetchDocByField<NewsArticle>(COLLECTIONS.news, "slug", slug);
   if (!article) notFound();
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="max-w-3xl mx-auto px-4">
@@ -31,7 +30,7 @@ export default async function NewsDetailPage({
           </Link>
 
           <div className="flex flex-wrap gap-2 mb-6">
-            <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-1.5">
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-jade-500/10 text-jade-400 border border-jade-500/20 flex items-center gap-1.5">
               <Tag className="w-3 h-3" /> {article.category}
             </span>
           </div>
@@ -39,6 +38,15 @@ export default async function NewsDetailPage({
           <h1 className="text-3xl sm:text-4xl font-medium text-white mb-6 leading-tight">
             {article.title}
           </h1>
+
+          {article.coverImage && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={article.coverImage}
+              alt={article.title}
+              className="w-full aspect-video object-cover rounded-2xl mb-10 border border-white/10"
+            />
+          )}
 
           <div className="flex items-center gap-4 text-sm text-white/30 mb-10 pb-8 border-b border-white/10">
             <div className="flex items-center gap-2">

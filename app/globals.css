@@ -1,27 +1,43 @@
 @import "tailwindcss";
 
+/* Custom "jade" accent scale — replaces the old blue/violet brand pair with a
+   single muted green-jade hue, used across gradients, badges, links, and glows. */
+@theme {
+  --color-jade-50: hsl(160 40% 96%);
+  --color-jade-100: hsl(160 38% 91%);
+  --color-jade-200: hsl(161 40% 82%);
+  --color-jade-300: hsl(161 40% 69%);
+  --color-jade-400: hsl(161 42% 56%);
+  --color-jade-500: hsl(161 45% 45%);
+  --color-jade-600: hsl(162 48% 36%);
+  --color-jade-700: hsl(163 50% 29%);
+  --color-jade-800: hsl(164 48% 23%);
+  --color-jade-900: hsl(164 45% 17%);
+  --color-jade-950: hsl(163 40% 9%);
+}
+
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 60%;
-    --primary: 221 83% 60%;
-    --primary-foreground: 222 47% 6%;
-    --accent: 270 75% 65%;
-    --accent-foreground: 210 40% 98%;
+    --background: 163 20% 5%;
+    --foreground: 150 15% 95%;
+    --card: 163 18% 9%;
+    --card-foreground: 150 15% 95%;
+    --border: 163 15% 17%;
+    --muted: 163 15% 17%;
+    --muted-foreground: 150 10% 62%;
+    --primary: 161 45% 45%;
+    --primary-foreground: 163 20% 5%;
+    --accent: 164 48% 23%;
+    --accent-foreground: 150 15% 95%;
     --amber: 38 95% 55%;
     --destructive: 0 84% 60%;
-    --ring: 221 83% 60%;
+    --ring: 161 45% 45%;
     --radius: 0.75rem;
   }
 
   body {
-    background-color: hsl(222, 47%, 6%);
-    color: hsl(210, 40%, 98%);
+    background-color: hsl(163, 20%, 5%);
+    color: hsl(150, 15%, 95%);
     font-family: var(--font-inter), system-ui, sans-serif;
   }
 
@@ -30,7 +46,7 @@
   }
 
   ::selection {
-    background: hsl(221, 83%, 60%, 0.3);
+    background: hsl(161, 45%, 45%, 0.3);
   }
 
   ::-webkit-scrollbar {
@@ -38,22 +54,33 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(222, 47%, 6%);
+    background: hsl(163, 20%, 5%);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(217, 33%, 17%);
+    background: hsl(163, 15%, 17%);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(221, 83%, 60%, 0.5);
+    background: hsl(161, 45%, 45%, 0.5);
   }
+}
+
+/* Native form controls (select dropdowns) rendered in dark mode so option
+   text isn't invisible white-on-white in the browser's native popup. */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: hsl(163, 18%, 9%);
+  color: hsl(150, 15%, 95%);
 }
 
 /* Custom utility classes */
 .gradient-text {
-  background: linear-gradient(135deg, hsl(221, 83%, 60%) 0%, hsl(270, 75%, 65%) 100%);
+  background: linear-gradient(135deg, hsl(161, 50%, 55%) 0%, hsl(164, 55%, 28%) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -67,14 +94,14 @@
 }
 
 .glass {
-  background: rgba(15, 20, 40, 0.6);
+  background: rgba(15, 23, 20, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-hover {
-  background: rgba(15, 20, 40, 0.6);
+  background: rgba(15, 23, 20, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -82,9 +109,9 @@
 }
 
 .glass-hover:hover {
-  background: rgba(15, 20, 40, 0.8);
-  border-color: rgba(59, 130, 246, 0.4);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+  background: rgba(15, 23, 20, 0.8);
+  border-color: rgba(63, 164, 130, 0.4);
+  box-shadow: 0 0 30px rgba(63, 164, 130, 0.1);
 }
 
 .grid-bg {
@@ -159,9 +186,9 @@
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(59,130,246,0.1) 0%,
-    rgba(59,130,246,0.3) 50%,
-    rgba(59,130,246,0.1) 100%
+    rgba(63,164,130,0.1) 0%,
+    rgba(63,164,130,0.3) 50%,
+    rgba(63,164,130,0.1) 100%
   );
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;

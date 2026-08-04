@@ -13,7 +13,7 @@ import Newsletter from "@/components/home/newsletter";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <Hero />
       <StatsBar />

@@ -54,16 +54,16 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-white/5 bg-[hsl(222_47%_4%)]">
+    <footer className="relative border-t border-white/5 bg-[hsl(163_20%_4%)]">
       {/* Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px bg-gradient-to-r from-transparent via-jade-500/30 to-transparent" />
 
       <div className="container-xl py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-jade-500 to-jade-900 flex items-center justify-center shadow-lg">
                 <Cpu className="w-4.5 h-4.5 text-white" />
               </div>
               <span className="font-medium text-white text-lg">CPLAB</span>
@@ -75,13 +75,13 @@ export default function Footer() {
             {/* Contact info */}
             <div className="space-y-2 mb-6">
               <a href="mailto:help@cplab.org" className="flex items-center gap-2 text-sm text-white/40 hover:text-white/70 transition-colors">
-                <Mail className="w-3.5 h-3.5 text-blue-400" /> help@cplab.org
+                <Mail className="w-3.5 h-3.5 text-jade-400" /> help@cplab.org
               </a>
               <span className="flex items-center gap-2 text-sm text-white/40">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" /> Basherhat, Dinajpur - 5200, Bangladesh
+                <MapPin className="w-3.5 h-3.5 text-jade-400" /> Basherhat, Dinajpur - 5200, Bangladesh
               </span>
               <a href="tel:+8801712534968" className="flex items-center gap-2 text-sm text-white/40 hover:text-white/70 transition-colors">
-                <Phone className="w-3.5 h-3.5 text-blue-400" /> 01712-534968
+                <Phone className="w-3.5 h-3.5 text-jade-400" /> 01712-534968
               </a>
             </div>
             {/* Social */}
@@ -93,7 +93,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg glass flex items-center justify-center text-white/50 hover:text-white hover:border-blue-500/50 transition-all duration-200"
+                  className="w-9 h-9 rounded-lg glass flex items-center justify-center text-white/50 hover:text-white hover:border-jade-500/50 transition-all duration-200"
                 >
                   <Icon />
                 </a>
@@ -151,8 +151,8 @@ export default function Footer() {
             © {year} Cyber Physical Laboratory. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-white/30 hover:text-white/60 transition-colors">Privacy Policy</a>
-            <a href="#" className="text-sm text-white/30 hover:text-white/60 transition-colors">Terms of Service</a>
+            <Link href="/privacy-policy" className="text-sm text-white/30 hover:text-white/60 transition-colors">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="text-sm text-white/30 hover:text-white/60 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

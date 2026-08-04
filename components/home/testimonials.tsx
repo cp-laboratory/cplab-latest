@@ -50,7 +50,7 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+          <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
             What Members Say
           </p>
           <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -70,12 +70,12 @@ export default function Testimonials() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <div className="glass-hover rounded-2xl p-7 h-full flex flex-col">
-                <Quote className="w-8 h-8 text-blue-500/30 mb-4" />
+                <Quote className="w-8 h-8 text-jade-500/30 mb-4" />
                 <p className="text-white/60 text-base leading-relaxed italic flex-1 mb-6">
                   "{t.quote}"
                 </p>
                 <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-white/10 flex items-center justify-center text-base font-medium text-blue-400">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center text-base font-medium text-jade-400">
                     {t.name.charAt(0)}
                   </div>
                   <div>

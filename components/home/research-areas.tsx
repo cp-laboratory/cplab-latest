@@ -8,17 +8,17 @@ const areas = [
     icon: Code2,
     title: "Application Development",
     description: "Building robust, scalable full-stack applications with modern frameworks and cloud-native architectures for real-world deployment.",
-    color: "from-blue-400 to-blue-600",
-    glow: "group-hover:shadow-blue-500/20",
-    span: "lg:col-span-2",
+    color: "from-jade-400 to-jade-600",
+    glow: "group-hover:shadow-jade-500/20",
+    span: "",
   },
   {
     icon: Brain,
     title: "Machine Learning & AI",
     description: "From federated learning to computer vision — developing AI systems that operate efficiently on resource-constrained edge devices.",
-    color: "from-violet-400 to-violet-600",
-    glow: "group-hover:shadow-violet-500/20",
-    span: "lg:col-span-1",
+    color: "from-orange-400 to-orange-600",
+    glow: "group-hover:shadow-orange-500/20",
+    span: "",
   },
   {
     icon: Link2,
@@ -26,7 +26,7 @@ const areas = [
     description: "Designing decentralized protocols, smart contracts, and zero-knowledge proof systems for transparent and trustless applications.",
     color: "from-emerald-400 to-emerald-600",
     glow: "group-hover:shadow-emerald-500/20",
-    span: "lg:col-span-1",
+    span: "",
   },
   {
     icon: Wifi,
@@ -34,7 +34,7 @@ const areas = [
     description: "Connecting the physical and digital worlds through intelligent sensor networks, edge computing, and real-time data processing pipelines.",
     color: "from-amber-400 to-amber-600",
     glow: "group-hover:shadow-amber-500/20",
-    span: "lg:col-span-1",
+    span: "",
   },
   {
     icon: Cpu,
@@ -42,7 +42,7 @@ const areas = [
     description: "Integrating computation, networking, and physical processes to create safety-critical embedded systems for industry and healthcare.",
     color: "from-rose-400 to-rose-600",
     glow: "group-hover:shadow-rose-500/20",
-    span: "lg:col-span-2",
+    span: "sm:col-span-2 lg:col-span-2",
   },
 ];
 
@@ -58,7 +58,7 @@ export default function ResearchAreas() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Our Focus</p>
+          <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Our Focus</p>
           <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
             Research <span className="gradient-text">Areas</span>
           </h2>

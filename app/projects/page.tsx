@@ -4,8 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { projects, Project } from "@/lib/data/projects";
-import { ExternalLink, Users, Calendar, ChevronRight, Search } from "lucide-react";
+import type { Project } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
+import { ExternalLink, Users, Calendar, ChevronRight, Search, Loader2 } from "lucide-react";
 
 const GithubIcon = () => (
   <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -18,7 +20,7 @@ type StatusFilter = "all" | "active" | "completed" | "ongoing";
 
 const statusColors: Record<string, string> = {
   active: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  completed: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  completed: "bg-jade-500/10 text-jade-400 border-jade-500/20",
   ongoing: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
@@ -26,6 +28,9 @@ export default function ProjectsPage() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
+  const { data: projects, loading } = useLiveCollection<Project>(COLLECTIONS.projects, {
+    orderByField: "title",
+  });
 
   const filtered = projects.filter((p) => {
     const matchType = typeFilter === "all" || p.type === typeFilter;
@@ -39,7 +44,7 @@ export default function ProjectsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -50,7 +55,7 @@ export default function ProjectsPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
               What We Build
             </p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -77,7 +82,7 @@ export default function ProjectsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search projects or technologies..."
-                className="w-full pl-10 pr-4 py-2.5 bg-transparent text-sm text-white placeholder-white/30 border border-white/10 rounded-xl focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 bg-transparent text-sm text-white placeholder-white/30 border border-white/10 rounded-xl focus:outline-none focus:border-jade-500/50 transition-colors"
               />
             </div>
             <div className="flex flex-wrap gap-2">
@@ -88,7 +93,7 @@ export default function ProjectsPage() {
                   onClick={() => setTypeFilter(f)}
                   className={`px-4 py-2 rounded-xl text-xs font-medium capitalize transition-all ${
                     typeFilter === f
-                      ? "bg-blue-500 text-white"
+                      ? "bg-jade-500 text-white"
                       : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
                   }`}
                 >
@@ -104,7 +109,7 @@ export default function ProjectsPage() {
                   onClick={() => setStatusFilter(f)}
                   className={`px-4 py-2 rounded-xl text-xs font-medium capitalize transition-all ${
                     statusFilter === f
-                      ? "bg-violet-500 text-white"
+                      ? "bg-jade-800 text-white"
                       : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
                   }`}
                 >
@@ -114,14 +119,20 @@ export default function ProjectsPage() {
             </div>
           </motion.div>
 
+          {loading && (
+            <div className="flex justify-center py-24">
+              <Loader2 className="w-6 h-6 text-jade-400 animate-spin" />
+            </div>
+          )}
+
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {filtered.map((project, i) => (
               <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </div>
 
-          {filtered.length === 0 && (
+          {!loading && filtered.length === 0 && (
             <div className="text-center py-24 text-white/30">
               <p className="text-lg">No projects match your filters.</p>
             </div>
@@ -156,7 +167,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
 
         {/* Area tag */}
-        <span className="text-xs text-blue-400 font-medium mb-2">{project.researchArea}</span>
+        <span className="text-xs text-jade-400 font-medium mb-2">{project.researchArea}</span>
 
         {/* Title */}
         <h3 className="text-lg font-medium text-white mb-3 leading-snug">{project.title}</h3>
@@ -218,7 +229,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               <ExternalLink className="w-3.5 h-3.5" /> Live Demo
             </a>
           )}
-          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-blue-400 ml-auto transition-colors" />
+          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-jade-400 ml-auto transition-colors" />
         </div>
       </div>
     </motion.div>

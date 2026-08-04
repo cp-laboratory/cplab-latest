@@ -13,13 +13,13 @@ export default function Hero() {
       className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden grid-bg"
     >
       {/* Background glow orbs */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[100px] orb-float pulse-glow pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-violet-600/10 blur-[100px] orb-float-delayed pulse-glow pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] rounded-full bg-blue-500/5 blur-[80px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-jade-600/10 blur-[100px] orb-float pulse-glow pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-jade-900/10 blur-[100px] orb-float-delayed pulse-glow pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] rounded-full bg-jade-500/5 blur-[80px] pointer-events-none" />
 
       {/* Radial overlay */}
       <div className="absolute inset-0 bg-radial-gradient pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(59,130,246,0.08), transparent)" }} />
+        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(63,164,130,0.08), transparent)" }} />
 
       <div className="container-xl relative z-10 flex flex-col items-center text-center pt-32 pb-20">
         {/* Badge */}
@@ -29,10 +29,10 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-blue-500/20 text-sm text-blue-400 font-medium">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-jade-500/20 text-sm text-jade-400 font-medium">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jade-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-jade-500" />
             </span>
             Advancing Cyber-Physical Systems
           </span>
@@ -73,7 +73,7 @@ export default function Hero() {
           <Link
             href="/team"
             id="hero-meet-team"
-            className="group flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-violet-600 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105"
+            className="group flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 hover:shadow-jade-500/40 hover:scale-105"
           >
             <Users className="w-4 h-4" />
             Meet Our Team
@@ -108,7 +108,7 @@ export default function Hero() {
             ].map((area) => (
               <span
                 key={area}
-                className="px-4 py-1.5 rounded-full text-xs font-medium text-white/50 border border-white/10 hover:border-blue-500/30 hover:text-white/70 transition-all cursor-default"
+                className="px-4 py-1.5 rounded-full text-xs font-medium text-white/50 border border-white/10 hover:border-jade-500/30 hover:text-white/70 transition-all cursor-default"
               >
                 {area}
               </span>

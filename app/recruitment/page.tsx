@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { CheckCircle, ChevronRight, ChevronLeft, User, GraduationCap, FlaskConical, FileText } from "lucide-react";
+import { CheckCircle, ChevronRight, ChevronLeft, User, GraduationCap, FlaskConical, FileText, Loader2 } from "lucide-react";
+import { createDoc, COLLECTIONS } from "@/lib/firestore";
 
 const steps = [
   { id: 0, icon: User, label: "Personal Info" },
@@ -16,6 +17,8 @@ const steps = [
 export default function RecruitmentPage() {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "", email: "", phone: "", university: "",
     degree: "", cgpa: "", batch: "",
@@ -24,11 +27,28 @@ export default function RecruitmentPage() {
   });
 
   const update = (k: string, v: string) => setForm({ ...form, [k]: v });
-  const inputClass = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors";
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setError("");
+    try {
+      await createDoc(COLLECTIONS.recruitment, {
+        ...form,
+        status: "pending",
+        submittedAt: new Date().toISOString(),
+      });
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong submitting your application. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  const inputClass = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors";
   const labelClass = "block text-sm font-medium text-white/60 mb-2";
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -39,7 +59,7 @@ export default function RecruitmentPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Join Us</p>
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Join Us</p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
               Apply to <span className="gradient-text">CPLAB</span>
             </h1>
@@ -75,7 +95,7 @@ export default function RecruitmentPage() {
                           <div
                             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
                               step === i
-                                ? "bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-lg shadow-blue-500/30 scale-110"
+                                ? "bg-gradient-to-br from-jade-500 to-jade-900 text-white shadow-lg shadow-jade-500/30 scale-110"
                                 : step > i
                                 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
                                 : "bg-white/5 text-white/30 border border-white/10"
@@ -178,20 +198,23 @@ export default function RecruitmentPage() {
                       <button
                         id="rec-next"
                         onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/20"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-jade-500/20"
                       >
                         Next <ChevronRight className="w-4 h-4" />
                       </button>
                     ) : (
                       <button
                         id="rec-submit"
-                        onClick={() => setSubmitted(true)}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20"
+                        onClick={handleSubmit}
+                        disabled={submitting}
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-jade-600 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50"
                       >
-                        Submit Application <CheckCircle className="w-4 h-4" />
+                        Submit Application
+                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                       </button>
                     )}
                   </div>
+                  {error && <p className="text-sm text-red-400 mt-4 text-center">{error}</p>}
                 </div>
 
                 <p className="text-center text-xs text-white/30 mt-6">

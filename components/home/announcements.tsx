@@ -1,10 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { announcements } from "@/lib/data/news";
+import type { Announcement } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
 import { Bell, ExternalLink, CalendarDays } from "lucide-react";
 
 export default function Announcements() {
+  const { data: announcements } = useLiveCollection<Announcement>(COLLECTIONS.announcements, {
+    orderByField: "date",
+    orderDirection: "desc",
+    limitCount: 5,
+  });
+
+  if (announcements.length === 0) return null;
+
   return (
     <section id="announcements" className="section-pad">
       <div className="container-xl">
@@ -16,7 +26,7 @@ export default function Announcements() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Stay Updated</p>
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Stay Updated</p>
             <h2 className="text-3xl sm:text-4xl font-medium text-white mb-6">
               Notices &{" "}
               <span className="gradient-text">Announcements</span>
@@ -39,8 +49,8 @@ export default function Announcements() {
               >
                 <div className="group glass-hover rounded-xl p-4 flex items-start gap-4">
                   {/* Icon */}
-                  <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Bell className="w-4 h-4 text-blue-400" />
+                  <div className="w-9 h-9 rounded-lg bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Bell className="w-4 h-4 text-jade-400" />
                   </div>
 
                   {/* Content */}
@@ -52,7 +62,7 @@ export default function Announcements() {
                       {item.link && (
                         <a
                           href={item.link}
-                          className="shrink-0 text-blue-400 hover:text-blue-300 transition-colors"
+                          className="shrink-0 text-jade-400 hover:text-jade-300 transition-colors"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                         </a>

@@ -9,6 +9,15 @@ export interface NewsArticle {
   category: string;
   tags: string[];
   featured: boolean;
+  coverImage?: string;
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  link?: string;
 }
 
 export const newsArticles: NewsArticle[] = [

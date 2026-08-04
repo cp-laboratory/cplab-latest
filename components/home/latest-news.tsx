@@ -1,19 +1,28 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { newsArticles } from "@/lib/data/news";
+import type { NewsArticle } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
 import { CalendarDays, Tag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const categoryColors: Record<string, string> = {
-  "Research Achievement": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  "Lab News": "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  "Research Achievement": "bg-jade-500/10 text-jade-400 border-jade-500/20",
+  "Lab News": "bg-jade-800/10 text-jade-700 border-jade-800/20",
   "Project Update": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   Recruitment: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
 export default function LatestNews() {
-  const latest = newsArticles.slice(0, 3);
+  const { data } = useLiveCollection<NewsArticle>(COLLECTIONS.news, {
+    orderByField: "publishedDate",
+    orderDirection: "desc",
+    limitCount: 3,
+  });
+  const latest = data;
+
+  if (latest.length === 0) return null;
 
   return (
     <section id="news" className="section-pad">
@@ -27,7 +36,7 @@ export default function LatestNews() {
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12"
         >
           <div>
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Latest</p>
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Latest</p>
             <h2 className="text-3xl sm:text-4xl font-medium text-white">
               News &{" "}
               <span className="gradient-text">Updates</span>
@@ -64,11 +73,11 @@ export default function LatestNews() {
                       <Tag className="w-3 h-3" />
                       {article.category}
                     </span>
-                    <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-jade-400 group-hover:translate-x-1 transition-all" />
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-lg font-medium text-white mb-3 leading-tight group-hover:text-blue-400 transition-colors line-clamp-2 flex-1">
+                  <h3 className="text-lg font-medium text-white mb-3 leading-tight group-hover:text-jade-400 transition-colors line-clamp-2 flex-1">
                     {article.title}
                   </h3>
 

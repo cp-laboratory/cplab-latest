@@ -16,20 +16,20 @@ export default function RecruitmentBanner() {
           className="relative overflow-hidden rounded-3xl"
         >
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 via-violet-600/20 to-blue-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-br from-jade-600/30 via-jade-900/20 to-jade-900/40" />
           <div className="absolute inset-0 grid-bg opacity-20" />
 
           {/* Glow orbs */}
-          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-blue-500/20 blur-[80px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-violet-500/20 blur-[60px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-jade-500/20 blur-[80px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-jade-800/20 blur-[60px] pointer-events-none" />
 
           {/* Border */}
-          <div className="absolute inset-0 rounded-3xl border border-blue-500/20" />
+          <div className="absolute inset-0 rounded-3xl border border-jade-500/20" />
 
           <div className="relative z-10 px-8 py-16 sm:px-16 flex flex-col sm:flex-row items-center justify-between gap-8">
             {/* Text */}
             <div className="max-w-lg text-center sm:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-jade-500/10 border border-jade-500/20 text-jade-400 text-xs font-medium mb-6">
                 <Sparkles className="w-3.5 h-3.5" /> Now Recruiting — 2024 Cohort
               </div>
               <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -61,7 +61,7 @@ export default function RecruitmentBanner() {
               <Link
                 href="/recruitment"
                 id="recruitment-banner-cta"
-                className="group flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-blue-500 to-violet-600 text-white font-semibold hover:opacity-90 transition-all shadow-2xl shadow-blue-500/30 hover:scale-105"
+                className="group flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold hover:opacity-90 transition-all shadow-2xl shadow-jade-500/30 hover:scale-105"
               >
                 Apply Now
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

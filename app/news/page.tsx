@@ -3,23 +3,29 @@
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { newsArticles } from "@/lib/data/news";
-import { CalendarDays, Tag, ArrowRight } from "lucide-react";
+import type { NewsArticle } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
+import { CalendarDays, Tag, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const categoryColors: Record<string, string> = {
-  "Research Achievement": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  "Lab News": "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  "Research Achievement": "bg-jade-500/10 text-jade-400 border-jade-500/20",
+  "Lab News": "bg-jade-800/10 text-jade-700 border-jade-800/20",
   "Project Update": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   Recruitment: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
 export default function NewsPage() {
+  const { data: newsArticles, loading } = useLiveCollection<NewsArticle>(COLLECTIONS.news, {
+    orderByField: "publishedDate",
+    orderDirection: "desc",
+  });
   const featured = newsArticles.find((a) => a.featured);
   const rest = newsArticles.filter((a) => !a.featured);
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -30,7 +36,7 @@ export default function NewsPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
               What&apos;s Happening
             </p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -52,10 +58,10 @@ export default function NewsPage() {
             >
               <Link href={`/news/${featured.slug}`}>
                 <div className="group glass-hover rounded-3xl p-8 sm:p-10 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-blue-500/5 blur-[60px] pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-jade-500/5 blur-[60px] pointer-events-none" />
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-6">
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-jade-500/10 text-jade-400 border border-jade-500/20">
                         ⭐ Featured
                       </span>
                       <span
@@ -66,7 +72,7 @@ export default function NewsPage() {
                         {featured.category}
                       </span>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-medium text-white mb-4 leading-snug group-hover:text-blue-400 transition-colors max-w-3xl">
+                    <h2 className="text-2xl sm:text-3xl font-medium text-white mb-4 leading-snug group-hover:text-jade-400 transition-colors max-w-3xl">
                       {featured.title}
                     </h2>
                     <p className="text-white/50 text-lg leading-relaxed max-w-3xl mb-6">
@@ -83,7 +89,7 @@ export default function NewsPage() {
                         <span>·</span>
                         <span>{featured.author}</span>
                       </div>
-                      <span className="flex items-center gap-2 text-blue-400 font-medium text-sm group-hover:gap-3 transition-all">
+                      <span className="flex items-center gap-2 text-jade-400 font-medium text-sm group-hover:gap-3 transition-all">
                         Read More <ArrowRight className="w-4 h-4" />
                       </span>
                     </div>
@@ -93,8 +99,14 @@ export default function NewsPage() {
             </motion.div>
           )}
 
+          {loading && (
+            <div className="flex justify-center py-24">
+              <Loader2 className="w-6 h-6 text-jade-400 animate-spin" />
+            </div>
+          )}
+
           {/* All Articles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {rest.map((article, i) => (
               <motion.div
                 key={article.id}
@@ -112,9 +124,9 @@ export default function NewsPage() {
                       >
                         <Tag className="w-3 h-3" /> {article.category}
                       </span>
-                      <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="w-4 h-4 text-white/20 group-hover:text-jade-400 group-hover:translate-x-1 transition-all" />
                     </div>
-                    <h3 className="text-lg font-medium text-white mb-3 leading-tight group-hover:text-blue-400 transition-colors line-clamp-2 flex-1">
+                    <h3 className="text-lg font-medium text-white mb-3 leading-tight group-hover:text-jade-400 transition-colors line-clamp-2 flex-1">
                       {article.title}
                     </h3>
                     <p className="text-sm text-white/50 line-clamp-2 mb-4">{article.excerpt}</p>

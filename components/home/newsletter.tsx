@@ -2,16 +2,27 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, CheckCircle } from "lucide-react";
+import { Send, CheckCircle, Loader2 } from "lucide-react";
+import { createDoc, COLLECTIONS } from "@/lib/firestore";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      await createDoc(COLLECTIONS.newsletter, { email, subscribedAt: new Date().toISOString() });
       setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -26,10 +37,10 @@ export default function Newsletter() {
           className="relative overflow-hidden rounded-3xl glass border border-white/5 px-8 py-16 text-center"
         >
           {/* Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full bg-blue-500/10 blur-[60px] pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full bg-jade-500/10 blur-[60px] pointer-events-none" />
 
           <div className="relative z-10 max-w-xl mx-auto">
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
               Stay Connected
             </p>
             <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -66,17 +77,19 @@ export default function Newsletter() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
                   required
-                  className="flex-1 px-4 py-3 rounded-xl glass border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors bg-transparent"
+                  className="flex-1 px-4 py-3 rounded-xl glass border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors bg-transparent"
                 />
                 <button
                   type="submit"
                   id="newsletter-submit"
-                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-blue-500/20 whitespace-nowrap"
+                  disabled={submitting}
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 whitespace-nowrap disabled:opacity-50"
                 >
-                  <Send className="w-4 h-4" /> Subscribe
+                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} Subscribe
                 </button>
               </form>
             )}
+            {error && <p className="text-sm text-red-400 mt-4">{error}</p>}
           </div>
         </motion.div>
       </div>

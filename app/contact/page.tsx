@@ -4,7 +4,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { Send, Mail, MapPin, Phone, CheckCircle } from "lucide-react";
+import { Send, Mail, MapPin, Phone, CheckCircle, Loader2 } from "lucide-react";
+import { createDoc, COLLECTIONS } from "@/lib/firestore";
 
 const FacebookIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -24,15 +25,30 @@ const LinkedinIcon = () => (
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError("");
+    try {
+      await createDoc(COLLECTIONS.contact, {
+        ...form,
+        read: false,
+        submittedAt: new Date().toISOString(),
+      });
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong sending your message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -43,7 +59,7 @@ export default function ContactPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Get in Touch</p>
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Get in Touch</p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
               Contact <span className="gradient-text">CPLAB</span>
             </h1>
@@ -65,8 +81,8 @@ export default function ContactPage() {
 
                 <div className="space-y-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                      <MapPin className="w-4 h-4 text-blue-400" />
+                    <div className="w-10 h-10 rounded-xl bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0">
+                      <MapPin className="w-4 h-4 text-jade-400" />
                     </div>
                     <div>
                       <p className="font-medium text-white mb-1">Location</p>
@@ -80,20 +96,20 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                      <Mail className="w-4 h-4 text-blue-400" />
+                    <div className="w-10 h-10 rounded-xl bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0">
+                      <Mail className="w-4 h-4 text-jade-400" />
                     </div>
                     <div>
                       <p className="font-medium text-white mb-1">Email</p>
-                      <a href="mailto:help@cplab.org" className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                      <a href="mailto:help@cplab.org" className="text-sm text-jade-400 hover:text-jade-300 transition-colors">
                         help@cplab.org
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                      <Phone className="w-4 h-4 text-blue-400" />
+                    <div className="w-10 h-10 rounded-xl bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0">
+                      <Phone className="w-4 h-4 text-jade-400" />
                     </div>
                     <div>
                       <p className="font-medium text-white mb-1">Phone</p>
@@ -118,7 +134,7 @@ export default function ContactPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={label}
-                        className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-blue-500/30 transition-all"
+                        className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-jade-500/30 transition-all"
                       >
                         <Icon />
                       </a>
@@ -167,7 +183,7 @@ export default function ContactPage() {
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             placeholder="Your name"
-                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
                           />
                         </div>
                         <div>
@@ -179,7 +195,7 @@ export default function ContactPage() {
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             placeholder="your@email.com"
-                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
                           />
                         </div>
                       </div>
@@ -193,7 +209,7 @@ export default function ContactPage() {
                           value={form.subject}
                           onChange={(e) => setForm({ ...form, subject: e.target.value })}
                           placeholder="How can we help?"
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
                         />
                       </div>
 
@@ -206,16 +222,19 @@ export default function ContactPage() {
                           onChange={(e) => setForm({ ...form, message: e.target.value })}
                           placeholder="Tell us about your inquiry..."
                           rows={6}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
+                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors resize-none"
                         />
                       </div>
+
+                      {error && <p className="text-sm text-red-400">{error}</p>}
 
                       <button
                         type="submit"
                         id="contact-submit"
-                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-blue-500/20"
+                        disabled={submitting}
+                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 disabled:opacity-50"
                       >
-                        <Send className="w-4 h-4" /> Send Message
+                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} Send Message
                       </button>
                     </form>
                   </>

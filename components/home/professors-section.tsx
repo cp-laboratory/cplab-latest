@@ -1,15 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { teamMembers } from "@/lib/data/team";
+import type { TeamMember } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
 import { Mail, ExternalLink, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const professors = teamMembers.filter((m) => m.memberType === "professor");
-
 export default function ProfessorsSection() {
   const router = useRouter();
+  const { data: teamMembers } = useLiveCollection<TeamMember>(COLLECTIONS.team, { orderByField: "name" });
+  const professors = teamMembers.filter((m) => m.memberType === "professor");
+  const isSolo = professors.length === 1;
+
+  if (professors.length === 0) return null;
+
   return (
     <section id="professors" className="section-pad">
       <div className="container-xl">
@@ -21,7 +27,7 @@ export default function ProfessorsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Leadership</p>
+          <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Leadership</p>
           <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
             Faculty &{" "}
             <span className="gradient-text">Researchers</span>
@@ -33,7 +39,7 @@ export default function ProfessorsSection() {
         </motion.div>
 
         {/* Professor Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className={isSolo ? "mb-12" : "grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"}>
           {professors.map((prof, i) => (
             <motion.div
               key={prof.id}
@@ -46,30 +52,47 @@ export default function ProfessorsSection() {
                 onClick={() => router.push(`/team/${prof.slug}`)}
                 className="cursor-pointer"
               >
-                <div className="group glass-hover rounded-2xl p-6 flex flex-col sm:flex-row gap-6 h-full">
+                <div
+                  className={`group glass-hover rounded-2xl h-full ${
+                    isSolo
+                      ? "p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
+                      : "p-6 flex flex-col sm:flex-row gap-6"
+                  }`}
+                >
                   {/* Avatar */}
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl shrink-0 bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-white/10 flex items-center justify-center text-4xl font-medium text-blue-400">
-                    {prof.name.charAt(0)}
+                  <div
+                    className={`rounded-2xl shrink-0 bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 overflow-hidden ${
+                      isSolo ? "w-32 h-32 sm:w-36 sm:h-36 text-5xl" : "w-24 h-24 sm:w-28 sm:h-28 text-4xl"
+                    }`}
+                  >
+                    {prof.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={prof.image} alt={prof.name} className="w-full h-full object-cover" />
+                    ) : (
+                      prof.name.charAt(0)
+                    )}
                   </div>
 
                   {/* Info */}
                   <div className="flex-1">
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <h3 className="text-lg font-medium text-white group-hover:text-blue-400 transition-colors leading-tight">
+                    <div className={`flex items-start justify-between gap-2 mb-1 ${isSolo ? "sm:justify-start" : ""}`}>
+                      <h3 className={`font-medium text-white group-hover:text-jade-400 transition-colors leading-tight ${isSolo ? "text-2xl" : "text-lg"}`}>
                         {prof.name}
                       </h3>
-                      <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-blue-400 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                      {!isSolo && (
+                        <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-jade-400 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                      )}
                     </div>
-                    <p className="text-sm text-blue-400 font-medium mb-3">{prof.designation}</p>
-                    <p className="text-sm text-white/50 leading-relaxed line-clamp-3 mb-4">{prof.bio}</p>
+                    <p className={`text-jade-400 font-medium mb-3 ${isSolo ? "text-base" : "text-sm"}`}>{prof.designation}</p>
+                    <p className={`text-white/50 leading-relaxed mb-4 ${isSolo ? "text-base" : "text-sm line-clamp-3"}`}>{prof.bio}</p>
 
                     {/* Research interests */}
                     {prof.researchInterests && (
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {prof.researchInterests.slice(0, 3).map((interest) => (
+                      <div className={`flex flex-wrap gap-2 mb-3 ${isSolo ? "justify-center sm:justify-start" : ""}`}>
+                        {(isSolo ? prof.researchInterests : prof.researchInterests.slice(0, 3)).map((interest) => (
                           <span
                             key={interest}
-                            className="px-2.5 py-0.5 rounded-full text-xs bg-blue-500/10 text-blue-300 border border-blue-500/20"
+                            className="px-2.5 py-0.5 rounded-full text-xs bg-jade-500/10 text-jade-300 border border-jade-500/20"
                           >
                             {interest}
                           </span>
@@ -78,7 +101,7 @@ export default function ProfessorsSection() {
                     )}
 
                     {/* Links */}
-                    <div className="flex items-center gap-3">
+                    <div className={`flex items-center gap-3 ${isSolo ? "justify-center sm:justify-start" : ""}`}>
                       {prof.email && (
                         <a
                           href={`mailto:${prof.email}`}
@@ -117,7 +140,7 @@ export default function ProfessorsSection() {
         >
           <Link
             href="/team"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass border border-white/10 text-white/60 font-medium text-sm hover:text-white hover:border-blue-500/30 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass border border-white/10 text-white/60 font-medium text-sm hover:text-white hover:border-jade-500/30 transition-all"
           >
             View Full Team
             <ChevronRight className="w-4 h-4" />

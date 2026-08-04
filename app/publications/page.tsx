@@ -4,8 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { publications, Publication } from "@/lib/data/publications";
-import { Search, BookOpen, ExternalLink, Users, Quote } from "lucide-react";
+import type { Publication } from "@/lib/types";
+import { useLiveCollection } from "@/lib/hooks/use-collection";
+import { COLLECTIONS } from "@/lib/firestore";
+import { Search, BookOpen, ExternalLink, Users, Quote, Loader2 } from "lucide-react";
 
 type TypeFilter = "all" | "journal" | "conference" | "book-chapter" | "workshop";
 const typeOptions: { label: string; value: TypeFilter }[] = [
@@ -16,8 +18,8 @@ const typeOptions: { label: string; value: TypeFilter }[] = [
 ];
 
 const typeBadgeColors: Record<string, string> = {
-  journal: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  conference: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  journal: "bg-jade-500/10 text-jade-400 border-jade-500/20",
+  conference: "bg-jade-800/10 text-jade-700 border-jade-800/20",
   "book-chapter": "bg-amber-500/10 text-amber-400 border-amber-500/20",
   workshop: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
 };
@@ -26,6 +28,10 @@ export default function PublicationsPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [yearFilter, setYearFilter] = useState("all");
+  const { data: publications, loading } = useLiveCollection<Publication>(COLLECTIONS.publications, {
+    orderByField: "year",
+    orderDirection: "desc",
+  });
 
   const years = [...new Set(publications.map((p) => p.year))].sort((a, b) => b - a);
 
@@ -41,7 +47,7 @@ export default function PublicationsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -52,7 +58,7 @@ export default function PublicationsPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">Research Output</p>
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Research Output</p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
               <span className="gradient-text">Publications</span>
             </h1>
@@ -77,7 +83,7 @@ export default function PublicationsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by title, author, keyword..."
-                className="w-full pl-10 pr-4 py-2.5 bg-transparent text-sm text-white placeholder-white/30 border border-white/10 rounded-xl focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 bg-transparent text-sm text-white placeholder-white/30 border border-white/10 rounded-xl focus:outline-none focus:border-jade-500/50 transition-colors"
               />
             </div>
 
@@ -90,7 +96,7 @@ export default function PublicationsPage() {
                   onClick={() => setTypeFilter(opt.value)}
                   className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${
                     typeFilter === opt.value
-                      ? "bg-blue-500 text-white"
+                      ? "bg-jade-500 text-white"
                       : "bg-white/5 text-white/50 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -104,7 +110,7 @@ export default function PublicationsPage() {
               id="pub-year-filter"
               value={yearFilter}
               onChange={(e) => setYearFilter(e.target.value)}
-              className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white/70 focus:outline-none focus:border-blue-500/50 transition-colors"
+              className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white/70 focus:outline-none focus:border-jade-500/50 transition-colors"
             >
               <option value="all">All Years</option>
               {years.map((y) => (
@@ -120,12 +126,18 @@ export default function PublicationsPage() {
             {filtered.length} publication{filtered.length !== 1 ? "s" : ""} found
           </p>
 
+          {loading && (
+            <div className="flex justify-center py-24">
+              <Loader2 className="w-6 h-6 text-jade-400 animate-spin" />
+            </div>
+          )}
+
           {/* Publications List */}
           <div className="space-y-4">
             {filtered.map((pub, i) => (
               <PublicationCard key={pub.id} pub={pub} index={i} />
             ))}
-            {filtered.length === 0 && (
+            {!loading && filtered.length === 0 && (
               <div className="text-center py-24 text-white/30">
                 <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg">No publications match your search.</p>
@@ -179,7 +191,7 @@ function PublicationCard({ pub, index }: { pub: Publication; index: number }) {
         </div>
 
         {/* Venue */}
-        <p className="text-sm text-blue-400 font-medium mb-4">{pub.venue}</p>
+        <p className="text-sm text-jade-400 font-medium mb-4">{pub.venue}</p>
 
         {/* Abstract toggle */}
         {pub.abstract && (
@@ -189,7 +201,7 @@ function PublicationCard({ pub, index }: { pub: Publication; index: number }) {
             </p>
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors mb-4"
+              className="text-xs text-jade-400 hover:text-jade-300 transition-colors mb-4"
             >
               {expanded ? "Show less" : "Read abstract"}
             </button>

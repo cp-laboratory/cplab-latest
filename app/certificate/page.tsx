@@ -4,25 +4,24 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
-import { Search, CheckCircle, XCircle, ShieldCheck } from "lucide-react";
+import { Search, CheckCircle, XCircle, ShieldCheck, Loader2 } from "lucide-react";
+import { fetchDocByField, COLLECTIONS } from "@/lib/firestore";
+import type { Certificate } from "@/lib/types";
 
-type VerifyState = "idle" | "success" | "error";
-
-const mockCerts: Record<string, { name: string; date: string; achievement: string }> = {
-  "CPLAB-2024-001": { name: "Md. Rashed Kabir", date: "January 15, 2024", achievement: "Excellence in Machine Learning Research" },
-  "CPLAB-2023-042": { name: "Fatema Tuz Zohra", date: "December 10, 2023", achievement: "Best Student Project — Smart Grid IoT" },
-  "CPLAB-2023-019": { name: "Arif Hossen", date: "November 5, 2023", achievement: "Blockchain Development Certification" },
-};
+type VerifyState = "idle" | "loading" | "success" | "error";
 
 export default function CertificatePage() {
   const [certId, setCertId] = useState("");
   const [state, setVerifyState] = useState<VerifyState>("idle");
-  const [certData, setCertData] = useState<(typeof mockCerts)[string] | null>(null);
+  const [certData, setCertData] = useState<Certificate | null>(null);
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const id = certId.trim().toUpperCase();
-    if (mockCerts[id]) {
-      setCertData(mockCerts[id]);
+    if (!id) return;
+    setVerifyState("loading");
+    const cert = await fetchDocByField<Certificate>(COLLECTIONS.certificates, "certId", id);
+    if (cert) {
+      setCertData(cert);
       setVerifyState("success");
     } else {
       setCertData(null);
@@ -37,7 +36,7 @@ export default function CertificatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(222_47%_6%)]">
+    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -49,11 +48,11 @@ export default function CertificatePage() {
             className="text-center mb-16"
           >
             <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-blue-500/20 flex items-center justify-center">
-                <ShieldCheck className="w-8 h-8 text-blue-400" />
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-jade-500/20 flex items-center justify-center">
+                <ShieldCheck className="w-8 h-8 text-jade-400" />
               </div>
             </div>
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
               Authenticity Check
             </p>
             <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -87,37 +86,22 @@ export default function CertificatePage() {
                     onChange={(e) => { setCertId(e.target.value); setVerifyState("idle"); }}
                     onKeyDown={(e) => e.key === "Enter" && handleVerify()}
                     placeholder="e.g., CPLAB-2024-001"
-                    className="w-full pl-10 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-blue-500/50 transition-colors"
+                    className="w-full pl-10 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
                   />
                 </div>
                 <button
                   id="cert-verify-btn"
                   onClick={handleVerify}
-                  disabled={!certId.trim()}
-                  className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                  disabled={!certId.trim() || state === "loading"}
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
+                  {state === "loading" && <Loader2 className="w-4 h-4 animate-spin" />}
                   Verify
                 </button>
               </div>
               <p className="text-xs text-white/30 mt-3">
                 The certificate ID is printed on the certificate document (format: CPLAB-YYYY-###).
               </p>
-
-              {/* Demo IDs */}
-              <div className="mt-5 pt-5 border-t border-white/5">
-                <p className="text-xs text-white/30 mb-3">Demo IDs for testing:</p>
-                <div className="flex flex-wrap gap-2">
-                  {Object.keys(mockCerts).map((id) => (
-                    <button
-                      key={id}
-                      onClick={() => { setCertId(id); setVerifyState("idle"); }}
-                      className="px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 text-xs border border-blue-500/20 hover:bg-blue-500/20 transition-colors font-mono"
-                    >
-                      {id}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </motion.div>
 
             {/* Result */}
@@ -189,7 +173,7 @@ export default function CertificatePage() {
                   <p className="text-sm text-white/50">
                     Please check that the ID is entered correctly. If you believe this is
                     an error, contact us at{" "}
-                    <a href="mailto:help@cplab.org" className="text-blue-400 hover:underline">
+                    <a href="mailto:help@cplab.org" className="text-jade-400 hover:underline">
                       help@cplab.org
                     </a>
                     .

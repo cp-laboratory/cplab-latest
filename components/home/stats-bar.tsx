@@ -5,8 +5,8 @@ import { motion, useInView } from "framer-motion";
 import { BookOpen, FlaskConical, Users, Calendar } from "lucide-react";
 
 const stats = [
-  { icon: BookOpen, value: 80, suffix: "+", label: "Publications", color: "from-blue-400 to-blue-600" },
-  { icon: FlaskConical, value: 25, suffix: "+", label: "Active Projects", color: "from-violet-400 to-violet-600" },
+  { icon: BookOpen, value: 80, suffix: "+", label: "Publications", color: "from-jade-400 to-jade-600" },
+  { icon: FlaskConical, value: 25, suffix: "+", label: "Active Projects", color: "from-jade-700 to-jade-900" },
   { icon: Users, value: 40, suffix: "+", label: "Lab Members", color: "from-amber-400 to-amber-600" },
   { icon: Calendar, value: 8, suffix: " Years", label: "Of Research", color: "from-emerald-400 to-emerald-600" },
 ];
@@ -44,7 +44,7 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 export default function StatsBar() {
   return (
     <section className="relative py-16 border-y border-white/5">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-950/20 via-transparent to-violet-950/20 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-jade-950/20 via-transparent to-jade-950/20 pointer-events-none" />
       <div className="container-xl">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, i) => {

@@ -46,7 +46,7 @@ export default function FAQSection() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <p className="text-xs text-blue-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
               Questions
             </p>
             <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
@@ -70,7 +70,7 @@ export default function FAQSection() {
               >
                 <div
                   className={`glass rounded-2xl overflow-hidden border transition-all duration-200 ${
-                    openIndex === i ? "border-blue-500/30" : "border-white/5"
+                    openIndex === i ? "border-jade-500/30" : "border-white/5"
                   }`}
                 >
                   <button
@@ -87,7 +87,7 @@ export default function FAQSection() {
                     </span>
                     <ChevronDown
                       className={`w-5 h-5 shrink-0 text-white/40 transition-transform duration-300 ${
-                        openIndex === i ? "rotate-180 text-blue-400" : ""
+                        openIndex === i ? "rotate-180 text-jade-400" : ""
                       }`}
                     />
                   </button>
