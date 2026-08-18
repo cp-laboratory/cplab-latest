@@ -2,6 +2,7 @@ export type { TeamMember } from "@/lib/data/team";
 export type { Publication } from "@/lib/data/publications";
 export type { Project } from "@/lib/data/projects";
 export type { NewsArticle, Announcement } from "@/lib/data/news";
+export type { Resource } from "@/lib/data/resources";
 
 export interface Certificate {
   id: string;

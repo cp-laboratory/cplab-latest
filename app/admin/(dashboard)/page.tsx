@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Users, BookOpen, FolderKanban, Newspaper, ClipboardList, Mail, Send, Database, Loader2, CheckCircle } from "lucide-react";
+import { Users, BookOpen, FolderKanban, Archive, Newspaper, ClipboardList, Mail, Send, Database, Loader2, CheckCircle } from "lucide-react";
 import { useLiveCollection } from "@/lib/hooks/use-collection";
 import { COLLECTIONS } from "@/lib/firestore";
 import { seedAllData } from "@/lib/seed";
-import type { TeamMember, Publication, Project, NewsArticle, RecruitmentApplication, ContactMessage, NewsletterSubscriber } from "@/lib/types";
+import ConfirmDialog from "@/components/admin/confirm-dialog";
+import type { TeamMember, Publication, Project, NewsArticle, Resource, RecruitmentApplication, ContactMessage, NewsletterSubscriber } from "@/lib/types";
 
 export default function AdminDashboardPage() {
   const { data: team } = useLiveCollection<TeamMember>(COLLECTIONS.team);
   const { data: publications } = useLiveCollection<Publication>(COLLECTIONS.publications);
   const { data: projects } = useLiveCollection<Project>(COLLECTIONS.projects);
+  const { data: resources } = useLiveCollection<Resource>(COLLECTIONS.resources);
   const { data: news } = useLiveCollection<NewsArticle>(COLLECTIONS.news);
   const { data: recruitment } = useLiveCollection<RecruitmentApplication>(COLLECTIONS.recruitment);
   const { data: contact } = useLiveCollection<ContactMessage>(COLLECTIONS.contact);
@@ -19,13 +21,14 @@ export default function AdminDashboardPage() {
 
   const [seeding, setSeeding] = useState(false);
   const [seeded, setSeeded] = useState(false);
+  const [confirmingSeed, setConfirmingSeed] = useState(false);
 
-  const handleSeed = async () => {
-    if (!confirm("This will import the site's existing sample content (team, publications, projects, news, announcements, certificates) into Firestore. Continue?")) return;
+  const runSeed = async () => {
     setSeeding(true);
     try {
       await seedAllData();
       setSeeded(true);
+      setConfirmingSeed(false);
     } finally {
       setSeeding(false);
     }
@@ -35,6 +38,7 @@ export default function AdminDashboardPage() {
     { label: "Team Members", value: team.length, icon: Users, href: "/admin/team" },
     { label: "Publications", value: publications.length, icon: BookOpen, href: "/admin/publications" },
     { label: "Projects", value: projects.length, icon: FolderKanban, href: "/admin/projects" },
+    { label: "Resources", value: resources.length, icon: Archive, href: "/admin/resources" },
     { label: "News Articles", value: news.length, icon: Newspaper, href: "/admin/news" },
     { label: "Recruitment Applications", value: recruitment.length, icon: ClipboardList, href: "/admin/recruitment" },
     { label: "Contact Messages", value: contact.length, icon: Mail, href: "/admin/contact" },
@@ -75,7 +79,7 @@ export default function AdminDashboardPage() {
               records with the same ID will be merged, not duplicated.
             </p>
             <button
-              onClick={handleSeed}
+              onClick={() => setConfirmingSeed(true)}
               disabled={seeding}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/70 text-sm font-medium hover:text-white hover:border-white/20 transition-all disabled:opacity-50"
             >
@@ -86,6 +90,16 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmingSeed}
+        title="Import Sample Data"
+        message="This will import the site's existing sample content (team, publications, projects, resources, news, announcements, certificates) into Firestore. Continue?"
+        confirmLabel="Import"
+        loading={seeding}
+        onConfirm={runSeed}
+        onCancel={() => setConfirmingSeed(false)}
+      />
     </div>
   );
 }

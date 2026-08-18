@@ -13,7 +13,6 @@ export default function AdminNewsletterPage() {
   });
 
   const handleDelete = async (row: NewsletterSubscriber) => {
-    if (!confirm(`Remove "${row.email}" from the newsletter list?`)) return;
     await deleteDocById(COLLECTIONS.newsletter, row.id);
   };
 
@@ -24,7 +23,13 @@ export default function AdminNewsletterPage() {
   return (
     <div>
       <PageHeader title="Newsletter Subscribers" description="Subscribers who signed up through the homepage newsletter form." />
-      <DataTable columns={columns} rows={data} loading={loading} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Remove "${r.email}" from the newsletter list?`}
+      />
     </div>
   );
 }

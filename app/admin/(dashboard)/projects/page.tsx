@@ -65,7 +65,6 @@ export default function AdminProjectsPage() {
   };
 
   const handleDelete = async (row: Project) => {
-    if (!confirm(`Delete "${row.title}"? This cannot be undone.`)) return;
     await deleteDocById(COLLECTIONS.projects, row.id);
   };
 
@@ -85,7 +84,14 @@ export default function AdminProjectsPage() {
         actionLabel="Add Project"
         onAction={openCreate}
       />
-      <DataTable columns={columns} rows={data} loading={loading} onEdit={openEdit} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Delete "${r.title}"? This cannot be undone.`}
+      />
       <EntityFormModal
         open={modalOpen}
         title={editing ? "Edit Project" : "Add Project"}

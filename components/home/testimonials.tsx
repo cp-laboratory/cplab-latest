@@ -17,7 +17,7 @@ const testimonials = [
     quote:
       "Working on the AgriTrace blockchain project taught me more about distributed systems in 6 months than 2 years of coursework. The hands-on culture at CPLAB is what sets it apart.",
     name: "Rabeya Sultana",
-    role: "Data Scientist @ Walton | CPLAB Alumni",
+    role: "Data Scientist @ Microsoft | CPLAB Alumni",
     year: "2023",
   },
   {

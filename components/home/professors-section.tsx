@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { TeamMember } from "@/lib/types";
+import { sortByHierarchy } from "@/lib/data/team";
 import { useLiveCollection } from "@/lib/hooks/use-collection";
 import { COLLECTIONS } from "@/lib/firestore";
 import { Mail, ExternalLink, ChevronRight } from "lucide-react";
@@ -10,8 +11,8 @@ import Link from "next/link";
 
 export default function ProfessorsSection() {
   const router = useRouter();
-  const { data: teamMembers } = useLiveCollection<TeamMember>(COLLECTIONS.team, { orderByField: "name" });
-  const professors = teamMembers.filter((m) => m.memberType === "professor");
+  const { data } = useLiveCollection<TeamMember>(COLLECTIONS.team);
+  const professors = sortByHierarchy(data).filter((m) => m.memberType === "professor");
   const isSolo = professors.length === 1;
 
   if (professors.length === 0) return null;
@@ -53,16 +54,16 @@ export default function ProfessorsSection() {
                 className="cursor-pointer"
               >
                 <div
-                  className={`group glass-hover rounded-2xl h-full ${
+                  className={`group glass-hover rounded-xl h-full ${
                     isSolo
-                      ? "p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
-                      : "p-6 flex flex-col sm:flex-row gap-6"
+                      ? "p-6 sm:p-7 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
+                      : "p-5 flex flex-col sm:flex-row gap-5"
                   }`}
                 >
                   {/* Avatar */}
                   <div
-                    className={`rounded-2xl shrink-0 bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 overflow-hidden ${
-                      isSolo ? "w-32 h-32 sm:w-36 sm:h-36 text-5xl" : "w-24 h-24 sm:w-28 sm:h-28 text-4xl"
+                    className={`rounded-lg shrink-0 bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 overflow-hidden ${
+                      isSolo ? "w-36 h-36 sm:w-44 sm:h-44 text-5xl" : "w-28 h-28 sm:w-32 sm:h-32 text-4xl"
                     }`}
                   >
                     {prof.image ? (

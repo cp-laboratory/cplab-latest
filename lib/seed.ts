@@ -5,6 +5,7 @@ import { teamMembers } from "@/lib/data/team";
 import { publications } from "@/lib/data/publications";
 import { projects } from "@/lib/data/projects";
 import { newsArticles, announcements } from "@/lib/data/news";
+import { resources } from "@/lib/data/resources";
 
 const mockCertificates = [
   { id: "1", certId: "CPLAB-2024-001", name: "Md. Rashed Kabir", date: "January 15, 2024", achievement: "Excellence in Machine Learning Research" },
@@ -30,4 +31,5 @@ export async function seedAllData() {
   await seedCollection(COLLECTIONS.news, newsArticles);
   await seedCollection(COLLECTIONS.announcements, announcements);
   await seedCollection(COLLECTIONS.certificates, mockCertificates);
+  await seedCollection(COLLECTIONS.resources, resources);
 }

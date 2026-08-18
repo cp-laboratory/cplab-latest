@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Loader2, Pencil, Trash2, Eye } from "lucide-react";
 import type { ReactNode } from "react";
+import ConfirmDialog from "./confirm-dialog";
 
 export interface Column<T> {
   key: string;
@@ -16,6 +18,7 @@ export default function DataTable<T extends { id: string }>({
   loading,
   onEdit,
   onDelete,
+  deleteMessage,
   onView,
   emptyMessage = "No records yet.",
 }: {
@@ -23,10 +26,25 @@ export default function DataTable<T extends { id: string }>({
   rows: T[];
   loading?: boolean;
   onEdit?: (row: T) => void;
-  onDelete?: (row: T) => void;
+  onDelete?: (row: T) => void | Promise<void>;
+  deleteMessage?: (row: T) => string;
   onView?: (row: T) => void;
   emptyMessage?: string;
 }) {
+  const [pendingDelete, setPendingDelete] = useState<T | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const confirmDelete = async () => {
+    if (!pendingDelete || !onDelete) return;
+    setDeleting(true);
+    try {
+      await onDelete(pendingDelete);
+      setPendingDelete(null);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="glass rounded-2xl p-16 flex items-center justify-center">
@@ -95,7 +113,7 @@ export default function DataTable<T extends { id: string }>({
                       )}
                       {onDelete && (
                         <button
-                          onClick={() => onDelete(row)}
+                          onClick={() => setPendingDelete(row)}
                           className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                           aria-label="Delete"
                         >
@@ -110,6 +128,14 @@ export default function DataTable<T extends { id: string }>({
           </tbody>
         </table>
       </div>
+
+      <ConfirmDialog
+        open={!!pendingDelete}
+        message={pendingDelete ? deleteMessage?.(pendingDelete) ?? "Delete this record? This cannot be undone." : ""}
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }

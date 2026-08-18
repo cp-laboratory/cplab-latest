@@ -35,7 +35,6 @@ export default function AdminCertificatesPage() {
   };
 
   const handleDelete = async (row: Certificate) => {
-    if (!confirm(`Delete certificate "${row.certId}"? This cannot be undone.`)) return;
     await deleteDocById(COLLECTIONS.certificates, row.id);
   };
 
@@ -54,7 +53,14 @@ export default function AdminCertificatesPage() {
         actionLabel="Add Certificate"
         onAction={openCreate}
       />
-      <DataTable columns={columns} rows={data} loading={loading} onEdit={openEdit} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Delete certificate "${r.certId}"? This cannot be undone.`}
+      />
       <EntityFormModal
         open={modalOpen}
         title={editing ? "Edit Certificate" : "Add Certificate"}

@@ -22,6 +22,7 @@ export const COLLECTIONS = {
   news: "news",
   announcements: "announcements",
   certificates: "certificates",
+  resources: "resources",
   recruitment: "recruitmentApplications",
   contact: "contactMessages",
   newsletter: "newsletterSubscribers",

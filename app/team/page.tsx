@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import type { TeamMember } from "@/lib/types";
+import { sortByHierarchy } from "@/lib/data/team";
 import { useLiveCollection } from "@/lib/hooks/use-collection";
 import { COLLECTIONS } from "@/lib/firestore";
 import { Mail, ExternalLink, ChevronRight, Loader2 } from "lucide-react";
@@ -33,9 +34,8 @@ const filters: { label: string; value: FilterType }[] = [
 
 export default function TeamPage() {
   const [filter, setFilter] = useState<FilterType>("all");
-  const { data: teamMembers, loading } = useLiveCollection<TeamMember>(COLLECTIONS.team, {
-    orderByField: "name",
-  });
+  const { data, loading } = useLiveCollection<TeamMember>(COLLECTIONS.team);
+  const teamMembers = sortByHierarchy(data);
 
   const professors = teamMembers.filter((m) => m.memberType === "professor");
   const students = teamMembers.filter((m) => m.memberType === "student");
@@ -163,15 +163,15 @@ function ProfessorCard({ member, index, solo = false }: { member: TeamMember; in
     >
       <div onClick={() => router.push(`/team/${member.slug}`)} className="cursor-pointer">
         <div
-          className={`group glass-hover rounded-2xl h-full ${
+          className={`group glass-hover rounded-xl h-full ${
             solo
-              ? "p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
-              : "p-6 flex gap-6"
+              ? "p-6 sm:p-7 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
+              : "p-5 flex gap-5"
           }`}
         >
           <div
-            className={`rounded-2xl bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 shrink-0 overflow-hidden ${
-              solo ? "w-32 h-32 sm:w-36 sm:h-36 text-5xl" : "w-24 h-24 text-4xl"
+            className={`rounded-lg bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 shrink-0 overflow-hidden ${
+              solo ? "w-36 h-36 sm:w-44 sm:h-44 text-5xl" : "w-28 h-28 sm:w-32 sm:h-32 text-4xl"
             }`}
           >
             {member.image ? (
@@ -239,8 +239,8 @@ function StudentCard({ member, index }: { member: TeamMember; index: number }) {
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
       <Link href={`/team/${member.slug}`}>
-        <div className="group glass-hover rounded-2xl p-5 flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-jade-500/15 to-jade-800/15 border border-white/10 flex items-center justify-center text-2xl font-medium text-jade-400 mb-4 group-hover:scale-105 transition-transform overflow-hidden">
+        <div className="group glass-hover rounded-xl p-5 flex flex-col items-center text-center">
+          <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-jade-500/15 to-jade-800/15 border border-white/10 flex items-center justify-center text-3xl font-medium text-jade-400 mb-4 group-hover:scale-105 transition-transform overflow-hidden">
             {member.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={member.image} alt={member.name} className="w-full h-full object-cover" />

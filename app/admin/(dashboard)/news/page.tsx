@@ -44,7 +44,6 @@ export default function AdminNewsPage() {
   };
 
   const handleDelete = async (row: NewsArticle) => {
-    if (!confirm(`Delete "${row.title}"? This cannot be undone.`)) return;
     await deleteDocById(COLLECTIONS.news, row.id);
   };
 
@@ -67,7 +66,14 @@ export default function AdminNewsPage() {
         actionLabel="Add Article"
         onAction={openCreate}
       />
-      <DataTable columns={columns} rows={data} loading={loading} onEdit={openEdit} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Delete "${r.title}"? This cannot be undone.`}
+      />
       <EntityFormModal
         open={modalOpen}
         title={editing ? "Edit Article" : "Add Article"}

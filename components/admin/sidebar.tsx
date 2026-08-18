@@ -13,6 +13,7 @@ import {
   ClipboardList,
   Mail,
   Send,
+  Database,
   LogOut,
   ExternalLink,
 } from "lucide-react";
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/admin/team", label: "Team Members", icon: Users },
   { href: "/admin/publications", label: "Publications", icon: BookOpen },
   { href: "/admin/projects", label: "Projects", icon: FolderKanban },
+  { href: "/admin/resources", label: "Resources", icon: Database },
   { href: "/admin/news", label: "News", icon: Newspaper },
   { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
   { href: "/admin/certificates", label: "Certificates", icon: ShieldCheck },

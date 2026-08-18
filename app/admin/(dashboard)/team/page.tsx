@@ -6,6 +6,7 @@ import DataTable, { type Column } from "@/components/admin/data-table";
 import EntityFormModal, { type FieldConfig } from "@/components/admin/entity-form";
 import { useLiveCollection } from "@/lib/hooks/use-collection";
 import { COLLECTIONS, createDoc, updateDocById, deleteDocById } from "@/lib/firestore";
+import { sortByHierarchy } from "@/lib/data/team";
 import type { TeamMember } from "@/lib/types";
 
 const fields: FieldConfig[] = [
@@ -25,6 +26,14 @@ const fields: FieldConfig[] = [
     ],
   },
   { key: "designation", label: "Designation", type: "text", required: true, placeholder: "e.g., PhD Researcher" },
+  {
+    key: "order",
+    label: "Position Hierarchy",
+    type: "number",
+    required: true,
+    placeholder: "e.g., 1",
+    helpText: "Controls display order within their member type. Lower numbers appear first (e.g., Lab Director = 1).",
+  },
   { key: "bio", label: "Bio", type: "textarea", rows: 4 },
   { key: "email", label: "Email", type: "text", placeholder: "name@cplab.org" },
   { key: "github", label: "GitHub URL", type: "text" },
@@ -34,7 +43,8 @@ const fields: FieldConfig[] = [
 ];
 
 export default function AdminTeamPage() {
-  const { data, loading } = useLiveCollection<TeamMember>(COLLECTIONS.team, { orderByField: "name" });
+  const { data: rawData, loading } = useLiveCollection<TeamMember>(COLLECTIONS.team);
+  const data = sortByHierarchy(rawData);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<TeamMember | null>(null);
 
@@ -53,7 +63,6 @@ export default function AdminTeamPage() {
   };
 
   const handleDelete = async (row: TeamMember) => {
-    if (!confirm(`Delete "${row.name}"? This cannot be undone.`)) return;
     await deleteDocById(COLLECTIONS.team, row.id);
   };
 
@@ -77,6 +86,7 @@ export default function AdminTeamPage() {
     },
     { key: "memberType", label: "Type", render: (r) => <span className="capitalize">{r.memberType}</span> },
     { key: "designation", label: "Designation" },
+    { key: "order", label: "Order", render: (r) => <span className="text-white/50">{r.order}</span> },
     { key: "email", label: "Email" },
   ];
 
@@ -88,12 +98,19 @@ export default function AdminTeamPage() {
         actionLabel="Add Member"
         onAction={openCreate}
       />
-      <DataTable columns={columns} rows={data} loading={loading} onEdit={openEdit} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Delete "${r.name}"? This cannot be undone.`}
+      />
       <EntityFormModal
         open={modalOpen}
         title={editing ? "Edit Team Member" : "Add Team Member"}
         fields={fields}
-        initialValues={editing ?? {}}
+        initialValues={editing ?? { order: data.length + 1 }}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
       />

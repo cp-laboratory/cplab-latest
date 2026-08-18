@@ -21,7 +21,6 @@ export default function AdminContactPage() {
   };
 
   const handleDelete = async (row: ContactMessage) => {
-    if (!confirm(`Delete message from "${row.name}"? This cannot be undone.`)) return;
     await deleteDocById(COLLECTIONS.contact, row.id);
   };
 
@@ -43,7 +42,14 @@ export default function AdminContactPage() {
   return (
     <div>
       <PageHeader title="Contact Messages" description="Messages submitted through the public contact form." />
-      <DataTable columns={columns} rows={data} loading={loading} onView={handleView} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onView={handleView}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Delete message from "${r.name}"? This cannot be undone.`}
+      />
 
       <DetailModal open={!!viewing} title="Message Details" onClose={() => setViewing(null)}>
         {viewing && (

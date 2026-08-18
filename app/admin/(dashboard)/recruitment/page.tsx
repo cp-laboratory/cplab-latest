@@ -28,7 +28,6 @@ export default function AdminRecruitmentPage() {
   };
 
   const handleDelete = async (row: RecruitmentApplication) => {
-    if (!confirm(`Delete application from "${row.name}"? This cannot be undone.`)) return;
     await deleteDocById(COLLECTIONS.recruitment, row.id);
   };
 
@@ -59,7 +58,14 @@ export default function AdminRecruitmentPage() {
   return (
     <div>
       <PageHeader title="Recruitment Applications" description="Review and manage applications submitted through the recruitment form." />
-      <DataTable columns={columns} rows={data} loading={loading} onView={setViewing} onDelete={handleDelete} />
+      <DataTable
+        columns={columns}
+        rows={data}
+        loading={loading}
+        onView={setViewing}
+        onDelete={handleDelete}
+        deleteMessage={(r) => `Delete application from "${r.name}"? This cannot be undone.`}
+      />
 
       <DetailModal open={!!viewing} title="Application Details" onClose={() => setViewing(null)}>
         {viewing && (
