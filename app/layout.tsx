@@ -24,6 +24,14 @@ export const metadata: Metadata = {
     description:
       "Advancing research in Application Development, Machine Learning, Blockchain, IoT, and Cyber-Physical Systems.",
     type: "website",
+    images: [{ url: "/cplab-logo.png" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "Cyber Physical Laboratory | CPLAB",
+    description:
+      "Advancing research in Application Development, Machine Learning, Blockchain, IoT, and Cyber-Physical Systems.",
+    images: ["/cplab-logo.png"],
   },
 };
 
