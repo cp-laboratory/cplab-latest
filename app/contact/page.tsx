@@ -88,8 +88,8 @@ export default function ContactPage() {
                       <p className="font-medium text-white mb-1">Location</p>
                       <p className="text-sm text-white/50 leading-relaxed">
                         Cyber Physical Laboratory<br />
-                        Department of CSE<br />
-                        Basherhat, Dinajpur - 5200<br />
+                        Department of Electronics and Communication Engineering, Hajee Mohammad Danesh Science and Technology University<br />
+                        Dinajpur - 5200<br />
                         Bangladesh
                       </p>
                     </div>
@@ -101,8 +101,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="font-medium text-white mb-1">Email</p>
-                      <a href="mailto:help@cplab.org" className="text-sm text-jade-400 hover:text-jade-300 transition-colors">
-                        help@cplab.org
+                      <a href="mailto:research.cplab@gmail.com" className="text-sm text-jade-400 hover:text-jade-300 transition-colors">
+                        research.cplab@gmail.com
                       </a>
                     </div>
                   </div>
