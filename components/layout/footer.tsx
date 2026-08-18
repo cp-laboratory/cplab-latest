@@ -75,8 +75,8 @@ export default function Footer() {
             </p>
             {/* Contact info */}
             <div className="space-y-2 mb-6">
-              <a href="mailto:help@cplab.org" className="flex items-center gap-2 text-sm text-white/40 hover:text-white/70 transition-colors">
-                <Mail className="w-3.5 h-3.5 text-jade-400" /> help@cplab.org
+              <a href="mailto:research.cplab@gmail.com" className="flex items-center gap-2 text-sm text-white/40 hover:text-white/70 transition-colors">
+                <Mail className="w-3.5 h-3.5 text-jade-400" /> research.cplab@gmail.com
               </a>
               <span className="flex items-center gap-2 text-sm text-white/40">
                 <MapPin className="w-3.5 h-3.5 text-jade-400" /> Basherhat, Dinajpur - 5200, Bangladesh
