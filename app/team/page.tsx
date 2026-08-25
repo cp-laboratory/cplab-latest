@@ -196,7 +196,10 @@ function ProfessorCard({ member, index, solo = false }: { member: TeamMember; in
               )}
             </div>
             <p className={`text-oxford-600 font-bold mb-4 ${solo ? "text-lg" : "text-base"}`}>{member.designation}</p>
-            <p className={`text-gray-600 mb-6 flex-1 ${solo ? "text-lg leading-relaxed" : "text-sm leading-relaxed line-clamp-3"}`}>{member.bio}</p>
+            <div 
+              className={`text-gray-600 mb-6 flex-1 prose prose-gray prose-p:my-0 ${solo ? "prose-lg leading-relaxed max-w-none" : "prose-sm leading-relaxed line-clamp-3"}`} 
+              dangerouslySetInnerHTML={{ __html: member.bio || "" }} 
+            />
             
             {member.researchInterests && (
               <div className={`flex flex-wrap gap-2 mb-6 ${solo ? "justify-center sm:justify-start" : "justify-center sm:justify-start"}`}>
