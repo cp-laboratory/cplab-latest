@@ -147,9 +147,14 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-oxford-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500 font-medium">
-            © {year} Cyber Physical Laboratory. All rights reserved.
-          </p>
+          <div className="flex flex-col gap-1.5 text-center sm:text-left">
+            <p className="text-sm text-gray-500 font-medium">
+              © {year} Cyber Physical Laboratory. All rights reserved.
+            </p>
+            <p className="text-sm text-gray-500 font-medium">
+              Developed by <a href="https://abidhasanrafi.github.io" target="_blank" rel="noopener noreferrer" className="text-amber-500 hover:text-amber-400 transition-colors">Md. Abid Hasan Rafi</a>
+            </p>
+          </div>
           <div className="flex items-center gap-6">
             <Link href="/privacy-policy" className="text-sm font-medium text-gray-500 hover:text-gray-300 transition-colors">Privacy Policy</Link>
             <Link href="/terms-of-service" className="text-sm font-medium text-gray-500 hover:text-gray-300 transition-colors">Terms of Service</Link>
