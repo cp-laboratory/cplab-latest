@@ -187,7 +187,7 @@ function ProfessorCard({ member, index, solo = false }: { member: TeamMember; in
             )}
           </div>
           <div className="flex-1 min-w-0 flex flex-col h-full">
-            <div className={`flex items-start justify-between gap-2 mb-2 ${solo ? "sm:justify-start" : "sm:justify-between"}`}>
+            <div className={`flex items-center justify-center sm:items-start gap-2 mb-2 ${solo ? "sm:justify-start" : "sm:justify-between"}`}>
               <h3 className={`font-serif font-bold text-gray-900 group-hover:text-amber-600 transition-colors leading-snug ${solo ? "text-3xl" : "text-xl"}`}>
                 {member.name}
               </h3>
