@@ -9,21 +9,21 @@ export const metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="max-w-3xl mx-auto px-4">
           <div className="flex justify-center mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-jade-500/20 flex items-center justify-center">
-              <ShieldCheck className="w-7 h-7 text-jade-400" />
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-oxford-50 to-oxford-100 border border-oxford-200 flex items-center justify-center">
+              <ShieldCheck className="w-7 h-7 text-oxford-600" />
             </div>
           </div>
           <div className="text-center mb-14">
-            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Legal</p>
-            <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+            <p className="text-xs text-oxford-600 uppercase tracking-widest font-medium mb-4">Legal</p>
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
               Privacy <span className="gradient-text">Policy</span>
             </h1>
-            <p className="text-white/40 text-sm">Last updated: August 4, 2026</p>
+            <p className="text-gray-500 text-sm">Last updated: August 4, 2026</p>
           </div>
 
           <div className="space-y-10">
@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
             <Section title="9. Contact Us">
               <p>
                 If you have questions about this Privacy Policy, please contact us at{" "}
-                <a href="mailto:help@cplab.org" className="text-jade-400 hover:underline">help@cplab.org</a>.
+                <a href="mailto:help@cplab.org" className="text-oxford-600 hover:underline">help@cplab.org</a>.
               </p>
             </Section>
           </div>
@@ -118,8 +118,8 @@ export default function PrivacyPolicyPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="text-xl font-medium text-white mb-4">{title}</h2>
-      <div className="text-white/50 text-[15px] leading-relaxed space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_strong]:text-white/70">
+      <h2 className="text-xl font-serif font-bold text-gray-900 mb-4">{title}</h2>
+      <div className="text-gray-600 text-[15px] leading-relaxed space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-2 [&_strong]:text-gray-700">
         {children}
       </div>
     </section>

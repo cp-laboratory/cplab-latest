@@ -39,7 +39,7 @@ export default function AdminCertificatesPage() {
   };
 
   const columns: Column<Certificate>[] = [
-    { key: "certId", label: "Certificate ID", render: (r) => <span className="text-white font-mono">{r.certId}</span> },
+    { key: "certId", label: "Certificate ID", render: (r) => <span className="text-gray-900 font-mono">{r.certId}</span> },
     { key: "name", label: "Issued To" },
     { key: "achievement", label: "Achievement" },
     { key: "date", label: "Date" },

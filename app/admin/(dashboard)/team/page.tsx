@@ -34,7 +34,7 @@ const fields: FieldConfig[] = [
     placeholder: "e.g., 1",
     helpText: "Controls display order within their member type. Lower numbers appear first (e.g., Lab Director = 1).",
   },
-  { key: "bio", label: "Bio", type: "textarea", rows: 4 },
+  { key: "bio", label: "Bio", type: "richtext" },
   { key: "email", label: "Email", type: "text", placeholder: "name@cplab.org" },
   { key: "github", label: "GitHub URL", type: "text" },
   { key: "linkedin", label: "LinkedIn URL", type: "text" },
@@ -72,7 +72,7 @@ export default function AdminTeamPage() {
       label: "Name",
       render: (r) => (
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center text-jade-400 text-sm font-medium shrink-0">
+          <div className="w-9 h-9 rounded-lg overflow-hidden bg-gray-50 border border-gray-200 flex items-center justify-center text-oxford-600 text-sm font-medium shrink-0">
             {r.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={r.image} alt={r.name} className="w-full h-full object-cover" />
@@ -80,13 +80,13 @@ export default function AdminTeamPage() {
               r.name.charAt(0)
             )}
           </div>
-          <span className="text-white font-medium">{r.name}</span>
+          <span className="text-gray-900 font-medium">{r.name}</span>
         </div>
       ),
     },
     { key: "memberType", label: "Type", render: (r) => <span className="capitalize">{r.memberType}</span> },
     { key: "designation", label: "Designation" },
-    { key: "order", label: "Order", render: (r) => <span className="text-white/50">{r.order}</span> },
+    { key: "order", label: "Order", render: (r) => <span className="text-gray-600">{r.order}</span> },
     { key: "email", label: "Email" },
   ];
 

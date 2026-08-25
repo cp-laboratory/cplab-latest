@@ -9,6 +9,7 @@ import { COLLECTIONS, createDoc, updateDocById, deleteDocById } from "@/lib/fire
 import type { Project } from "@/lib/types";
 
 const fields: FieldConfig[] = [
+  { key: "coverImage", label: "Cover Image", type: "image" },
   { key: "title", label: "Title", type: "text", required: true },
   { key: "slug", label: "URL Slug", type: "text", required: true },
   {
@@ -35,7 +36,7 @@ const fields: FieldConfig[] = [
   },
   { key: "researchArea", label: "Research Area", type: "text", required: true, placeholder: "e.g., Blockchain, IoT" },
   { key: "description", label: "Short Description", type: "textarea", rows: 2, required: true },
-  { key: "fullDescription", label: "Full Description", type: "textarea", rows: 5 },
+  { key: "fullDescription", label: "Full Description", type: "richtext" },
   { key: "technologies", label: "Technologies", type: "tags", placeholder: "Comma-separated technologies" },
   { key: "team", label: "Team Members", type: "tags", placeholder: "Comma-separated member names" },
   { key: "startDate", label: "Start Date", type: "text", placeholder: "YYYY-MM" },
@@ -69,7 +70,7 @@ export default function AdminProjectsPage() {
   };
 
   const columns: Column<Project>[] = [
-    { key: "title", label: "Title", render: (r) => <span className="text-white font-medium">{r.title}</span> },
+    { key: "title", label: "Title", render: (r) => <span className="text-gray-900 font-medium">{r.title}</span> },
     { key: "type", label: "Type", render: (r) => <span className="capitalize">{r.type}</span> },
     { key: "status", label: "Status", render: (r) => <span className="capitalize">{r.status}</span> },
     { key: "researchArea", label: "Area" },

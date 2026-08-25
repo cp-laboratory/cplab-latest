@@ -37,7 +37,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -45,16 +45,16 @@ export default function AdminLoginPage() {
         className="w-full max-w-md"
       >
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-jade-500/20 flex items-center justify-center mb-4">
-            <ShieldCheck className="w-7 h-7 text-jade-400" />
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-oxford-50 to-oxford-100 border border-oxford-200 flex items-center justify-center mb-4">
+            <ShieldCheck className="w-7 h-7 text-oxford-600" />
           </div>
-          <h1 className="text-2xl font-medium text-white">CPLAB Admin</h1>
-          <p className="text-sm text-white/40 mt-1">Sign in to manage lab content</p>
+          <h1 className="text-2xl font-serif font-bold text-gray-900">CPLAB Admin</h1>
+          <p className="text-sm text-gray-500 mt-1">Sign in to manage lab content</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="glass rounded-2xl p-8 space-y-5">
+        <form onSubmit={handleSubmit} className="academic-card rounded-2xl p-8 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-white/60 mb-2">Email</label>
+            <label className="block text-sm font-medium text-gray-600 mb-2">Email</label>
             <input
               type="email"
               required
@@ -62,11 +62,11 @@ export default function AdminLoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@cplab.org"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-oxford-400 transition-colors"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white/60 mb-2">Password</label>
+            <label className="block text-sm font-medium text-gray-600 mb-2">Password</label>
             <input
               type="password"
               required
@@ -74,23 +74,23 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-oxford-400 transition-colors"
             />
           </div>
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r bg-oxford-800 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-oxford-100 disabled:opacity-50"
           >
             {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
             Sign In
           </button>
         </form>
 
-        <p className="text-center text-xs text-white/30 mt-6">
+        <p className="text-center text-xs text-gray-500 mt-6">
           Access is restricted to authorized CPLAB staff only.
         </p>
       </motion.div>

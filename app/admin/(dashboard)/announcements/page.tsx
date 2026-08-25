@@ -10,7 +10,7 @@ import type { Announcement } from "@/lib/types";
 
 const fields: FieldConfig[] = [
   { key: "title", label: "Title", type: "text", required: true },
-  { key: "description", label: "Description", type: "textarea", rows: 3, required: true },
+  { key: "description", label: "Description", type: "richtext", required: true },
   { key: "date", label: "Date", type: "text", required: true, placeholder: "YYYY-MM-DD" },
   { key: "link", label: "Link (optional)", type: "text", placeholder: "/recruitment" },
 ];
@@ -42,7 +42,7 @@ export default function AdminAnnouncementsPage() {
   };
 
   const columns: Column<Announcement>[] = [
-    { key: "title", label: "Title", render: (r) => <span className="text-white font-medium">{r.title}</span> },
+    { key: "title", label: "Title", render: (r) => <span className="text-gray-900 font-medium">{r.title}</span> },
     { key: "description", label: "Description", render: (r) => <span className="line-clamp-2 max-w-md block">{r.description}</span> },
     { key: "date", label: "Date" },
   ];

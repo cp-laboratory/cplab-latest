@@ -35,7 +35,7 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="section-pad">
+    <section id="faq" className="section-pad bg-white">
       <div className="container-xl">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
@@ -46,20 +46,20 @@ export default function FAQSection() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-oxford-600 uppercase tracking-widest font-bold mb-4">
               Questions
             </p>
-            <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
               Frequently Asked{" "}
-              <span className="gradient-text">Questions</span>
+              <span className="text-oxford-800">Questions</span>
             </h2>
-            <p className="text-white/50 text-lg">
+            <p className="text-gray-600 text-lg">
               Everything you need to know about CPLAB and joining the team.
             </p>
           </motion.div>
 
           {/* FAQ Items */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {faqs.map((faq, i) => (
               <motion.div
                 key={i}
@@ -69,25 +69,25 @@ export default function FAQSection() {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
               >
                 <div
-                  className={`glass rounded-2xl overflow-hidden border transition-all duration-200 ${
-                    openIndex === i ? "border-jade-500/30" : "border-white/5"
+                  className={`bg-white rounded-xl overflow-hidden border transition-all duration-200 ${
+                    openIndex === i ? "border-oxford-200 shadow-md" : "border-gray-200"
                   }`}
                 >
                   <button
                     id={`faq-${i}`}
                     onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left bg-gray-50 hover:bg-gray-100 transition-colors"
                   >
                     <span
-                      className={`font-semibold text-base leading-snug transition-colors ${
-                        openIndex === i ? "text-white" : "text-white/70"
+                      className={`font-bold text-base leading-snug transition-colors ${
+                        openIndex === i ? "text-oxford-800" : "text-gray-800"
                       }`}
                     >
                       {faq.q}
                     </span>
                     <ChevronDown
-                      className={`w-5 h-5 shrink-0 text-white/40 transition-transform duration-300 ${
-                        openIndex === i ? "rotate-180 text-jade-400" : ""
+                      className={`w-5 h-5 shrink-0 transition-transform duration-300 ${
+                        openIndex === i ? "rotate-180 text-oxford-600" : "text-gray-400"
                       }`}
                     />
                   </button>
@@ -101,8 +101,8 @@ export default function FAQSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                       >
-                        <div className="px-6 pb-5 border-t border-white/5">
-                          <p className="text-white/50 text-sm leading-relaxed pt-4">{faq.a}</p>
+                        <div className="px-6 py-5 bg-white">
+                          <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
                         </div>
                       </motion.div>
                     )}

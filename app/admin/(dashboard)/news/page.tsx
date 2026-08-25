@@ -13,7 +13,7 @@ const fields: FieldConfig[] = [
   { key: "title", label: "Title", type: "text", required: true },
   { key: "slug", label: "URL Slug", type: "text", required: true },
   { key: "excerpt", label: "Excerpt", type: "textarea", rows: 2, required: true },
-  { key: "content", label: "Content", type: "textarea", rows: 8, required: true, helpText: "Separate paragraphs with a blank line. Wrap a line in ** ** to render it as a subheading." },
+  { key: "content", label: "Content", type: "richtext", required: true },
   { key: "author", label: "Author", type: "text", required: true },
   { key: "publishedDate", label: "Published Date", type: "text", required: true, placeholder: "YYYY-MM-DD" },
   { key: "category", label: "Category", type: "text", required: true, placeholder: "e.g., Research Achievement" },
@@ -51,7 +51,7 @@ export default function AdminNewsPage() {
     {
       key: "title",
       label: "Title",
-      render: (r) => <span className="text-white font-medium line-clamp-2 max-w-md block">{r.title}</span>,
+      render: (r) => <span className="text-gray-900 font-medium line-clamp-2 max-w-md block">{r.title}</span>,
     },
     { key: "category", label: "Category" },
     { key: "publishedDate", label: "Published" },

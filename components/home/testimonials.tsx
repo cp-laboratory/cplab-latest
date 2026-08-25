@@ -40,7 +40,7 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="section-pad overflow-hidden">
+    <section id="testimonials" className="section-pad overflow-hidden bg-gray-50">
       <div className="container-xl">
         {/* Header */}
         <motion.div
@@ -50,17 +50,17 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
+          <p className="text-xs text-oxford-600 uppercase tracking-widest font-bold mb-4">
             What Members Say
           </p>
-          <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
             From Our{" "}
-            <span className="gradient-text">Community</span>
+            <span className="text-oxford-800">Community</span>
           </h2>
         </motion.div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {testimonials.map((t, i) => (
             <motion.div
               key={t.id}
@@ -69,20 +69,20 @@ export default function Testimonials() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <div className="glass-hover rounded-2xl p-7 h-full flex flex-col">
-                <Quote className="w-8 h-8 text-jade-500/30 mb-4" />
-                <p className="text-white/60 text-base leading-relaxed italic flex-1 mb-6">
+              <div className="academic-card p-8 h-full flex flex-col bg-white">
+                <Quote className="w-8 h-8 text-oxford-200 mb-6" />
+                <p className="text-gray-700 text-base leading-relaxed italic flex-1 mb-8">
                   "{t.quote}"
                 </p>
-                <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center text-base font-medium text-jade-400">
+                <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
+                  <div className="w-12 h-12 rounded-full bg-oxford-50 border border-oxford-100 flex items-center justify-center text-lg font-bold text-oxford-800 shadow-sm">
                     {t.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-semibold text-white text-sm">{t.name}</p>
-                    <p className="text-white/40 text-xs">{t.role}</p>
+                    <p className="font-bold text-gray-900 text-sm">{t.name}</p>
+                    <p className="text-gray-500 text-xs font-medium">{t.role}</p>
                   </div>
-                  <span className="ml-auto text-xs text-white/20 bg-white/5 px-2.5 py-1 rounded-full">
+                  <span className="ml-auto text-xs font-bold text-oxford-600 bg-oxford-50 px-3 py-1 rounded">
                     {t.year}
                   </span>
                 </div>

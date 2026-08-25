@@ -18,10 +18,10 @@ export default function DetailModal({
   return (
     <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto bg-black/70 backdrop-blur-sm">
       <div className="w-full max-w-2xl my-8">
-        <div className="glass rounded-2xl border border-white/10 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
-            <h2 className="text-lg font-medium text-white">{title}</h2>
-            <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+        <div className="academic-card rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+            <h2 className="text-lg font-medium text-gray-900">{title}</h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-900 transition-colors">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -36,8 +36,8 @@ export function DetailField({ label, value }: { label: string; value?: string | 
   if (value === undefined || value === null || value === "") return null;
   return (
     <div>
-      <p className="text-xs text-white/40 mb-1">{label}</p>
-      <p className="text-sm text-white/80 whitespace-pre-wrap leading-relaxed">{value}</p>
+      <p className="text-xs text-gray-500 mb-1">{label}</p>
+      <p className="text-sm text-gray-900/80 whitespace-pre-wrap leading-relaxed">{value}</p>
     </div>
   );
 }

@@ -5,10 +5,10 @@ import { motion, useInView } from "framer-motion";
 import { BookOpen, FlaskConical, Users, Calendar } from "lucide-react";
 
 const stats = [
-  { icon: BookOpen, value: 80, suffix: "+", label: "Publications", color: "from-jade-400 to-jade-600" },
-  { icon: FlaskConical, value: 25, suffix: "+", label: "Active Projects", color: "from-jade-700 to-jade-900" },
+  { icon: BookOpen, value: 80, suffix: "+", label: "Publications", color: "from-oxford-600 to-oxford-800" },
+  { icon: FlaskConical, value: 25, suffix: "+", label: "Active Projects", color: "from-oxford-600 to-oxford-800" },
   { icon: Users, value: 40, suffix: "+", label: "Lab Members", color: "from-amber-400 to-amber-600" },
-  { icon: Calendar, value: 8, suffix: " Years", label: "Of Research", color: "from-emerald-400 to-emerald-600" },
+  { icon: Calendar, value: 8, suffix: " Years", label: "Of Research", color: "from-oxford-600 to-oxford-800" },
 ];
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
@@ -43,9 +43,9 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 
 export default function StatsBar() {
   return (
-    <section className="relative py-16 border-y border-white/5">
-      <div className="absolute inset-0 bg-gradient-to-r from-jade-950/20 via-transparent to-jade-950/20 pointer-events-none" />
-      <div className="container-xl">
+    <section className="relative py-16 border-y border-gray-200 bg-oxford-50/50">
+      <div className="absolute inset-0 bg-gradient-to-r from-oxford-100/20 via-transparent to-oxford-100/20 pointer-events-none" />
+      <div className="container-xl relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, i) => {
             const Icon = stat.icon;
@@ -61,10 +61,10 @@ export default function StatsBar() {
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg mb-1`}>
                   <Icon className="w-5 h-5 text-white" />
                 </div>
-                <div className={`text-4xl font-medium bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                <div className={`text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <p className="text-sm text-white/40 font-medium">{stat.label}</p>
+                <p className="text-sm text-gray-600 font-semibold uppercase tracking-wider">{stat.label}</p>
               </motion.div>
             );
           })}

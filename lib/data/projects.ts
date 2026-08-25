@@ -14,6 +14,7 @@ export interface Project {
   liveUrl?: string;
   featured: boolean;
   researchArea: string;
+  coverImage?: string;
 }
 
 export const projects: Project[] = [

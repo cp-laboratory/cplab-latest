@@ -47,36 +47,36 @@ export default function DataTable<T extends { id: string }>({
 
   if (loading) {
     return (
-      <div className="glass rounded-2xl p-16 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-jade-400 animate-spin" />
+      <div className="academic-card rounded-2xl p-16 flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-oxford-600 animate-spin" />
       </div>
     );
   }
 
   if (rows.length === 0) {
     return (
-      <div className="glass rounded-2xl p-16 text-center text-white/30">
+      <div className="academic-card rounded-2xl p-16 text-center text-gray-400">
         <p>{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="glass rounded-2xl overflow-hidden">
+    <div className="academic-card rounded-2xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/5">
+            <tr className="border-b border-gray-200">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="text-left font-medium text-white/40 uppercase tracking-wide text-xs px-5 py-4 whitespace-nowrap"
+                  className="text-left font-medium text-gray-500 uppercase tracking-wide text-xs px-5 py-4 whitespace-nowrap"
                 >
                   {col.label}
                 </th>
               ))}
               {(onEdit || onDelete || onView) && (
-                <th className="text-right font-medium text-white/40 uppercase tracking-wide text-xs px-5 py-4">
+                <th className="text-right font-medium text-gray-500 uppercase tracking-wide text-xs px-5 py-4">
                   Actions
                 </th>
               )}
@@ -84,9 +84,9 @@ export default function DataTable<T extends { id: string }>({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
+              <tr key={row.id} className="border-b border-gray-200 last:border-0 hover:bg-gray-50 transition-colors">
                 {columns.map((col) => (
-                  <td key={col.key} className={`px-5 py-4 text-white/70 align-top ${col.className || ""}`}>
+                  <td key={col.key} className={`px-5 py-4 text-gray-700 align-top ${col.className || ""}`}>
                     {col.render ? col.render(row) : String((row as Record<string, unknown>)[col.key] ?? "—")}
                   </td>
                 ))}
@@ -96,7 +96,7 @@ export default function DataTable<T extends { id: string }>({
                       {onView && (
                         <button
                           onClick={() => onView(row)}
-                          className="p-2 rounded-lg text-white/40 hover:text-jade-400 hover:bg-jade-500/10 transition-colors"
+                          className="p-2 rounded-lg text-gray-500 hover:text-oxford-600 hover:bg-oxford-50 transition-colors"
                           aria-label="View"
                         >
                           <Eye className="w-4 h-4" />
@@ -105,7 +105,7 @@ export default function DataTable<T extends { id: string }>({
                       {onEdit && (
                         <button
                           onClick={() => onEdit(row)}
-                          className="p-2 rounded-lg text-white/40 hover:text-jade-400 hover:bg-jade-500/10 transition-colors"
+                          className="p-2 rounded-lg text-gray-500 hover:text-oxford-600 hover:bg-oxford-50 transition-colors"
                           aria-label="Edit"
                         >
                           <Pencil className="w-4 h-4" />
@@ -114,7 +114,7 @@ export default function DataTable<T extends { id: string }>({
                       {onDelete && (
                         <button
                           onClick={() => setPendingDelete(row)}
-                          className="p-2 rounded-lg text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          className="p-2 rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-500/10 transition-colors"
                           aria-label="Delete"
                         >
                           <Trash2 className="w-4 h-4" />

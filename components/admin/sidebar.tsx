@@ -44,12 +44,12 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 shrink-0 h-screen sticky top-0 flex flex-col border-r border-white/5 bg-[hsl(163_20%_7%)]">
-      <div className="px-6 py-6 border-b border-white/5">
-        <p className="text-lg font-medium text-white">
+    <aside className="w-64 shrink-0 h-screen sticky top-0 flex flex-col border-r border-gray-200 bg-white">
+      <div className="px-6 py-6 border-b border-gray-200">
+        <p className="text-lg font-medium text-gray-900">
           CPLAB <span className="gradient-text">Admin</span>
         </p>
-        {user?.email && <p className="text-xs text-white/30 mt-1 truncate">{user.email}</p>}
+        {user?.email && <p className="text-xs text-gray-400 mt-1 truncate">{user.email}</p>}
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
@@ -62,8 +62,8 @@ export default function AdminSidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 active
-                  ? "bg-gradient-to-r from-jade-500/20 to-jade-900/20 text-white border border-jade-500/20"
-                  : "text-white/50 hover:text-white hover:bg-white/5"
+                  ? "bg-gradient-to-r from-oxford-50 to-oxford-100 text-gray-900 border border-oxford-200"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
               }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
@@ -73,17 +73,17 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-white/5 space-y-1">
+      <div className="p-3 border-t border-gray-200 space-y-1">
         <Link
           href="/"
           target="_blank"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors"
         >
           <ExternalLink className="w-4 h-4" /> View Site
         </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-600/80 hover:text-red-600 hover:bg-red-500/10 transition-colors"
         >
           <LogOut className="w-4 h-4" /> Sign Out
         </button>

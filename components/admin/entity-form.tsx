@@ -3,8 +3,14 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { X, Loader2 } from "lucide-react";
 import ImageUploadField from "./image-upload-field";
+import dynamic from "next/dynamic";
 
-export type FieldType = "text" | "textarea" | "number" | "select" | "checkbox" | "tags" | "image";
+const RichTextEditor = dynamic(() => import("./rich-text-editor"), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-gray-50 rounded-xl border border-gray-200 animate-pulse flex items-center justify-center text-sm text-gray-400">Loading editor...</div>
+});
+
+export type FieldType = "text" | "textarea" | "richtext" | "number" | "select" | "checkbox" | "tags" | "image";
 
 export interface FieldConfig {
   key: string;
@@ -20,7 +26,7 @@ export interface FieldConfig {
 type RawRecord = Record<string, unknown>;
 
 const inputClass =
-  "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors";
+  "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-jade-500/50 transition-colors";
 
 function toFormValue(field: FieldConfig, raw: RawRecord): unknown {
   const v = raw[field.key];
@@ -104,10 +110,10 @@ export default function EntityFormModal({
   return (
     <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto bg-black/70 backdrop-blur-sm">
       <div className="w-full max-w-2xl my-8">
-        <form onSubmit={handleSubmit} className="glass rounded-2xl border border-white/10 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
-            <h2 className="text-lg font-medium text-white">{title}</h2>
-            <button type="button" onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+        <form onSubmit={handleSubmit} className="academic-card rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+            <h2 className="text-lg font-medium text-gray-900">{title}</h2>
+            <button type="button" onClick={onClose} className="text-gray-500 hover:text-gray-900 transition-colors">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -116,9 +122,9 @@ export default function EntityFormModal({
             {fields.map((field) => (
               <div key={field.key}>
                 {field.type !== "checkbox" && field.type !== "image" && (
-                  <label className="block text-sm font-medium text-white/60 mb-2">
+                  <label className="block text-sm font-medium text-gray-900/60 mb-2">
                     {field.label}
-                    {field.required && <span className="text-red-400 ml-1">*</span>}
+                    {field.required && <span className="text-red-600 ml-1">*</span>}
                   </label>
                 )}
 
@@ -155,6 +161,16 @@ export default function EntityFormModal({
                   />
                 )}
 
+                {field.type === "richtext" && (
+                  <div className="bg-white rounded-xl overflow-hidden [&_.ql-toolbar]:rounded-t-xl [&_.ql-toolbar]:border-gray-200 [&_.ql-toolbar]:bg-gray-50 [&_.ql-container]:rounded-b-xl [&_.ql-container]:border-gray-200 [&_.ql-container]:min-h-[200px] [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-gray-900">
+                    <RichTextEditor
+                      value={String(state[field.key] ?? "")}
+                      onChange={(val) => update(field.key, val)}
+                      placeholder={field.placeholder}
+                    />
+                  </div>
+                )}
+
                 {field.type === "tags" && (
                   <input
                     type="text"
@@ -189,7 +205,7 @@ export default function EntityFormModal({
                       onChange={(e) => update(field.key, e.target.checked)}
                       className="w-4 h-4 rounded accent-jade-500"
                     />
-                    <span className="text-sm text-white/60">{field.label}</span>
+                    <span className="text-sm text-gray-900/60">{field.label}</span>
                   </label>
                 )}
 
@@ -201,25 +217,25 @@ export default function EntityFormModal({
                   />
                 )}
 
-                {field.helpText && <p className="text-xs text-white/30 mt-1.5">{field.helpText}</p>}
+                {field.helpText && <p className="text-xs text-gray-400 mt-1.5">{field.helpText}</p>}
               </div>
             ))}
           </div>
 
-          {error && <p className="px-6 text-sm text-red-400 pb-2">{error}</p>}
+          {error && <p className="px-6 text-sm text-red-600 pb-2">{error}</p>}
 
-          <div className="flex items-center justify-end gap-3 px-6 py-5 border-t border-white/5">
+          <div className="flex items-center justify-end gap-3 px-6 py-5 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl glass border border-white/10 text-white/60 text-sm hover:text-white transition-all"
+              className="px-5 py-2.5 rounded-xl academic-card border border-gray-200 text-gray-900/60 text-sm hover:text-gray-900 transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-gray-900 text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               Save

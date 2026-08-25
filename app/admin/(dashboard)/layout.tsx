@@ -18,14 +18,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-[hsl(163_20%_5%)] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-jade-400 animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-oxford-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)] flex">
+    <div className="min-h-screen bg-background flex">
       <AdminSidebar />
       <main className="flex-1 min-w-0 px-6 py-8 sm:px-10 sm:py-10">{children}</main>
     </div>

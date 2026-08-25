@@ -18,7 +18,7 @@ export default function ProfessorsSection() {
   if (professors.length === 0) return null;
 
   return (
-    <section id="professors" className="section-pad">
+    <section id="professors" className="section-pad bg-white">
       <div className="container-xl">
         {/* Header */}
         <motion.div
@@ -28,12 +28,12 @@ export default function ProfessorsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Leadership</p>
-          <h2 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+          <p className="text-xs text-oxford-600 uppercase tracking-widest font-bold mb-4">Leadership</p>
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
             Faculty &{" "}
-            <span className="gradient-text">Researchers</span>
+            <span className="text-oxford-800">Researchers</span>
           </h2>
-          <p className="text-white/50 text-lg max-w-xl mx-auto">
+          <p className="text-gray-600 text-lg max-w-xl mx-auto">
             Meet the principal investigators and faculty members leading our research
             agenda at CPLAB.
           </p>
@@ -54,7 +54,7 @@ export default function ProfessorsSection() {
                 className="cursor-pointer"
               >
                 <div
-                  className={`group glass-hover rounded-xl h-full ${
+                  className={`group academic-card h-full ${
                     isSolo
                       ? "p-6 sm:p-7 flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start text-center sm:text-left"
                       : "p-5 flex flex-col sm:flex-row gap-5"
@@ -62,7 +62,7 @@ export default function ProfessorsSection() {
                 >
                   {/* Avatar */}
                   <div
-                    className={`rounded-lg shrink-0 bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center font-medium text-jade-400 overflow-hidden ${
+                    className={`rounded-lg shrink-0 bg-oxford-50 border border-oxford-100 flex items-center justify-center font-bold text-oxford-800 overflow-hidden shadow-sm ${
                       isSolo ? "w-36 h-36 sm:w-44 sm:h-44 text-5xl" : "w-28 h-28 sm:w-32 sm:h-32 text-4xl"
                     }`}
                   >
@@ -77,23 +77,23 @@ export default function ProfessorsSection() {
                   {/* Info */}
                   <div className="flex-1">
                     <div className={`flex items-start justify-between gap-2 mb-1 ${isSolo ? "sm:justify-start" : ""}`}>
-                      <h3 className={`font-medium text-white group-hover:text-jade-400 transition-colors leading-tight ${isSolo ? "text-2xl" : "text-lg"}`}>
+                      <h3 className={`font-bold text-gray-900 group-hover:text-oxford-800 transition-colors leading-tight ${isSolo ? "text-2xl" : "text-lg"}`}>
                         {prof.name}
                       </h3>
                       {!isSolo && (
-                        <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-jade-400 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                        <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-oxford-600 group-hover:translate-x-1 transition-all shrink-0 mt-0.5" />
                       )}
                     </div>
-                    <p className={`text-jade-400 font-medium mb-3 ${isSolo ? "text-base" : "text-sm"}`}>{prof.designation}</p>
-                    <p className={`text-white/50 leading-relaxed mb-4 ${isSolo ? "text-base" : "text-sm line-clamp-3"}`}>{prof.bio}</p>
+                    <p className={`text-oxford-600 font-semibold mb-3 ${isSolo ? "text-base" : "text-sm"}`}>{prof.designation}</p>
+                    <p className={`text-gray-600 leading-relaxed mb-4 ${isSolo ? "text-base" : "text-sm line-clamp-3"}`}>{prof.bio}</p>
 
                     {/* Research interests */}
                     {prof.researchInterests && (
-                      <div className={`flex flex-wrap gap-2 mb-3 ${isSolo ? "justify-center sm:justify-start" : ""}`}>
+                      <div className={`flex flex-wrap gap-2 mb-4 ${isSolo ? "justify-center sm:justify-start" : ""}`}>
                         {(isSolo ? prof.researchInterests : prof.researchInterests.slice(0, 3)).map((interest) => (
                           <span
                             key={interest}
-                            className="px-2.5 py-0.5 rounded-full text-xs bg-jade-500/10 text-jade-300 border border-jade-500/20"
+                            className="px-2.5 py-0.5 rounded font-medium text-xs bg-oxford-50 text-oxford-800 border border-oxford-100"
                           >
                             {interest}
                           </span>
@@ -102,14 +102,14 @@ export default function ProfessorsSection() {
                     )}
 
                     {/* Links */}
-                    <div className={`flex items-center gap-3 ${isSolo ? "justify-center sm:justify-start" : ""}`}>
+                    <div className={`flex items-center gap-4 ${isSolo ? "justify-center sm:justify-start" : ""}`}>
                       {prof.email && (
                         <a
                           href={`mailto:${prof.email}`}
-                          className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1 transition-colors"
+                          className="text-sm font-medium text-gray-500 hover:text-oxford-800 flex items-center gap-1.5 transition-colors"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Mail className="w-3 h-3" /> Email
+                          <Mail className="w-4 h-4" /> Email
                         </a>
                       )}
                       {prof.googleScholar && (
@@ -117,10 +117,10 @@ export default function ProfessorsSection() {
                           href={prof.googleScholar}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1 transition-colors"
+                          className="text-sm font-medium text-gray-500 hover:text-oxford-800 flex items-center gap-1.5 transition-colors"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <ExternalLink className="w-3 h-3" /> Scholar
+                          <ExternalLink className="w-4 h-4" /> Scholar
                         </a>
                       )}
                     </div>
@@ -141,7 +141,7 @@ export default function ProfessorsSection() {
         >
           <Link
             href="/team"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass border border-white/10 text-white/60 font-medium text-sm hover:text-white hover:border-jade-500/30 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
           >
             View Full Team
             <ChevronRight className="w-4 h-4" />

@@ -10,9 +10,9 @@ import type { RecruitmentApplication, RecruitmentStatus } from "@/lib/types";
 
 const statusStyles: Record<RecruitmentStatus, string> = {
   pending: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-  reviewed: "bg-jade-500/10 text-jade-400 border-jade-500/20",
+  reviewed: "bg-oxford-50 text-oxford-600 border-oxford-200",
   accepted: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  rejected: "bg-red-500/10 text-red-400 border-red-500/20",
+  rejected: "bg-red-50 text-red-600 border-red-500/20",
 };
 
 export default function AdminRecruitmentPage() {
@@ -32,7 +32,7 @@ export default function AdminRecruitmentPage() {
   };
 
   const columns: Column<RecruitmentApplication>[] = [
-    { key: "name", label: "Name", render: (r) => <span className="text-white font-medium">{r.name}</span> },
+    { key: "name", label: "Name", render: (r) => <span className="text-gray-900 font-medium">{r.name}</span> },
     { key: "email", label: "Email" },
     { key: "researchTrack", label: "Track" },
     { key: "degree", label: "Degree" },
@@ -44,7 +44,7 @@ export default function AdminRecruitmentPage() {
           value={r.status || "pending"}
           onChange={(e) => handleStatusChange(r, e.target.value as RecruitmentStatus)}
           onClick={(e) => e.stopPropagation()}
-          className={`px-2.5 py-1 rounded-full text-xs font-medium border capitalize bg-transparent cursor-pointer ${statusStyles[r.status || "pending"]}`}
+          className={`px-2.5 py-1 rounded-full text-xs font-medium border capitalize bg-white cursor-pointer ${statusStyles[r.status || "pending"]}`}
         >
           <option value="pending" className="bg-[#101d18]">Pending</option>
           <option value="reviewed" className="bg-[#101d18]">Reviewed</option>

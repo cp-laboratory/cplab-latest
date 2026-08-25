@@ -48,7 +48,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -59,11 +59,11 @@ export default function ContactPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-16"
           >
-            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Get in Touch</p>
-            <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+            <p className="text-xs text-oxford-600 uppercase tracking-widest font-medium mb-4">Get in Touch</p>
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
               Contact <span className="gradient-text">CPLAB</span>
             </h1>
-            <p className="text-xl text-white/50 max-w-xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-xl mx-auto">
               Questions, collaborations, or just want to say hello? We&apos;d love to hear from you.
             </p>
           </motion.div>
@@ -76,17 +76,17 @@ export default function ContactPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="space-y-8"
             >
-              <div className="glass rounded-2xl p-8 space-y-6">
-                <h2 className="text-2xl font-medium text-white">Lab Information</h2>
+              <div className="academic-card rounded-2xl p-8 space-y-6">
+                <h2 className="text-2xl font-serif font-bold text-gray-900">Lab Information</h2>
 
                 <div className="space-y-5">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0">
-                      <MapPin className="w-4 h-4 text-jade-400" />
+                    <div className="w-10 h-10 rounded-xl bg-oxford-50 border border-oxford-200 flex items-center justify-center shrink-0">
+                      <MapPin className="w-4 h-4 text-oxford-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-white mb-1">Location</p>
-                      <p className="text-sm text-white/50 leading-relaxed">
+                      <p className="font-serif font-bold text-gray-900 mb-1">Location</p>
+                      <p className="text-sm text-gray-600 leading-relaxed">
                         Cyber Physical Laboratory<br />
                         Department of Electronics and Communication Engineering, Hajee Mohammad Danesh Science and Technology University<br />
                         Dinajpur - 5200<br />
@@ -96,32 +96,32 @@ export default function ContactPage() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0">
-                      <Mail className="w-4 h-4 text-jade-400" />
+                    <div className="w-10 h-10 rounded-xl bg-oxford-50 border border-oxford-200 flex items-center justify-center shrink-0">
+                      <Mail className="w-4 h-4 text-oxford-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-white mb-1">Email</p>
-                      <a href="mailto:research.cplab@gmail.com" className="text-sm text-jade-400 hover:text-jade-300 transition-colors">
+                      <p className="font-serif font-bold text-gray-900 mb-1">Email</p>
+                      <a href="mailto:research.cplab@gmail.com" className="text-sm text-oxford-600 hover:text-jade-300 transition-colors">
                         research.cplab@gmail.com
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-jade-500/10 border border-jade-500/20 flex items-center justify-center shrink-0">
-                      <Phone className="w-4 h-4 text-jade-400" />
+                    <div className="w-10 h-10 rounded-xl bg-oxford-50 border border-oxford-200 flex items-center justify-center shrink-0">
+                      <Phone className="w-4 h-4 text-oxford-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-white mb-1">Phone</p>
-                      <a href="tel:+8801712534968" className="text-sm text-white/50 hover:text-white/70 transition-colors">
+                      <p className="font-serif font-bold text-gray-900 mb-1">Phone</p>
+                      <a href="tel:+8801712534968" className="text-sm text-gray-600 hover:text-gray-700 transition-colors">
                         +880 1712-534968
                       </a>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-white/5">
-                  <p className="text-sm font-medium text-white mb-4">Follow Us</p>
+                <div className="pt-4 border-t border-gray-100">
+                  <p className="text-sm font-serif font-bold text-gray-900 mb-4">Follow Us</p>
                   <div className="flex gap-3">
                     {[
                       { icon: FacebookIcon, href: "https://www.facebook.com/cp.laboratory", label: "Facebook" },
@@ -134,7 +134,7 @@ export default function ContactPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={label}
-                        className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-jade-500/30 transition-all"
+                        className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-600 hover:text-gray-900 hover:border-oxford-300 transition-all"
                       >
                         <Icon />
                       </a>
@@ -150,7 +150,7 @@ export default function ContactPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <div className="glass rounded-2xl p-8">
+              <div className="academic-card rounded-2xl p-8">
                 {submitted ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -158,24 +158,24 @@ export default function ContactPage() {
                     className="flex flex-col items-center text-center gap-4 py-12"
                   >
                     <CheckCircle className="w-16 h-16 text-emerald-400" />
-                    <h3 className="text-2xl font-medium text-white">Message Sent!</h3>
-                    <p className="text-white/50">
+                    <h3 className="text-2xl font-serif font-bold text-gray-900">Message Sent!</h3>
+                    <p className="text-gray-600">
                       Thanks for reaching out. We&apos;ll get back to you within 1-2 business days.
                     </p>
                     <button
                       onClick={() => { setSubmitted(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
-                      className="mt-4 px-6 py-2.5 rounded-xl glass border border-white/10 text-white/60 text-sm hover:text-white hover:border-white/20 transition-all"
+                      className="mt-4 px-6 py-2.5 rounded-xl academic-card border border-gray-200 text-gray-600 text-sm hover:text-gray-900 hover:border-gray-300 transition-all"
                     >
                       Send Another
                     </button>
                   </motion.div>
                 ) : (
                   <>
-                    <h2 className="text-2xl font-medium text-white mb-8">Send a Message</h2>
+                    <h2 className="text-2xl font-serif font-bold text-gray-900 mb-8">Send a Message</h2>
                     <form id="contact-form" onSubmit={handleSubmit} className="space-y-5">
                       <div className="grid sm:grid-cols-2 gap-5">
                         <div>
-                          <label className="block text-sm font-medium text-white/60 mb-2">Name</label>
+                          <label className="block text-sm font-medium text-gray-600 mb-2">Name</label>
                           <input
                             id="contact-name"
                             type="text"
@@ -183,11 +183,11 @@ export default function ContactPage() {
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             placeholder="Your name"
-                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-white/30 text-sm focus:outline-none focus:border-oxford-400 transition-colors"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-white/60 mb-2">Email</label>
+                          <label className="block text-sm font-medium text-gray-600 mb-2">Email</label>
                           <input
                             id="contact-email"
                             type="email"
@@ -195,13 +195,13 @@ export default function ContactPage() {
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             placeholder="your@email.com"
-                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-white/30 text-sm focus:outline-none focus:border-oxford-400 transition-colors"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/60 mb-2">Subject</label>
+                        <label className="block text-sm font-medium text-gray-600 mb-2">Subject</label>
                         <input
                           id="contact-subject"
                           type="text"
@@ -209,12 +209,12 @@ export default function ContactPage() {
                           value={form.subject}
                           onChange={(e) => setForm({ ...form, subject: e.target.value })}
                           placeholder="How can we help?"
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-white/30 text-sm focus:outline-none focus:border-oxford-400 transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-white/60 mb-2">Message</label>
+                        <label className="block text-sm font-medium text-gray-600 mb-2">Message</label>
                         <textarea
                           id="contact-message"
                           required
@@ -222,7 +222,7 @@ export default function ContactPage() {
                           onChange={(e) => setForm({ ...form, message: e.target.value })}
                           placeholder="Tell us about your inquiry..."
                           rows={6}
-                          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors resize-none"
+                          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-white/30 text-sm focus:outline-none focus:border-oxford-400 transition-colors resize-none"
                         />
                       </div>
 
@@ -232,7 +232,7 @@ export default function ContactPage() {
                         type="submit"
                         id="contact-submit"
                         disabled={submitting}
-                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r bg-oxford-800 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-oxford-100 disabled:opacity-50"
                       >
                         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} Send Message
                       </button>

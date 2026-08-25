@@ -26,7 +26,7 @@ const fields: FieldConfig[] = [
   },
   { key: "venue", label: "Venue", type: "text", required: true },
   { key: "year", label: "Year", type: "number", required: true },
-  { key: "abstract", label: "Abstract", type: "textarea", rows: 4 },
+  { key: "abstract", label: "Abstract", type: "richtext" },
   { key: "keywords", label: "Keywords", type: "tags", placeholder: "Comma-separated keywords" },
   { key: "doi", label: "DOI", type: "text" },
   { key: "arxiv", label: "arXiv URL", type: "text" },
@@ -64,7 +64,7 @@ export default function AdminPublicationsPage() {
     {
       key: "title",
       label: "Title",
-      render: (r) => <span className="text-white font-medium line-clamp-2 max-w-md block">{r.title}</span>,
+      render: (r) => <span className="text-gray-900 font-medium line-clamp-2 max-w-md block">{r.title}</span>,
     },
     { key: "type", label: "Type", render: (r) => <span className="capitalize">{r.type.replace("-", " ")}</span> },
     { key: "venue", label: "Venue" },

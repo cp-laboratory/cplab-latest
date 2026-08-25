@@ -31,7 +31,7 @@ export default function AdminContactPage() {
       render: (r) => (
         <div className="flex items-center gap-2">
           {!r.read && <span className="w-2 h-2 rounded-full bg-jade-400 shrink-0" />}
-          <span className="text-white font-medium">{r.name}</span>
+          <span className="text-gray-900 font-medium">{r.name}</span>
         </div>
       ),
     },

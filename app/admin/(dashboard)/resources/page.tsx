@@ -25,7 +25,7 @@ const fields: FieldConfig[] = [
     ],
   },
   { key: "category", label: "Category", type: "text", required: true, placeholder: "e.g., IoT, Blockchain, Machine Learning" },
-  { key: "description", label: "Description", type: "textarea", rows: 4, required: true },
+  { key: "description", label: "Description", type: "richtext", required: true },
   { key: "tags", label: "Tags", type: "tags", placeholder: "Comma-separated tags" },
   { key: "fileUrl", label: "File URL", type: "text", helpText: "Direct download link, if hosted (e.g., a Cloudinary file)." },
   { key: "externalUrl", label: "External URL", type: "text", helpText: "e.g., GitHub, Kaggle, or another external host." },
@@ -56,7 +56,7 @@ export default function AdminResourcesPage() {
   };
 
   const columns: Column<Resource>[] = [
-    { key: "title", label: "Title", render: (r) => <span className="text-white font-medium">{r.title}</span> },
+    { key: "title", label: "Title", render: (r) => <span className="text-gray-900 font-medium">{r.title}</span> },
     { key: "resourceType", label: "Type", render: (r) => <span className="capitalize">{r.resourceType}</span> },
     { key: "category", label: "Category" },
     { key: "featured", label: "Featured", render: (r) => (r.featured ? "Yes" : "No") },

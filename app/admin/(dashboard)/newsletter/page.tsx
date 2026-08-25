@@ -17,7 +17,7 @@ export default function AdminNewsletterPage() {
   };
 
   const columns: Column<NewsletterSubscriber>[] = [
-    { key: "email", label: "Email", render: (r) => <span className="text-white font-medium">{r.email}</span> },
+    { key: "email", label: "Email", render: (r) => <span className="text-gray-900 font-medium">{r.email}</span> },
   ];
 
   return (

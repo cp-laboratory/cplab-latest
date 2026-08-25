@@ -1,52 +1,52 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-/* Custom "jade" accent scale — replaces the old blue/violet brand pair with a
-   single muted green-jade hue, used across gradients, badges, links, and glows. */
+/* Academic Theme: Oxford Blue and Gold Accent */
 @theme {
-  --color-jade-50: hsl(160 40% 96%);
-  --color-jade-100: hsl(160 38% 91%);
-  --color-jade-200: hsl(161 40% 82%);
-  --color-jade-300: hsl(161 40% 69%);
-  --color-jade-400: hsl(161 42% 56%);
-  --color-jade-500: hsl(161 45% 45%);
-  --color-jade-600: hsl(162 48% 36%);
-  --color-jade-700: hsl(163 50% 29%);
-  --color-jade-800: hsl(164 48% 23%);
-  --color-jade-900: hsl(164 45% 17%);
-  --color-jade-950: hsl(163 40% 9%);
+  --color-oxford-50: hsl(212 50% 96%);
+  --color-oxford-100: hsl(212 50% 90%);
+  --color-oxford-200: hsl(212 50% 80%);
+  --color-oxford-300: hsl(212 50% 70%);
+  --color-oxford-400: hsl(212 60% 50%);
+  --color-oxford-500: hsl(212 80% 30%);
+  --color-oxford-600: hsl(212 90% 25%);
+  --color-oxford-700: hsl(212 100% 20%);
+  --color-oxford-800: hsl(212 100% 14%); /* Oxford Blue */
+  --color-oxford-900: hsl(212 100% 10%);
+  --color-oxford-950: hsl(212 100% 5%);
 }
 
 @layer base {
   :root {
-    --background: 163 20% 5%;
-    --foreground: 150 15% 95%;
-    --card: 163 18% 9%;
-    --card-foreground: 150 15% 95%;
-    --border: 163 15% 17%;
-    --muted: 163 15% 17%;
-    --muted-foreground: 150 10% 62%;
-    --primary: 161 45% 45%;
-    --primary-foreground: 163 20% 5%;
-    --accent: 164 48% 23%;
-    --accent-foreground: 150 15% 95%;
-    --amber: 38 95% 55%;
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+    --border: 214 32% 91%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+    --primary: 212 100% 14%;
+    --primary-foreground: 210 40% 98%;
+    --accent: 43 96% 56%;
+    --accent-foreground: 215 25% 15%;
+    --amber: 43 96% 56%;
     --destructive: 0 84% 60%;
-    --ring: 161 45% 45%;
-    --radius: 0.75rem;
+    --ring: 212 100% 14%;
+    --radius: 0.5rem;
   }
 
   body {
-    background-color: hsl(163, 20%, 5%);
-    color: hsl(150, 15%, 95%);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: var(--font-inter), system-ui, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-space-grotesk), var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-playfair), var(--font-inter), system-ui, serif;
   }
 
   ::selection {
-    background: hsl(161, 45%, 45%, 0.3);
+    background: hsl(212 100% 14% / 0.2);
   }
 
   ::-webkit-scrollbar {
@@ -54,98 +54,66 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(163, 20%, 5%);
+    background: hsl(210 20% 98%);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(163, 15%, 17%);
+    background: hsl(214 32% 91%);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(161, 45%, 45%, 0.5);
+    background: hsl(215 16% 47%);
   }
 }
 
-/* Native form controls (select dropdowns) rendered in dark mode so option
-   text isn't invisible white-on-white in the browser's native popup. */
-select {
-  color-scheme: dark;
-}
-
-select option {
-  background-color: hsl(163, 18%, 9%);
-  color: hsl(150, 15%, 95%);
-}
-
-/* Custom utility classes */
+/* Custom utility classes for academic design */
 .gradient-text {
-  background: linear-gradient(135deg, hsl(161, 50%, 55%) 0%, hsl(164, 55%, 28%) 100%);
+  background: linear-gradient(135deg, hsl(212, 100%, 25%) 0%, hsl(212, 100%, 10%) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gradient-text-amber {
-  background: linear-gradient(135deg, hsl(38, 95%, 55%) 0%, hsl(38, 95%, 70%) 100%);
+  background: linear-gradient(135deg, hsl(43, 96%, 56%) 0%, hsl(38, 96%, 45%) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.glass {
-  background: rgba(15, 23, 20, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.academic-card {
+  background: hsl(0, 0%, 100%);
+  border: 1px solid hsl(214, 32%, 91%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.glass-hover {
-  background: rgba(15, 23, 20, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s;
-}
-
-.glass-hover:hover {
-  background: rgba(15, 23, 20, 0.8);
-  border-color: rgba(63, 164, 130, 0.4);
-  box-shadow: 0 0 30px rgba(63, 164, 130, 0.1);
-}
-
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
+.academic-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 33, 71, 0.08);
+  border-color: hsl(212, 50%, 80%);
+  transform: translateY(-4px);
 }
 
 .section-pad {
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
 @media (min-width: 640px) {
   .section-pad {
-    padding-top: 8rem;
-    padding-bottom: 8rem;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
   }
 }
 
 .container-xl {
-  max-width: 80rem;
+  max-width: 76rem;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .container-xl {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -155,41 +123,20 @@ select option {
   }
 }
 
-/* Glow orb animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-20px) scale(1.05); }
+/* Pattern background for academic sections */
+.pattern-bg {
+  background-image: radial-gradient(hsl(214 32% 85%) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+/* Light pattern for main content bodies */
+.pattern-bg-light {
+  background-color: hsl(210 20% 98%);
+  background-image: radial-gradient(hsl(214 32% 85%) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.orb-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.orb-float-delayed {
-  animation: float 8s ease-in-out 2s infinite;
-}
-
-.pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(63,164,130,0.1) 0%,
-    rgba(63,164,130,0.3) 50%,
-    rgba(63,164,130,0.1) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s linear infinite;
+/* Premium Dark Hero Gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, hsl(212, 100%, 5%) 0%, hsl(212, 100%, 14%) 100%);
 }

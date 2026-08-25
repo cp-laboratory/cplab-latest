@@ -32,25 +32,25 @@ export default async function TeamMemberPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const member = await fetchDocByField<TeamMember>(COLLECTIONS.team, "slug", slug);
+  const member = await fetchDocByField<TeamMember>(COLLECTIONS.team, "slug", decodeURIComponent(slug));
   if (!member) notFound();
 
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="max-w-4xl mx-auto px-4">
           <Link
             href="/team"
-            className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white/70 mb-10 transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-10 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Team
           </Link>
 
-          <div className="glass rounded-3xl p-8 sm:p-12">
+          <div className="academic-card rounded-2xl p-6 sm:p-10">
             <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start text-center sm:text-left mb-10">
               {/* Avatar */}
-              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-3xl shrink-0 bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-white/10 flex items-center justify-center text-6xl font-medium text-jade-400 overflow-hidden">
+              <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-xl shrink-0 bg-gradient-to-br from-oxford-50 to-oxford-100 border border-gray-200 flex items-center justify-center text-6xl font-medium text-oxford-600 overflow-hidden">
                 {member.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
@@ -60,20 +60,20 @@ export default async function TeamMemberPage({
               </div>
 
               <div className="flex-1">
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-jade-500/10 text-jade-300 border border-jade-500/20 mb-4">
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-oxford-50 text-oxford-700 border border-oxford-200 mb-4">
                   {memberTypeLabels[member.memberType] || member.memberType}
                 </span>
-                <h1 className="text-3xl sm:text-4xl font-medium text-white mb-2 leading-tight">
+                <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-2 leading-tight">
                   {member.name}
                 </h1>
-                <p className="text-lg text-jade-400 font-medium mb-6">{member.designation}</p>
+                <p className="text-lg text-oxford-600 font-medium mb-6">{member.designation}</p>
 
                 {/* Contact links */}
                 <div className="flex items-center gap-3 justify-center sm:justify-start">
                   {member.email && (
                     <a
                       href={`mailto:${member.email}`}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60 hover:text-white hover:border-jade-500/30 transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-sm text-gray-600 hover:text-gray-900 hover:border-oxford-300 transition-all"
                     >
                       <Mail className="w-4 h-4" /> Email
                     </a>
@@ -83,7 +83,7 @@ export default async function TeamMemberPage({
                       href={member.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60 hover:text-white hover:border-jade-500/30 transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-sm text-gray-600 hover:text-gray-900 hover:border-oxford-300 transition-all"
                     >
                       <GithubIcon /> GitHub
                     </a>
@@ -93,7 +93,7 @@ export default async function TeamMemberPage({
                       href={member.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60 hover:text-white hover:border-jade-500/30 transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-sm text-gray-600 hover:text-gray-900 hover:border-oxford-300 transition-all"
                     >
                       <LinkedinIcon /> LinkedIn
                     </a>
@@ -103,7 +103,7 @@ export default async function TeamMemberPage({
                       href={member.googleScholar}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white/60 hover:text-white hover:border-jade-500/30 transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-sm text-gray-600 hover:text-gray-900 hover:border-oxford-300 transition-all"
                     >
                       <ExternalLink className="w-4 h-4" /> Scholar
                     </a>
@@ -114,21 +114,21 @@ export default async function TeamMemberPage({
 
             {/* Bio */}
             {member.bio && (
-              <div className="pt-8 border-t border-white/10">
-                <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">About</h2>
-                <p className="text-white/60 text-lg leading-relaxed">{member.bio}</p>
+              <div className="pt-8 border-t border-gray-200">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">About</h2>
+                <div className="prose prose-lg max-w-none prose-gray prose-headings:font-serif prose-headings:text-gray-900 prose-a:text-amber-600 hover:prose-a:text-amber-500" dangerouslySetInnerHTML={{ __html: member.bio }} />
               </div>
             )}
 
             {/* Research interests */}
             {member.researchInterests && member.researchInterests.length > 0 && (
-              <div className="pt-8 mt-8 border-t border-white/10">
-                <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">Research Interests</h2>
+              <div className="pt-8 mt-8 border-t border-gray-200">
+                <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Research Interests</h2>
                 <div className="flex flex-wrap gap-2">
                   {member.researchInterests.map((interest) => (
                     <span
                       key={interest}
-                      className="px-3 py-1.5 rounded-full text-sm bg-jade-500/10 text-jade-300 border border-jade-500/20"
+                      className="px-3 py-1.5 rounded-full text-sm font-semibold bg-oxford-50 text-oxford-700 border border-oxford-200"
                     >
                       {interest}
                     </span>

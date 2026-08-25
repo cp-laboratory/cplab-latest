@@ -36,7 +36,7 @@ export default function CertificatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -48,18 +48,18 @@ export default function CertificatePage() {
             className="text-center mb-16"
           >
             <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-jade-500/20 to-jade-800/20 border border-jade-500/20 flex items-center justify-center">
-                <ShieldCheck className="w-8 h-8 text-jade-400" />
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-oxford-50 to-oxford-100 border border-oxford-200 flex items-center justify-center">
+                <ShieldCheck className="w-8 h-8 text-oxford-600" />
               </div>
             </div>
-            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">
+            <p className="text-xs text-oxford-600 uppercase tracking-widest font-medium mb-4">
               Authenticity Check
             </p>
-            <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
               Certificate{" "}
               <span className="gradient-text">Verification</span>
             </h1>
-            <p className="text-xl text-white/50 max-w-xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-xl mx-auto">
               Verify the authenticity of certificates issued by the Cyber Physical
               Laboratory by entering the certificate ID below.
             </p>
@@ -71,14 +71,14 @@ export default function CertificatePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="glass rounded-2xl p-8 mb-8"
+              className="academic-card rounded-2xl p-8 mb-8"
             >
-              <label className="block text-sm font-medium text-white/60 mb-3">
+              <label className="block text-sm font-medium text-gray-600 mb-3">
                 Certificate ID
               </label>
               <div className="flex gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     id="cert-id-input"
                     type="text"
@@ -86,20 +86,20 @@ export default function CertificatePage() {
                     onChange={(e) => { setCertId(e.target.value); setVerifyState("idle"); }}
                     onKeyDown={(e) => e.key === "Enter" && handleVerify()}
                     placeholder="e.g., CPLAB-2024-001"
-                    className="w-full pl-10 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors"
+                    className="w-full pl-10 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-white/30 text-sm focus:outline-none focus:border-oxford-400 transition-colors"
                   />
                 </div>
                 <button
                   id="cert-verify-btn"
                   onClick={handleVerify}
                   disabled={!certId.trim() || state === "loading"}
-                  className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-jade-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r bg-oxford-800 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-oxford-100 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {state === "loading" && <Loader2 className="w-4 h-4 animate-spin" />}
                   Verify
                 </button>
               </div>
-              <p className="text-xs text-white/30 mt-3">
+              <p className="text-xs text-gray-400 mt-3">
                 The certificate ID is printed on the certificate document (format: CPLAB-YYYY-###).
               </p>
             </motion.div>
@@ -113,14 +113,14 @@ export default function CertificatePage() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35 }}
-                  className="glass rounded-2xl p-8 border border-emerald-500/20"
+                  className="academic-card rounded-2xl p-8 border border-emerald-500/20"
                 >
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                       <CheckCircle className="w-6 h-6 text-emerald-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-white">Certificate Verified ✓</h3>
+                      <h3 className="text-lg font-serif font-bold text-gray-900">Certificate Verified ✓</h3>
                       <p className="text-sm text-emerald-400">This is an authentic CPLAB certificate.</p>
                     </div>
                   </div>
@@ -134,16 +134,16 @@ export default function CertificatePage() {
                       { label: "Issued By", value: "Cyber Physical Laboratory (CPLAB)" },
                       { label: "Status", value: "Valid & Active" },
                     ].map((item) => (
-                      <div key={item.label} className="bg-white/5 rounded-xl p-4">
-                        <p className="text-xs text-white/40 mb-1">{item.label}</p>
-                        <p className="text-sm text-white font-medium">{item.value}</p>
+                      <div key={item.label} className="bg-gray-50 rounded-xl p-4">
+                        <p className="text-xs text-gray-500 mb-1">{item.label}</p>
+                        <p className="text-sm text-gray-900 font-medium">{item.value}</p>
                       </div>
                     ))}
                   </div>
 
                   <button
                     onClick={handleReset}
-                    className="mt-6 text-sm text-white/40 hover:text-white/70 transition-colors"
+                    className="mt-6 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                   >
                     Verify another certificate →
                   </button>
@@ -157,30 +157,30 @@ export default function CertificatePage() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35 }}
-                  className="glass rounded-2xl p-8 border border-red-500/20"
+                  className="academic-card rounded-2xl p-8 border border-red-500/20"
                 >
                   <div className="flex items-center gap-4 mb-4">
                     <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
                       <XCircle className="w-6 h-6 text-red-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-white">Certificate Not Found</h3>
+                      <h3 className="text-lg font-serif font-bold text-gray-900">Certificate Not Found</h3>
                       <p className="text-sm text-red-400">
                         No certificate matches the ID &quot;{certId}&quot;.
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-white/50">
+                  <p className="text-sm text-gray-600">
                     Please check that the ID is entered correctly. If you believe this is
                     an error, contact us at{" "}
-                    <a href="mailto:help@cplab.org" className="text-jade-400 hover:underline">
+                    <a href="mailto:help@cplab.org" className="text-oxford-600 hover:underline">
                       help@cplab.org
                     </a>
                     .
                   </p>
                   <button
                     onClick={handleReset}
-                    className="mt-5 text-sm text-white/40 hover:text-white/70 transition-colors"
+                    className="mt-5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
                   >
                     Try again →
                   </button>

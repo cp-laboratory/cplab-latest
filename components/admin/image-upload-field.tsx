@@ -33,16 +33,16 @@ export default function ImageUploadField({
 
   return (
     <div>
-      <label className="block text-sm font-medium text-white/60 mb-2">{label}</label>
+      <label className="block text-sm font-medium text-gray-900/60 mb-2">{label}</label>
       <div className="flex items-center gap-4">
-        <div className="w-20 h-20 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+        <div className="w-20 h-20 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
           {uploading ? (
-            <Loader2 className="w-5 h-5 text-jade-400 animate-spin" />
+            <Loader2 className="w-5 h-5 text-oxford-600 animate-spin" />
           ) : value ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={value} alt="Preview" className="w-full h-full object-cover" />
           ) : (
-            <ImagePlus className="w-6 h-6 text-white/20" />
+            <ImagePlus className="w-6 h-6 text-gray-900/20" />
           )}
         </div>
         <div className="flex-1 flex items-center gap-2">
@@ -50,7 +50,7 @@ export default function ImageUploadField({
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
-            className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/70 text-xs font-medium hover:text-white hover:border-white/20 transition-all disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 text-xs font-medium hover:text-gray-900 hover:border-gray-300 transition-all disabled:opacity-50"
           >
             {value ? "Replace Image" : "Upload Image"}
           </button>
@@ -58,7 +58,7 @@ export default function ImageUploadField({
             <button
               type="button"
               onClick={() => onChange("")}
-              className="p-2 rounded-xl text-white/30 hover:text-red-400 transition-colors"
+              className="p-2 rounded-xl text-gray-400 hover:text-red-600 transition-colors"
               aria-label="Remove image"
             >
               <X className="w-4 h-4" />
@@ -73,7 +73,7 @@ export default function ImageUploadField({
           onChange={(e) => handleFile(e.target.files?.[0])}
         />
       </div>
-      {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
+      {error && <p className="text-xs text-red-600 mt-2">{error}</p>}
     </div>
   );
 }

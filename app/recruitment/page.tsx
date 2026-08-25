@@ -44,11 +44,11 @@ export default function RecruitmentPage() {
       setSubmitting(false);
     }
   };
-  const inputClass = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:border-jade-500/50 transition-colors";
-  const labelClass = "block text-sm font-medium text-white/60 mb-2";
+  const inputClass = "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-white/30 text-sm focus:outline-none focus:border-oxford-400 transition-colors";
+  const labelClass = "block text-sm font-medium text-gray-600 mb-2";
 
   return (
-    <div className="min-h-screen bg-[hsl(163_20%_5%)]">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-32 pb-24">
         <div className="container-xl">
@@ -59,11 +59,11 @@ export default function RecruitmentPage() {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <p className="text-xs text-jade-400 uppercase tracking-widest font-medium mb-4">Join Us</p>
-            <h1 className="text-3xl sm:text-4xl font-medium text-white mb-4">
+            <p className="text-xs text-oxford-600 uppercase tracking-widest font-medium mb-4">Join Us</p>
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-4">
               Apply to <span className="gradient-text">CPLAB</span>
             </h1>
-            <p className="text-xl text-white/50 max-w-xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-xl mx-auto">
               We&apos;re recruiting passionate researchers for BSc thesis, MSc, and PhD positions.
             </p>
           </motion.div>
@@ -73,13 +73,13 @@ export default function RecruitmentPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="glass rounded-3xl p-12 text-center"
+                className="academic-card rounded-3xl p-12 text-center"
               >
                 <CheckCircle className="w-20 h-20 text-emerald-400 mx-auto mb-6" />
-                <h2 className="text-3xl font-medium text-white mb-4">Application Submitted!</h2>
-                <p className="text-white/50 text-lg leading-relaxed">
-                  Thank you <strong className="text-white">{form.name}</strong>! We&apos;ve received your application
-                  for the <strong className="text-white">{form.researchTrack}</strong> track.
+                <h2 className="text-3xl font-serif font-bold text-gray-900 mb-4">Application Submitted!</h2>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  Thank you <strong className="text-gray-900">{form.name}</strong>! We&apos;ve received your application
+                  for the <strong className="text-gray-900">{form.researchTrack}</strong> track.
                   You&apos;ll hear from us within 2 weeks.
                 </p>
               </motion.div>
@@ -95,20 +95,20 @@ export default function RecruitmentPage() {
                           <div
                             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
                               step === i
-                                ? "bg-gradient-to-br from-jade-500 to-jade-900 text-white shadow-lg shadow-jade-500/30 scale-110"
+                                ? "bg-gradient-to-br bg-oxford-800 text-white shadow-lg shadow-jade-500/30 scale-110"
                                 : step > i
                                 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                                : "bg-white/5 text-white/30 border border-white/10"
+                                : "bg-gray-50 text-gray-400 border border-gray-200"
                             }`}
                           >
                             {step > i ? <CheckCircle className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                           </div>
-                          <span className={`text-xs font-medium text-center leading-tight hidden sm:block ${step === i ? "text-white" : "text-white/30"}`}>
+                          <span className={`text-xs font-medium text-center leading-tight hidden sm:block ${step === i ? "text-gray-900" : "text-gray-400"}`}>
                             {s.label}
                           </span>
                         </div>
                         {i < steps.length - 1 && (
-                          <div className={`flex-1 h-px mx-2 transition-all ${step > i ? "bg-emerald-500/30" : "bg-white/10"}`} />
+                          <div className={`flex-1 h-px mx-2 transition-all ${step > i ? "bg-emerald-500/30" : "bg-gray-100"}`} />
                         )}
                       </div>
                     );
@@ -116,11 +116,11 @@ export default function RecruitmentPage() {
                 </div>
 
                 {/* Form Card */}
-                <div className="glass rounded-3xl p-8">
+                <div className="academic-card rounded-3xl p-8">
                   <AnimatePresence mode="wait">
                     {step === 0 && (
                       <motion.div key="step0" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-                        <h2 className="text-2xl font-medium text-white mb-6">Personal Information</h2>
+                        <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">Personal Information</h2>
                         <div className="space-y-5">
                           <div><label className={labelClass}>Full Name</label><input id="rec-name" type="text" value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Your full name" className={inputClass} /></div>
                           <div><label className={labelClass}>Email Address</label><input id="rec-email" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="your@email.com" className={inputClass} /></div>
@@ -131,7 +131,7 @@ export default function RecruitmentPage() {
 
                     {step === 1 && (
                       <motion.div key="step1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-                        <h2 className="text-2xl font-medium text-white mb-6">Academic Background</h2>
+                        <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">Academic Background</h2>
                         <div className="space-y-5">
                           <div><label className={labelClass}>University / Institution</label><input id="rec-university" type="text" value={form.university} onChange={(e) => update("university", e.target.value)} placeholder="Your university name" className={inputClass} /></div>
                           <div><label className={labelClass}>Degree Program</label>
@@ -152,7 +152,7 @@ export default function RecruitmentPage() {
 
                     {step === 2 && (
                       <motion.div key="step2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-                        <h2 className="text-2xl font-medium text-white mb-6">Research Interests</h2>
+                        <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">Research Interests</h2>
                         <div className="space-y-5">
                           <div>
                             <label className={labelClass}>Research Track</label>
@@ -173,7 +173,7 @@ export default function RecruitmentPage() {
 
                     {step === 3 && (
                       <motion.div key="step3" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}>
-                        <h2 className="text-2xl font-medium text-white mb-6">Research Proposal & SOP</h2>
+                        <h2 className="text-2xl font-serif font-bold text-gray-900 mb-6">Research Proposal & SOP</h2>
                         <div className="space-y-5">
                           <div><label className={labelClass}>Proposed Research Title</label><input id="rec-proposal-title" type="text" value={form.proposalTitle} onChange={(e) => update("proposalTitle", e.target.value)} placeholder="A tentative title for your research" className={inputClass} /></div>
                           <div><label className={labelClass}>Brief Research Proposal</label><textarea id="rec-proposal-desc" value={form.proposalDesc} onChange={(e) => update("proposalDesc", e.target.value)} rows={3} placeholder="What problem do you want to solve and how?" className={inputClass + " resize-none"} /></div>
@@ -184,12 +184,12 @@ export default function RecruitmentPage() {
                   </AnimatePresence>
 
                   {/* Navigation */}
-                  <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
+                  <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
                     <button
                       id="rec-prev"
                       onClick={() => setStep(Math.max(0, step - 1))}
                       disabled={step === 0}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass border border-white/10 text-white/50 text-sm hover:text-white hover:border-white/20 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl academic-card border border-gray-200 text-gray-600 text-sm hover:text-gray-900 hover:border-gray-300 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                     >
                       <ChevronLeft className="w-4 h-4" /> Previous
                     </button>
@@ -198,7 +198,7 @@ export default function RecruitmentPage() {
                       <button
                         id="rec-next"
                         onClick={() => setStep(Math.min(steps.length - 1, step + 1))}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-jade-500 to-jade-900 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-jade-500/20"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r bg-oxford-800 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-oxford-100"
                       >
                         Next <ChevronRight className="w-4 h-4" />
                       </button>
@@ -207,7 +207,7 @@ export default function RecruitmentPage() {
                         id="rec-submit"
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-jade-600 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50"
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-jade-600 text-gray-900 text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50"
                       >
                         Submit Application
                         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
@@ -217,7 +217,7 @@ export default function RecruitmentPage() {
                   {error && <p className="text-sm text-red-400 mt-4 text-center">{error}</p>}
                 </div>
 
-                <p className="text-center text-xs text-white/30 mt-6">
+                <p className="text-center text-xs text-gray-400 mt-6">
                   Applications reviewed on a rolling basis. Strong candidates will be contacted for an interview.
                 </p>
               </>
