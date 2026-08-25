@@ -69,7 +69,7 @@ export default async function TeamMemberPage({
                 <p className="text-lg text-oxford-600 font-medium mb-6">{member.designation}</p>
 
                 {/* Contact links */}
-                <div className="flex items-center gap-3 justify-center sm:justify-start">
+                <div className="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
                   {member.email && (
                     <a
                       href={`mailto:${member.email}`}
